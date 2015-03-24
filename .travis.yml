@@ -1,0 +1,47 @@
+language: python
+python:
+  - "2.7"
+
+env:
+  - SQLALCHEMY_DATABASE_URI="sqlite://"
+  - SQLALCHEMY_DATABASE_URI="postgres://postgres@localhost/abilian_crm"
+
+services:
+  - redis-server
+
+addons:
+  postgresql: "9.3"
+
+cache:
+  directories:
+    - $HOME/.pip-cache
+
+# Install OS dependencies
+before_install:
+ - sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm
+ - sudo apt-add-repository -y ppa:chris-lea/node.js
+ - sudo apt-get update
+ - sudo apt-get install -y poppler-utils nodejs
+ - sudo npm install -g less
+
+# Install Python dependencies
+install:
+  - pip install -r etc/dev-requirements.txt --download-cache $HOME/.pip-cache
+  - pip install -r etc/git-requirements.txt --download-cache $HOME/.pip-cache
+  - pip install -e .
+  - pip --version
+  - pip list
+
+# Create DB
+before_script:
+  - createdb -w -U postgres -E utf-8 abilian_crm
+
+# Run tests
+script:
+  - py.test --tb=short -q --cov abilian abilian
+  # There are no docs yet!
+  #- sphinx-build -W -b html docs/ docs/_build/
+
+# Report coverage
+after_success:
+  - coveralls
