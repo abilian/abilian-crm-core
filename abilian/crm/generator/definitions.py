@@ -44,7 +44,8 @@ COLUMN_TYPES = (
     JSONDict,
 )
 COLUMN_TYPES = {t.__name__: t for t in COLUMN_TYPES}
-
+COLUMN_TYPES['PhoneNumber'] = sa.types.UnicodeText
+COLUMN_TYPES['EmailAddress'] = sa.types.UnicodeText
 
 FORM_FIELDS = (
     wtforms.fields.SelectField,
