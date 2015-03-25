@@ -5,10 +5,14 @@ from __future__ import absolute_import
 
 import sys
 import imp
+import logging
 from importlib import import_module
 from pathlib import Path
 
 from .codegen import CodeGenerator
+
+logger = logging.getLogger(__name__)
+
 
 def generate_module(fullname):
   """
@@ -30,6 +34,7 @@ def generate_module(fullname):
   module.__path__ = [str(directory)]
 
   for yml in directory.glob(u'*.yml'):
+    logger.info('Loading: %s', yml)
     with yml.open('r') as f:
       gen = CodeGenerator(yaml_file=f)
 
