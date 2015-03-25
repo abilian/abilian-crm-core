@@ -228,7 +228,7 @@ class CodeGenerator(object):
           attributes[relation_name] = sa.ext.declarative.declared_attr(rel_attr)
 
     if table_args:
-      attributes['__table_args__'] = table_args
+      attributes['__table_args__'] = tuple(table_args)
 
     attributes['__module__'] = module.__name__
     cls = type(type_name, type_bases, attributes)
