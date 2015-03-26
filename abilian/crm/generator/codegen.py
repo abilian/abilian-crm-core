@@ -313,7 +313,8 @@ class CodeGenerator(object):
       # validators
       required_validator = (required() if d.get('required', False)
                             else optional())
-      extra_args['validators'].append(required_validator)
+      if attr_type not in ('Boolean',):
+        extra_args['validators'].append(required_validator)
 
       if 'validators' in d:
         validators = d['validators']
