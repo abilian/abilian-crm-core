@@ -8,7 +8,6 @@ from collections import OrderedDict
 import yaml
 import re
 
-import sqlalchemy as sa
 import wtforms.fields
 
 from abilian.core.util import slugify
@@ -19,13 +18,12 @@ from abilian.web.forms.filters import strip
 import abilian.web.forms.fields as awbff
 
 from .definitions import (
-    COLUMN_TYPES,
     FORM_FILTERS,
     LIST_GENERATORS,
-    MAX_IDENTIFIER_LENGTH,
     VALIDATORS,
-    WIDGETS,    
+    WIDGETS,
 )
+from .fieldtypes import get_field
 
 logger = logging.getLogger(__name__)
 
@@ -117,115 +115,24 @@ class CodeGenerator(object):
     for d in self.data['fields']:
       if 'ignore' in d:
         continue
-      is_relationship = False
-      attr_name = d['name']
-      attr_descr = d['description']
-      attr_type = d['type']
-      attr_type_options = d.get('type_options', dict())
-      extra_args = {}
 
-      if attr_type == 'Entity':
-        # Currently taken care of manually
-        continue
-
-      if attr_type == 'pass':
+      type_ = d['type']
+      if type_ == 'pass':
         # explicit manual handling - only declared in form groups
         continue
 
-      if attr_type == 'PositiveInteger':
-        attr_type = 'Integer'
-        table_args.append(
-            sa.schema.CheckConstraint(
-                attr_name >= 0,
-                name='check_{name}_positive'.format(name=attr_name))
-        )
-      elif attr_type == 'Vocabulary':
-        attr_type = 'Integer'
-        voc_cls = d['vocabulary']['cls']
-        relation_name = attr_name
-        attr_name += '_id'
-        relation_target = voc_cls
-        relation_target_col = voc_cls.id
-        is_relationship = True
+      FieldCls = get_field(type_)
+      if FieldCls is None:
+        raise ValueError('Unknown type: {}'.format(repr(type_)))
 
-        if d.get('multiple', False):
-          relation_secondary_tbl_name = \
-              '{}_{}'.format(self.data['name'].lower(),
-                             d['vocabulary']['generated_name'].lower())
+      field = FieldCls(d)
+      for name, attr in field.get_model_attributes():
+        assert name not in attributes
+        attributes[name] = attr
 
-      assert_ascii(attr_name)
-      if attr_type not in COLUMN_TYPES:
-        raise ValueError('Invalid column type: {}'.format(repr(attr_type)))
+      for arg in field.get_table_args():
+        table_args.append(arg)
 
-      attr_type = COLUMN_TYPES[attr_type]
-      col_name = attr_name[:MAX_IDENTIFIER_LENGTH]
-      extra_args['nullable'] = 'required' not in d
-
-      # Extra dict passed to SQLAlchemy models, and used later by the framework.
-      extra_args['info'] = info = {}
-      info['label'] = attr_descr
-      if 'indexed' in d:
-        info['searchable'] = True
-        info['index_to'] = ('text',)
-
-      if 'from_list' in d and not is_relationship:
-        info['choices'] = OrderedDict(d['from_list'])
-
-      if not is_relationship:
-        # simple column attribute
-        attr = sa.schema.Column(col_name,
-                                attr_type(**attr_type_options),
-                                **extra_args)
-        attributes[attr_name] = attr
-      else:
-        if not d.get('multiple'):
-          def get_column_attr(func_name, col_name, target_col):
-            def gen_column(cls):
-              return sa.schema.Column(
-                  col_name,
-                  sa.ForeignKey(target_col, ondelete='SET NULL'),
-              )
-            gen_column.func_name = func_name
-            return gen_column
-
-          attr = get_column_attr(attr_name, col_name, relation_target_col)
-          attributes[attr_name] = sa.ext.declarative.declared_attr(attr)
-
-          def get_rel_attr(func_name, target_cls):
-            def gen_relationship(cls):
-              return sa.orm.relationship(target_cls)
-
-            gen_relationship.func_name = func_name
-            return gen_relationship
-
-          rel_attr = get_rel_attr(relation_name, relation_target)
-          attributes[relation_name] = sa.ext.declarative.declared_attr(rel_attr)
-        else:
-          def get_m2m_attr(func_name, target_cls, secondary_tbl_name=None):
-            def gen_m2m_relationship(cls):
-              src_name = cls.__tablename__
-              target_name = target_cls.__tablename__
-              tbl_name = secondary_tbl_name
-              if tbl_name is None:
-                tbl_name = (src_name + '_' + target_name)
-              src_col = cls.__name__.lower() + '_id'
-              secondary_table = sa.Table(
-                  tbl_name,
-                  cls.metadata,
-                  sa.Column(src_col,
-                            sa.ForeignKey(src_name + '.id')),
-                  sa.Column('voc_id',
-                            sa.ForeignKey(target_name + '.id')),
-                  sa.schema.UniqueConstraint(src_col, 'voc_id'),
-              )
-              return sa.orm.relationship(target_cls, secondary=secondary_table)
-
-            gen_m2m_relationship.func_name = func_name
-            return gen_m2m_relationship
-
-          rel_attr = get_m2m_attr(relation_name, relation_target,
-                                  relation_secondary_tbl_name)
-          attributes[relation_name] = sa.ext.declarative.declared_attr(rel_attr)
 
     if table_args:
       attributes['__table_args__'] = tuple(table_args)

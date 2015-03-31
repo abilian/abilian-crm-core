@@ -1,0 +1,79 @@
+# coding=utf-8
+"""
+"""
+from __future__ import absolute_import
+
+import sqlalchemy as sa
+
+from .registry import register_field
+from .base import Field
+
+
+@register_field
+class Vocabulary(Field):
+  sa_type = sa.types.Integer
+
+  def __init__(self, data, *args, **kwargs):
+    super(Vocabulary, self).__init__(data, *args, **kwargs)
+    self.voc_cls = data['vocabulary']['cls']
+
+  def get_model_attributes(self, *args, **kwargs):
+    relation_name = self.name
+    attr_name = self.name + '_id'
+
+    if not self.multiple:
+      # column
+      def get_column_attr(func_name, col_name, target_col):
+        def gen_column(cls):
+          return sa.schema.Column(
+              col_name,
+              sa.ForeignKey(target_col, ondelete='SET NULL'),
+          )
+        gen_column.func_name = func_name
+        return gen_column
+
+      attr = get_column_attr(attr_name, attr_name, self.voc_cls.id)
+      yield attr_name, sa.ext.declarative.declared_attr(attr)
+
+      # relationship
+      def get_rel_attr(func_name, target_cls):
+        def gen_relationship(cls):
+          return sa.orm.relationship(target_cls)
+
+        gen_relationship.func_name = func_name
+        return gen_relationship
+
+      attr = get_rel_attr(relation_name, self.voc_cls)
+      yield relation_name, sa.ext.declarative.declared_attr(attr)
+
+    else: # m2m
+      def get_m2m_attr(func_name, target_cls, secondary_tbl_name=None):
+        def gen_m2m_relationship(cls):
+          src_name = cls.__tablename__
+          target_name = target_cls.__tablename__
+          tbl_name = secondary_tbl_name
+          if tbl_name is None:
+            tbl_name = (src_name + '_' + target_name)
+          src_col = cls.__name__.lower() + '_id'
+          secondary_table = sa.Table(
+              tbl_name,
+              cls.metadata,
+              sa.Column(src_col,
+                        sa.ForeignKey(src_name + '.id')),
+              sa.Column('voc_id',
+                        sa.ForeignKey(target_name + '.id')),
+              sa.schema.UniqueConstraint(src_col, 'voc_id'),
+          )
+          return sa.orm.relationship(target_cls, secondary=secondary_table)
+
+        gen_m2m_relationship.func_name = func_name
+        return gen_m2m_relationship
+
+
+      relation_secondary_tbl_name = \
+          '{}_{}'.format(self.name.lower(),
+                         self.data['vocabulary']['generated_name'].lower())
+
+      rel_attr = get_m2m_attr(relation_name, self.voc_cls,
+                              relation_secondary_tbl_name)
+      yield relation_name, sa.ext.declarative.declared_attr(rel_attr)
