@@ -4,7 +4,7 @@
 ((python-mode
   (py-continuation-offset . 4)
   (py-smart-indentation)
-  (py-indent-offset . 2)
+  (python-indent-offset . 2)
   (flycheck-pylintrc . "pylintrc")))
 
 
