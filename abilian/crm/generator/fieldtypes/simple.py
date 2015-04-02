@@ -99,12 +99,3 @@ class EmailAddress(UnicodeText):
 @model_field
 class URL(UnicodeText):
   default_ff_type = 'URLField'
-
-
-@model_field
-class Entity(Field):
-  """
-  Currently do nothing: must be implemented by subclassing generated model
-  """
-  def get_model_attributes(self, *args, **kwargs):
-    return ()
