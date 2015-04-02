@@ -4,14 +4,17 @@
 from __future__ import absolute_import
 
 import sqlalchemy as sa
+import abilian.web.forms.fields as awbff
+import abilian.web.forms.widgets as aw_widgets
 
-from .registry import register_field
-from .base import Field
+from .registry import model_field, form_field
+from .base import Field, FormField
 
 
-@register_field
+@model_field
 class Vocabulary(Field):
   sa_type = sa.types.Integer
+  default_ff_type = 'VocabularyFormField'
 
   def __init__(self, data, *args, **kwargs):
     super(Vocabulary, self).__init__(data, *args, **kwargs)
@@ -77,3 +80,28 @@ class Vocabulary(Field):
       rel_attr = get_m2m_attr(relation_name, self.voc_cls,
                               relation_secondary_tbl_name)
       yield relation_name, sa.ext.declarative.declared_attr(rel_attr)
+
+
+@form_field
+class VocabularyFormField(FormField):
+  ff_type = awbff.QuerySelect2Field
+
+  def get_extra_args(self, *args, **kwargs):
+    extra_args = super(VocabularyFormField, self).get_extra_args(*args,
+                                                                 **kwargs)
+    extra_args['multiple'] = self.multiple
+    extra_args['get_label'] = 'label'
+
+    def gen_voc_query(voc_cls):
+      def query_voc():
+        return voc_cls.query.active().all()
+
+      query_voc.func_name = 'query_vocabulary_{}'.format(voc_cls.Meta.name)
+      return query_voc
+
+    voc_cls = self.data['vocabulary']['cls']
+    extra_args['query_factory'] = gen_voc_query(voc_cls)
+    return extra_args
+
+  def setup_widgets(self, extra_args):
+    extra_args['view_widget'] = aw_widgets.ListWidget()

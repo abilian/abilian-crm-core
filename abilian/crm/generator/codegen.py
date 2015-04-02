@@ -8,21 +8,9 @@ from collections import OrderedDict
 import yaml
 import re
 
-import wtforms.fields
-
 from abilian.core.util import slugify
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
-from abilian.web.forms import widgets as abilian_widgets
-from abilian.web.forms.validators import required, optional
-from abilian.web.forms.filters import strip
-import abilian.web.forms.fields as awbff
 
-from .definitions import (
-    FORM_FILTERS,
-    LIST_GENERATORS,
-    VALIDATORS,
-    WIDGETS,
-)
 from .fieldtypes import get_field
 
 logger = logging.getLogger(__name__)
@@ -154,135 +142,20 @@ class CodeGenerator(object):
       if 'ignore' in d or 'hidden' in d:
         continue
 
-      attr_name = d['name']
-      attr_descr = d['description']
-      attr_type = d['type']
-
       if 'ignore' not in d:
         group_name = d['group']
-        groups.setdefault(group_name, []).append(attr_name)
+        groups.setdefault(group_name, []).append(d['name'])
         if group_name not in group_names:
           group_names.append(group_name)
 
-      field_type = wtforms.fields.TextField
-      extra_args = {'filters': [],
-                    'validators': [],}
-
-      if attr_type == "UnicodeText":
-        extra_args['filters'].append(strip)
-      elif attr_type == "Boolean":
-        field_type = wtforms.fields.BooleanField
-        extra_args['view_widget'] = abilian_widgets.BooleanWidget()
-      elif attr_type == "Date":
-        field_type = awbff.DateField
-      elif attr_type == "Float":
-        field_type = wtforms.fields.DecimalField
-        extra_args['default'] = 0
-      elif attr_type in ("Integer", 'PositiveInteger'):
-        field_type = wtforms.fields.IntegerField
-        extra_args['default'] = 0
-      elif attr_type == "EmailAddress":
-        extra_args['view_widget'] = abilian_widgets.EmailWidget()
-        extra_args['filters'].append(strip)
-      elif attr_type == "URL":
-        extra_args['view_widget'] = abilian_widgets.URLWidget()
-        extra_args['filters'].append(strip)
-      elif attr_type == 'Vocabulary':
-        field_type = awbff.QuerySelect2Field
-        extra_args['multiple'] = bool(d.get('multiple', False))
-        extra_args['allow_blank'] = not bool(d.get('required', False))
-        extra_args['get_label'] = 'label'
-        extra_args['view_widget'] = abilian_widgets.ListWidget()
-
-        def gen_voc_query(voc_cls):
-          def query_voc():
-            return voc_cls.query.active().all()
-
-          query_voc.func_name = 'query_vocabulary_{}'.format(voc_cls.Meta.name)
-          return query_voc
-
-        voc_cls = d['vocabulary']['cls']
-        extra_args['query_factory'] = gen_voc_query(voc_cls)
-      elif attr_type == "Entity":
-        # Currenty managed manually
-        continue
-      elif attr_type == 'pass':
+      if d['type'] == 'pass':
         # explicit manual handling - only declared in form groups
         continue
 
-      else:
-        # TODO
-        extra_args['filters'].append(strip)
-        logger.warning("unknown attr type: %s", repr(attr_type))
-
-      assert not '"' in attr_descr
-
-      # validators
-      required_validator = (required() if d.get('required', False)
-                            else optional())
-      if attr_type not in ('Boolean',):
-        extra_args['validators'].append(required_validator)
-
-      if 'validators' in d:
-        validators = d['validators']
-        if isinstance(validators, basestring):
-          validators = [validators]
-        validators = [VALIDATORS[v]() for v in validators]
-        extra_args['validators'].extend(validators)
-
-      # filters
-      if 'filters' in d:
-        filters = d['filters']
-        if isinstance(filters, basestring):
-          filters = [filters]
-        filters = [FORM_FILTERS[f] for f in filters]
-        extra_args['filters'] = filters
-
-      if not extra_args['filters']:
-        del extra_args['filters']
-
-      for widget_arg in ('widget', 'view_widget'):
-        if widget_arg not in d:
-          continue
-
-        widget = d[widget_arg]
-        if widget not in WIDGETS:
-          raise ValueError('Invalid {}: {}'.format(widget_arg,
-                                                   widget.encode('utf-8')))
-        widget = WIDGETS[widget]
-        kw = d.get(widget_arg + '_args', dict())
-        extra_args[widget_arg] = widget(**kw)
-
-      if 'from_list' in d and attr_type != 'Vocabulary':
-        # TODO: manage required / optional
-        field_type = awbff.Select2Field
-        if d.get("multiple"):
-          field_type = awbff.Select2MultipleField
-          extra_args['view_widget'] = abilian_widgets.ListWidget()
-
-        options = list(d['from_list'])
-        if 'required' in d:
-          if options[0][0] == u'':
-            options.pop(0)
-        elif options[0] != u'':
-          options.insert(0, (u'', u''))
-
-        extra_args['choices'] = options
-
-      if 'from_function' in d and field_type is wtforms.fields.TextField:
-        # TODO: manage required / optional
-        field_type = awbff.Select2Field
-        if d.get("multiple"):
-          field_type = awbff.Select2MultipleField
-        extra_args['choices'] = LIST_GENERATORS[d['from_function']]()
-
-      if 'lines' in d:
-        field_type = wtforms.fields.TextAreaField
-        extra_args['widget'] = abilian_widgets.TextArea(
-            resizeable='vertical',
-            rows=d['lines'])
-
-      attributes[attr_name] = field_type(attr_descr, **extra_args)
+      field = d['formfield']
+      field_type = field.get_type()
+      extra_args = field.get_extra_args()
+      attributes[field.name] = field_type(field.label, **extra_args)
 
     attributes['_groups'] = [(name, groups[name]) for name in group_names]
     attributes['__module__'] = module.__name__

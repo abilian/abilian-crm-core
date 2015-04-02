@@ -3,7 +3,7 @@
 """
 from __future__ import absolute_import
 
-from .registry import register_field, get_field
+from .registry import model_field, form_field, get_field, get_formfield
 
 # register fields
-from . import simple, vocabulary
+from . import simple, formfields, vocabulary

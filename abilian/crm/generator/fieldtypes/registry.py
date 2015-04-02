@@ -3,23 +3,43 @@
 """
 from __future__ import absolute_import
 
-from .base import Field
+from functools import partial
 
-_FIELD_REGISTRY = dict()
+class Registrable(object):
+  #: if not `None`, this is used as __fieldtype__()
+  __fieldname__ = None
 
-def register_field(cls):
+  @classmethod
+  def __fieldtype__(cls):
+    """
+    :return: identifier name for this field type
+    """
+    return (cls.__fieldname__
+            if cls.__fieldname__ is not None
+            else cls.__name__)
+    
+
+_SA_FIELD_REGISTRY = dict()
+_FF_FIELD_REGISTRY = dict()
+
+def _register(registry, cls):
   """
-  class decorator for `.base.Field`
+  class decorator for `Registrable` subclasses
   """
-  assert issubclass(cls, Field)
+  assert issubclass(cls, Registrable)
   reg_attr = '_{}_registered'.format(cls.__name__)
   if getattr(cls, reg_attr, False):
     return cls
   name = cls.__fieldtype__()
-  assert name not in _FIELD_REGISTRY
-  _FIELD_REGISTRY[name] = cls
+  assert name not in registry
+  registry[name] = cls
   setattr(cls, reg_attr, True)
   return cls
-  
 
-get_field = _FIELD_REGISTRY.get
+
+model_field = partial(_register, _SA_FIELD_REGISTRY)
+form_field = partial(_register, _FF_FIELD_REGISTRY)
+
+get_field = _SA_FIELD_REGISTRY.get
+get_formfield = _FF_FIELD_REGISTRY.get
+

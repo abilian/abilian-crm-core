@@ -3,21 +3,17 @@
 """
 from __future__ import absolute_import
 
-import sqlalchemy as sa
-
 import wtforms.fields
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask_wtf.file import FileField
 from flask_wtf.html5 import TelField, IntegerField
 
-from abilian.core.sqlalchemy import JSON, JSONList, JSONDict
 from abilian.web.forms.validators import email, url, required, optional
 from abilian.web.forms.filters import strip, uppercase, lowercase
 import abilian.web.forms.fields as awbff
 from abilian.web.forms import widgets as abilian_widgets
 
 __all__ = (
-    'COLUMN_TYPES',
     'FORM_FIELDS',
     'FORM_FILTERS',
     'LIST_GENERATORS',
@@ -31,21 +27,6 @@ __all__ = (
 #
 MAX_IDENTIFIER_LENGTH = 63
 
-COLUMN_TYPES = (
-    sa.types.Integer,
-    sa.types.UnicodeText,
-    sa.types.LargeBinary,
-    sa.types.Date,
-    sa.types.Text,
-    sa.types.Float,
-    sa.types.Boolean,
-    JSON,
-    JSONList,
-    JSONDict,
-)
-COLUMN_TYPES = {t.__name__: t for t in COLUMN_TYPES}
-COLUMN_TYPES['PhoneNumber'] = sa.types.UnicodeText
-COLUMN_TYPES['EmailAddress'] = sa.types.UnicodeText
 
 FORM_FIELDS = (
     wtforms.fields.SelectField,

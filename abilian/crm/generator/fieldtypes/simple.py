@@ -4,20 +4,24 @@
 from __future__ import absolute_import
 
 import hashlib
+
 import sqlalchemy as sa
+import wtforms.fields
 from abilian.core.sqlalchemy import JSON, JSONList, JSONDict
+import abilian.web.forms.fields as awbff
 
 from ..definitions import MAX_IDENTIFIER_LENGTH
 from .base import Field
-from .registry import register_field
+from .registry import model_field
 
 
-@register_field
+@model_field
 class Integer(Field):
   sa_type = sa.types.Integer
+  default_ff_type = 'IntegerField'
 
 
-@register_field
+@model_field
 class PositiveInteger(Integer):
 
   def get_table_args(self, *args, **kwargs):
@@ -34,62 +38,70 @@ class PositiveInteger(Integer):
                                     name=name)
 
 
-@register_field
+@model_field
 class UnicodeText(Field):
   sa_type = sa.types.UnicodeText
 
 
-@register_field
+@model_field
 class LargeBinary(Field):
   sa_type = sa.types.LargeBinary
 
 
-@register_field
+@model_field
 class Date(Field):
   sa_type = sa.types.Date
+  default_ff_type = 'DateField'
 
 
-@register_field
+@model_field
 class Text(Field):
   sa_type = sa.types.Text
 
 
-@register_field
+@model_field
 class Float(Field):
   sa_type = sa.types.Float
+  default_ff_type = 'DecimalField'
 
 
-@register_field
+@model_field
 class Boolean(Field):
   sa_type = sa.types.Boolean
+  default_ff_type = 'BooleanField'
 
 
-@register_field
+@model_field
 class JSON(Field):
   sa_type = JSON
 
 
-@register_field
+@model_field
 class JSONList(Field):
   sa_type = JSONList
 
 
-@register_field
+@model_field
 class JSONDict(Field):
   sa_type = JSONDict
 
 
-@register_field
+@model_field
 class PhoneNumber(UnicodeText):
   pass
 
 
-@register_field
+@model_field
 class EmailAddress(UnicodeText):
-  pass
+  default_ff_type = 'EmailField'
 
 
-@register_field
+@model_field
+class URL(UnicodeText):
+  default_ff_type = 'URLField'
+
+
+@model_field
 class Entity(Field):
   """
   Currently do nothing: must be implemented by subclassing generated model
