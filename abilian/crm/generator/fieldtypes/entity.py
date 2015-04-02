@@ -31,23 +31,32 @@ class EntityField(Field):
 
     if not self.multiple:
       # column
-      def get_column_attr(func_name, col_name, target_col):
+      def get_column_attr(func_name, col_name, target_cls_name, target_col):
         def gen_column(cls):
-          return sa.schema.Column(col_name,
-                                  sa.types.Integer(),
-                                  sa.ForeignKey(target_col),
-          )
+          # always use ALTER: when 2 entities reference each other it raises
+          # CircularDependencyError:
+          fk_kw = dict(use_alter=True,
+                       name='{}_{}_fkey'.format(cls.__name__.lower(), col_name),)
+          
+          fk_kw['ondelete'] = 'SET NULL'
+          fk = sa.ForeignKey(target_col, **fk_kw)
+          return sa.schema.Column(col_name, sa.types.Integer(), fk)
+          
         gen_column.func_name = func_name
         return gen_column
 
-      attr = get_column_attr(col_name, col_name, target_col)
+      attr = get_column_attr(col_name, col_name, self.target_cls, target_col)
       yield col_name, sa.ext.declarative.declared_attr(attr)
 
       # relationship
       def get_rel_attr(func_name, target_cls, col_name):
         def gen_relationship(cls):
-          primaryjoin = '{}.{} == {}.id'.format(cls.__name__, col_name,
-                                                target_cls)         
+          local = cls.__name__ + '.' + col_name
+          foreign = target_cls + '.id'
+          if cls.__name__ == target_cls:
+            local = 'remote({})'.format(local)
+            foreign = 'foreign({})'.format(foreign)
+          primaryjoin = '{} == {}'.format(local, foreign)
           return sa.orm.relationship(
               target_cls,
               uselist=False,
@@ -60,17 +69,17 @@ class EntityField(Field):
       attr = get_rel_attr(self.name, self.target_cls, col_name)
       yield self.name, sa.ext.declarative.declared_attr(attr)
       
-  def get_table_args(self, *args, **kwargs):
-    if not self.multiple:
-      local_col = self.name + '_id'
-      target_col = self.target_cls.lower() + '.id' # use tablename + '.id'      
-      fk = sa.schema.ForeignKeyConstraint(
-        [local_col], [target_col],
-        'fk_{}_{}'.format(self.name, self.target_cls.lower()),
-        ondelete='SET NULL',
-        use_alter=True,
-      )
-      yield fk
+  # def get_table_args(self, *args, **kwargs):
+  #   if not self.multiple:
+  #     local_col = self.name + '_id'
+  #     target_col = self.target_cls.lower() + '.id' # use tablename + '.id'      
+  #     fk = sa.schema.ForeignKeyConstraint(
+  #       [local_col], [target_col],
+  #       'fk_{}_{}'.format(self.name, self.target_cls.lower()),
+  #       ondelete='SET NULL',
+  #       use_alter=True,
+  #     )
+  #     yield fk
 
       
 @form_field
