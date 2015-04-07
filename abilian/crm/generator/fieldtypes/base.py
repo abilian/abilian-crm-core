@@ -36,9 +36,10 @@ class Field(Registrable):
   #: default form field type
   default_ff_type = 'TextField'
 
-  def __init__(self, data):
+  def __init__(self, model, data):
     """
     """
+    self.model = model
     self.data = data
     self.name = data['name']
     assert_valid_identifier(self.name)
@@ -48,7 +49,7 @@ class Field(Registrable):
     self.indexed = data.get('indexed', False)
     self.multiple = data.get('multiple', False)
     ff_type = self.get_ff_type()
-    data['formfield'] = ff_type(data)
+    data['formfield'] = ff_type(model=model, data=data)
 
   def get_ff_type(self, *args, **kwargs):
     ff_type = self.default_ff_type
@@ -105,7 +106,8 @@ class FormField(Registrable):
   #: form field type
   ff_type = wtforms.fields.TextField
 
-  def __init__(self, data):
+  def __init__(self, model, data):
+    self.model = model
     self.data = data
     self.name = data['name']
     assert_valid_identifier(self.name)

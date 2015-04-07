@@ -96,7 +96,8 @@ class CodeGenerator(object):
 
   def gen_model(self, module):
     table_args = []
-    type_name = self.data['name'] + 'Base'
+    model_name = self.data['name']
+    type_name = model_name + 'Base'
     type_bases = (object,)
     attributes = OrderedDict()
 
@@ -113,7 +114,7 @@ class CodeGenerator(object):
       if FieldCls is None:
         raise ValueError('Unknown type: {}'.format(repr(type_)))
 
-      field = FieldCls(d)
+      field = FieldCls(model=model_name, data=d)
       for name, attr in field.get_model_attributes():
         assert name not in attributes
         attributes[name] = attr

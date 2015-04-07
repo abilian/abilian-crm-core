@@ -45,8 +45,8 @@ class IntegerField(FormField):
 @form_field
 class EmailField(TextField):
 
-  def __init__(self, data, *args, **kwargs):
-    super(EmailField, self).__init__(data)
+  def __init__(self, model, data, *args, **kwargs):
+    super(EmailField, self).__init__(model, data)
     if 'view_widget' not in data:
       data['view_widget'] = aw_widgets.EmailWidget()
 
@@ -54,8 +54,8 @@ class EmailField(TextField):
 @form_field
 class URLField(TextField):
 
-  def __init__(self, data, *args, **kwargs):
-    super(URLField, self).__init__(data)
+  def __init__(self, model, data, *args, **kwargs):
+    super(URLField, self).__init__(model, data)
     if 'view_widget' not in data:
       data['view_widget'] = aw_widgets.URLWidget()
 

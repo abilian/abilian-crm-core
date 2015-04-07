@@ -16,8 +16,8 @@ class Vocabulary(Field):
   sa_type = sa.types.Integer
   default_ff_type = 'VocabularyFormField'
 
-  def __init__(self, data, *args, **kwargs):
-    super(Vocabulary, self).__init__(data, *args, **kwargs)
+  def __init__(self, model, data, *args, **kwargs):
+    super(Vocabulary, self).__init__(model, data, *args, **kwargs)
     self.voc_cls = data['vocabulary']['cls']
 
   def get_model_attributes(self, *args, **kwargs):

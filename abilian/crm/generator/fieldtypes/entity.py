@@ -5,6 +5,9 @@ from __future__ import absolute_import
 
 import sqlalchemy as sa
 from abilian.core.entities import Entity as Entity
+import abilian.web.forms.fields as awbff
+import abilian.web.forms.widgets as aw_widgets
+from abilian.web.action import Endpoint
 
 from .registry import model_field, form_field
 from .base import Field, FormField
@@ -15,8 +18,8 @@ class EntityField(Field):
   __fieldname__ = 'Entity'
   default_ff_type = 'EntityFormField'
 
-  def __init__(self, data, *args, **kwargs):
-    super(EntityField, self).__init__(data, *args, **kwargs)
+  def __init__(self, model, data, *args, **kwargs):
+    super(EntityField, self).__init__(model, data, *args, **kwargs)
     self.target_cls = str(data.get('target', 'Entity').strip()) or 'Entity'
 
     if self.multiple:
@@ -28,7 +31,8 @@ class EntityField(Field):
   def get_model_attributes(self, *args, **kwargs):
     target_col = self.target_cls.lower() + '.id' # use tablename + '.id'
     col_name = self.name + '_id'
-
+    type_args = self.data.get('type_args', {})
+    
     if not self.multiple:
       # column
       def get_column_attr(func_name, col_name, target_cls_name, target_col):
@@ -51,17 +55,24 @@ class EntityField(Field):
       # relationship
       def get_rel_attr(func_name, target_cls, col_name):
         def gen_relationship(cls):
+          kw = dict(uselist=False)
           local = cls.__name__ + '.' + col_name
           foreign = target_cls + '.id'
           if cls.__name__ == target_cls:
             local = 'remote({})'.format(local)
             foreign = 'foreign({})'.format(foreign)
-          primaryjoin = '{} == {}'.format(local, foreign)
-          return sa.orm.relationship(
-              target_cls,
-              uselist=False,
-              primaryjoin=primaryjoin,
-          )
+          kw['primaryjoin'] = '{} == {}'.format(local, foreign)
+
+          if 'backref' in type_args:
+            backref_name = type_args['backref']
+            backref_kw = {}
+            if isinstance(backref_name, dict):
+              backref_kw.update(backref_name)
+              backref_name = backref_kw.pop('name')
+
+            kw['backref'] = sa.orm.backref(backref_name, **backref_kw)
+          
+          return sa.orm.relationship(target_cls, **kw)
 
         gen_relationship.func_name = func_name
         return gen_relationship
@@ -69,19 +80,21 @@ class EntityField(Field):
       attr = get_rel_attr(self.name, self.target_cls, col_name)
       yield self.name, sa.ext.declarative.declared_attr(attr)
       
-  # def get_table_args(self, *args, **kwargs):
-  #   if not self.multiple:
-  #     local_col = self.name + '_id'
-  #     target_col = self.target_cls.lower() + '.id' # use tablename + '.id'      
-  #     fk = sa.schema.ForeignKeyConstraint(
-  #       [local_col], [target_col],
-  #       'fk_{}_{}'.format(self.name, self.target_cls.lower()),
-  #       ondelete='SET NULL',
-  #       use_alter=True,
-  #     )
-  #     yield fk
-
       
 @form_field
 class EntityFormField(FormField):
-  pass
+  ff_type = awbff.JsonSelect2Field
+
+  def __init__(self, model, data, *args, **kwargs):
+    super(EntityFormField, self).__init__(model, data, *args, **kwargs)
+    self.module_endpoint = data.get('endpoint', self.name.lower())
+
+  def get_extra_args(self, *args, **kwargs):
+    extra_args = super(EntityFormField, self).get_extra_args(*args, **kwargs)
+    extra_args['model_class'] = self.data['target']
+    extra_args['ajax_source'] = Endpoint(self.model.lower() + '.json_search')
+    return extra_args
+    
+  def setup_widgets(self, extra_args):
+    extra_args['view_widget'] = aw_widgets.EntityWidget()
+    extra_args['widget'] = aw_widgets.Select2Ajax()
