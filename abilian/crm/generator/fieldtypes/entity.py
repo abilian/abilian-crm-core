@@ -91,8 +91,8 @@ class EntityFormField(FormField):
 
   def get_extra_args(self, *args, **kwargs):
     extra_args = super(EntityFormField, self).get_extra_args(*args, **kwargs)
-    extra_args['model_class'] = self.data['target']
-    extra_args['ajax_source'] = Endpoint(self.model.lower() + '.json_search')
+    target = extra_args['model_class'] = self.data['target']
+    extra_args['ajax_source'] = Endpoint(target.lower() + '.json_search')
     return extra_args
     
   def setup_widgets(self, extra_args):
