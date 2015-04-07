@@ -57,11 +57,11 @@ class EntityField(Field):
         def gen_relationship(cls):
           kw = dict(uselist=False)
           local = cls.__name__ + '.' + col_name
-          foreign = target_cls + '.id'
+          remote = target_cls + '.id'
           if cls.__name__ == target_cls:
-            local = 'remote({})'.format(local)
-            foreign = 'foreign({})'.format(foreign)
-          kw['primaryjoin'] = '{} == {}'.format(local, foreign)
+            local = 'foreign({})'.format(local)
+            remote = 'remote({})'.format(remote)
+          kw['primaryjoin'] = '{} == {}'.format(local, remote)
 
           if 'backref' in type_args:
             backref_name = type_args['backref']
