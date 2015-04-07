@@ -8,10 +8,12 @@ from collections import OrderedDict
 import yaml
 import re
 
+from abilian.core.entities import Entity
 from abilian.core.util import slugify
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
 
 from .fieldtypes import get_field
+from . import autoname
 
 logger = logging.getLogger(__name__)
 
@@ -98,8 +100,10 @@ class CodeGenerator(object):
     table_args = []
     model_name = self.data['name']
     type_name = model_name + 'Base'
-    type_bases = (object,)
+    type_bases = (Entity,)
     attributes = OrderedDict()
+    attributes['__module__'] = module.__name__
+    attributes['__tablename__'] = model_name.lower()
 
     for d in self.data['fields']:
       if 'ignore' in d:
@@ -126,9 +130,13 @@ class CodeGenerator(object):
     if table_args:
       attributes['__table_args__'] = tuple(table_args)
 
-    attributes['__module__'] = module.__name__
     cls = type(type_name, type_bases, attributes)
     setattr(module, type_name, cls)
+
+    auto_name = (self.data.get('auto_name') or u'').strip()
+    if auto_name:
+      autoname.setup(cls, auto_name)
+
     return cls
 
   def gen_form(self, module):
