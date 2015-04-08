@@ -73,9 +73,8 @@ class Vocabulary(Field):
         return gen_m2m_relationship
 
 
-      relation_secondary_tbl_name = \
-          '{}_{}'.format(self.name.lower(),
-                         self.data['vocabulary']['generated_name'].lower())
+      relation_secondary_tbl_name =
+          '{}_{}'.format(self.model.lower(), self.name.lower())
 
       rel_attr = get_m2m_attr(relation_name, self.voc_cls,
                               relation_secondary_tbl_name)
