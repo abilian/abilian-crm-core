@@ -133,7 +133,7 @@ class CodeGenerator(object):
     cls = type(type_name, type_bases, attributes)
     setattr(module, type_name, cls)
 
-    auto_name = (self.data.get('auto_name') or u'').strip()
+    auto_name = unicode(self.data.get('auto_name') or u'').strip()
     if auto_name:
       autoname.setup(cls, auto_name)
 
