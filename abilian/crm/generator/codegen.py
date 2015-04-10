@@ -8,6 +8,7 @@ from collections import OrderedDict
 import yaml
 import re
 
+import sqlalchemy as sa
 from abilian.core.entities import Entity
 from abilian.core.util import slugify
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
@@ -100,7 +101,8 @@ class CodeGenerator(object):
     table_args = []
     model_name = self.data['name']
     type_name = model_name + 'Base'
-    type_bases = (Entity,)
+    type_base = Entity
+    type_base_attrs = sa.inspect(type_base).attrs
     attributes = OrderedDict()
     attributes['__module__'] = module.__name__
     attributes['__tablename__'] = model_name.lower()
@@ -119,6 +121,17 @@ class CodeGenerator(object):
         raise ValueError('Unknown type: {}'.format(repr(type_)))
 
       field = FieldCls(model=model_name, data=d)
+
+      if d['name'] in type_base_attrs:
+        # existing field (i.e, Entity.name), don't override column else it will
+        # be duplicated in joined table, and missing some setup found in
+        # overriden column (like indexability)
+        #
+        # since field has been setup, it has created 'formfield' instance,
+        # required for form generation
+        continue
+
+
       for name, attr in field.get_model_attributes():
         assert name not in attributes
         attributes[name] = attr
@@ -130,7 +143,7 @@ class CodeGenerator(object):
     if table_args:
       attributes['__table_args__'] = tuple(table_args)
 
-    cls = type(type_name, type_bases, attributes)
+    cls = type(type_name, (type_base,), attributes)
     setattr(module, type_name, cls)
 
     auto_name = unicode(self.data.get('auto_name') or u'').strip()
