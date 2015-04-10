@@ -26,6 +26,10 @@ class BooleanField(FormField):
     # default implementation may add 'required'
     return ()
   
+  def setup_widgets(self, extra_args):
+    if 'widget' not in extra_args:
+      extra_args['widget'] = aw_widgets.BooleanWidget()
+
 
 @form_field
 class DateField(FormField):
