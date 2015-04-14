@@ -83,18 +83,18 @@ class CodeGenerator(object):
 
   def init_vocabularies(self, module):
     for generated_name, definition in self.vocabularies.items():
-        name = definition['name'].encode('ascii').strip()
-        group = definition.get('group', u'').strip() or None
-        label = definition['label'].strip()
-        voc_cls = get_vocabulary(name, group=group)
+      name = definition['name'].encode('ascii').strip()
+      group = definition.get('group', u'').strip() or None
+      label = definition['label'].strip()
+      voc_cls = get_vocabulary(name, group=group)
 
-        if voc_cls is None:
-          voc_cls = Vocabulary(name=name, group=group, label=label)
+      if voc_cls is None:
+        voc_cls = Vocabulary(name=name, group=group, label=label)
 
-        definition['cls'] = voc_cls
+      definition['cls'] = voc_cls
 
-        if not hasattr(module, generated_name):
-          setattr(module, generated_name, voc_cls)
+      if not hasattr(module, generated_name):
+        setattr(module, generated_name, voc_cls)
 
   def gen_model(self, module):
     table_args = []
