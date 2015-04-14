@@ -44,8 +44,14 @@ class CodeGenerator(object):
           group = slugify(group, u'_')
           name += group + u'__'
         name += vocabulary['name']
-        vocabulary['generated_name'] = name.encode('ascii')
-        self.vocabularies[name] = vocabulary
+
+        if name in self.vocabularies:
+          # already defined in another field, maybe on another model: share
+          # existing definition so that generated class is also accessible
+          d['vocabulary'] = self.vocabularies[name]
+        else:
+          vocabulary['generated_name'] = name.encode('ascii')
+          self.vocabularies[name] = vocabulary
         continue
 
       # slugify list items
