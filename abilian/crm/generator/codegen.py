@@ -83,9 +83,6 @@ class CodeGenerator(object):
 
   def init_vocabularies(self, module):
     for generated_name, definition in self.vocabularies.items():
-        if hasattr(module, generated_name):
-          continue
-
         name = definition['name'].encode('ascii').strip()
         group = definition.get('group', u'').strip() or None
         label = definition['label'].strip()
@@ -95,7 +92,9 @@ class CodeGenerator(object):
           voc_cls = Vocabulary(name=name, group=group, label=label)
 
         definition['cls'] = voc_cls
-        setattr(module, generated_name, voc_cls)
+
+        if not hasattr(module, generated_name):
+          setattr(module, generated_name, voc_cls)
 
   def gen_model(self, module):
     table_args = []
