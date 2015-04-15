@@ -4,14 +4,14 @@
 from __future__ import absolute_import
 
 import sqlalchemy as sa
-from abilian.core.entities import Entity as Entity
+
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets
 from abilian.web.action import Endpoint
 
 from .registry import model_field, form_field
 from .base import Field, FormField
-  
+
 
 @model_field
 class EntityField(Field):
@@ -21,7 +21,7 @@ class EntityField(Field):
   def __init__(self, model, data, *args, **kwargs):
     super(EntityField, self).__init__(model, data, *args, **kwargs)
     self.target_cls = str(data.get('target', 'Entity').strip()) or 'Entity'
-  
+
   def get_model_attributes(self, *args, **kwargs):
     target_col = self.target_cls.lower() + '.id' # use tablename + '.id'
     col_name = self.name + '_id'
@@ -30,10 +30,10 @@ class EntityField(Field):
     res_iter = (self._m2m_relationship(target_col, col_name, type_args)
                 if self.multiple
                 else self._single_relationship(target_col, col_name, type_args))
-    
+
     for result in res_iter:
       yield result
-      
+
   def _single_relationship(self, target_col, col_name, type_args):
     # column
     def get_column_attr(func_name, col_name, target_cls_name, target_col):
@@ -80,7 +80,7 @@ class EntityField(Field):
 
     attr = get_rel_attr(self.name, self.target_cls, col_name)
     yield self.name, sa.ext.declarative.declared_attr(attr)
-    
+
   def _m2m_relationship(self, target_col, col_name, type_args):
     def get_m2m_attr(func_name, target_cls, secondary_tbl_name=None):
       def gen_m2m_relationship(cls):
@@ -107,8 +107,8 @@ class EntityField(Field):
 
     attr = get_m2m_attr(self.name, self.target_cls)
     yield self.name, sa.ext.declarative.declared_attr(attr)
-  
-    
+
+
 @form_field
 class EntityFormField(FormField):
   ff_type = awbff.JsonSelect2Field
@@ -121,14 +121,14 @@ class EntityFormField(FormField):
     return (awbff.JsonSelect2MultipleField
             if self.multiple
             else awbff.JsonSelect2Field)
-    
+
   def get_extra_args(self, *args, **kwargs):
     extra_args = super(EntityFormField, self).get_extra_args(*args, **kwargs)
     target = extra_args['model_class'] = self.data['target']
     extra_args['ajax_source'] = Endpoint(target.lower() + '.json_search')
     extra_args['multiple'] = self.multiple
     return extra_args
-    
+
   def setup_widgets(self, extra_args):
     extra_args['view_widget'] = aw_widgets.EntityWidget()
     extra_args['widget'] = aw_widgets.Select2Ajax(multiple=self.multiple)
