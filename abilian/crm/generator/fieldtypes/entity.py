@@ -82,25 +82,39 @@ class EntityField(Field):
     yield self.name, sa.ext.declarative.declared_attr(attr)
 
   def _m2m_relationship(self, target_col, col_name, type_args):
+    model_name = self.model
     def get_m2m_attr(func_name, target_cls, secondary_tbl_name=None):
       def gen_m2m_relationship(cls):
+        is_self_referential = (model_name == target_cls)
         src_name = cls.__tablename__
-        target_name = target_cls.lower()
+        src_pk = src_name + '.id'
+        src_col = src_name + '.c.id'
+        target_name = func_name.lower()
+        local_src_col = model_name.lower() + '_id'
+        local_target_col = target_name + '_id'
         tbl_name = secondary_tbl_name
+
         if tbl_name is None:
           tbl_name = (src_name + '_' + func_name)
-        local_src_col = cls.__name__.lower() + '_id'
-        local_target_col = target_name + '_id'
+
         secondary_table = sa.Table(
             tbl_name,
             cls.metadata,
             sa.Column(local_src_col,
-                      sa.ForeignKey(src_name + '.id')),
+                      sa.ForeignKey(src_pk)),
             sa.Column(local_target_col,
                       sa.ForeignKey(target_col)),
             sa.schema.UniqueConstraint(local_src_col, local_target_col),
         )
-        return sa.orm.relationship(target_cls, secondary=secondary_table)
+
+        rel_kw = dict(secondary=secondary_table)
+        if is_self_referential:
+          tmpl = '{} == {}.c.{}'
+          rel_kw['primaryjoin'] = tmpl.format(src_col, tbl_name, local_src_col)
+          rel_kw['secondaryjoin'] = tmpl.format(target_cls + '.id',
+                                                tbl_name, local_target_col)
+
+        return sa.orm.relationship(target_cls, **rel_kw)
 
       gen_m2m_relationship.func_name = func_name
       return gen_m2m_relationship
