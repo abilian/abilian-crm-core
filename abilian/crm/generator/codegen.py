@@ -125,7 +125,7 @@ class CodeGenerator(object):
       if FieldCls is None:
         raise ValueError('Unknown type: {}'.format(repr(type_)))
 
-      field = FieldCls(model=model_name, data=d)
+      field = FieldCls(model=model_name, data=d, generator=self)
 
       if d['name'] in type_base_attrs:
         # existing field (i.e, Entity.name), don't override column else it will

@@ -25,7 +25,7 @@ class BooleanField(FormField):
   def get_validators(self, *args, **kwargs):
     # default implementation may add 'required'
     return ()
-  
+
   def setup_widgets(self, extra_args):
     if 'widget' not in extra_args:
       extra_args['widget'] = aw_widgets.BooleanWidget()
@@ -50,7 +50,7 @@ class IntegerField(FormField):
 class EmailField(TextField):
 
   def __init__(self, model, data, *args, **kwargs):
-    super(EmailField, self).__init__(model, data)
+    super(EmailField, self).__init__(model, data, *args, **kwargs)
     if 'view_widget' not in data:
       data['view_widget'] = aw_widgets.EmailWidget()
 
@@ -59,8 +59,6 @@ class EmailField(TextField):
 class URLField(TextField):
 
   def __init__(self, model, data, *args, **kwargs):
-    super(URLField, self).__init__(model, data)
+    super(URLField, self).__init__(model, data, *args, **kwargs)
     if 'view_widget' not in data:
       data['view_widget'] = aw_widgets.URLWidget()
-
-
