@@ -28,13 +28,21 @@ def assert_ascii(s):
 
 class CodeGenerator(object):
 
-  def __init__(self, yaml_file):
+  def __init__(self, yaml_file=None, data=None):
     self.vocabularies = {}
-    self.load_file(yaml_file)
+    if data is not None:
+      self.data = data
+    else:
+      self.load_file(yaml_file)
+    self.prepare_data()
 
   def load_file(self, yaml_file):
     self.data = yaml.load(yaml_file)
 
+  def prepare_data(self):
+    """
+    Massage data before models creations
+    """
     for d in self.data['fields']:
       vocabulary = d.get('vocabulary', None)
       if vocabulary:
