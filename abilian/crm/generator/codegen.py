@@ -30,6 +30,7 @@ class CodeGenerator(object):
 
   def __init__(self, yaml_file=None, data=None):
     self.vocabularies = {}
+    self._model_finalizers = []
     if data is not None:
       self.data = data
     else:
@@ -38,6 +39,9 @@ class CodeGenerator(object):
 
   def load_file(self, yaml_file):
     self.data = yaml.load(yaml_file)
+
+  def add_model_finalizer(self, finalizer):
+    self._model_finalizers.append(finalizer)
 
   def prepare_data(self):
     """
@@ -152,14 +156,16 @@ class CodeGenerator(object):
       for arg in field.get_table_args():
         table_args.append(arg)
 
+    for finalize in self._model_finalizers:
+      finalize(attributes, table_args, module)
 
     if table_args:
       attributes['__table_args__'] = tuple(table_args)
 
     cls = type(type_name, (type_base,), attributes)
     setattr(module, type_name, cls)
-
     auto_name = unicode(self.data.get('auto_name') or u'').strip()
+
     if auto_name:
       autoname.setup(cls, auto_name)
 
