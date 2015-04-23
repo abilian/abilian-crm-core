@@ -115,14 +115,18 @@ class CodeGenerator(object):
         setattr(module, generated_name, voc_cls)
 
   def gen_model(self, module):
-    table_args = []
+    table_args = self.data.get('table_args', [])
     model_name = self.data['name']
-    type_name = model_name + 'Base'
-    type_base = Entity
-    type_base_attrs = sa.inspect(type_base).attrs
-    attributes = OrderedDict()
+    type_name = self.data.get('type_name', model_name + 'Base')
+    type_base = self.data.get('type_base', Entity)
+    try:
+      type_base_attrs = sa.inspect(type_base).attrs
+    except sa.exc.NoInspectionAvailable:
+      type_base_attrs = frozenset()
+
+    attributes = OrderedDict(self.data.get('attributes', {}))
     attributes['__module__'] = module.__name__
-    attributes['__tablename__'] = model_name.lower()
+    attributes['__tablename__'] = self.data.get('tablename', model_name.lower())
 
     for d in self.data['fields']:
       if 'ignore' in d:
