@@ -250,17 +250,13 @@ class YearlyAttribute(object):
 
   def __init__(self, attrs):
     self._attrs = frozenset(attrs)
-    self._collection_proxy = None
 
   def __get__(self, instance, owner):
     if instance is None:
       # attribute accessed on class ('owner')
       return self
 
-    if self._collection_proxy is None:
-      self._collection_proxy = YearlyCollectionProxy(instance.__yearly_data__,
-                                                     self._attrs)
-    return self._collection_proxy
+    return YearlyCollectionProxy(instance.__yearly_data__, self._attrs)
 
   def __set__(self, instance, value):
     yearly_data = instance.__yearly_data__
