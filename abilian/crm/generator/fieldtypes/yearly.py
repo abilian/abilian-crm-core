@@ -139,8 +139,8 @@ class YearlyAttrProxy(object):
   __slots__ = ('yearly_data', 'attrs')
 
   def __init__(self, yearly_data, attrs):
-    self.yearly_data = yearly_data
     self.attrs = frozenset(attrs)
+    self.yearly_data = yearly_data
 
   def clear(self):
     for attr in self.attrs:
@@ -160,13 +160,13 @@ class YearlyAttrProxy(object):
                       ''.format(type(value).__name__))
 
   def __getattr__(self, name):
-    if name != 'attrs' and name in self.attrs:
+    if name != 'attrs' and (name == 'year' or name in self.attrs):
       return self.yearly_data.__getattribute__(name)
 
     raise AttributeError
 
   def __setattr__(self, name, value):
-    if name in getattr(self, 'attrs', ()):
+    if name != 'attrs' and (name == 'year' or name in self.attrs):
       return self.yearly_data.__setattr__(name, value)
 
     return super(YearlyAttrProxy, self).__setattr__(name, value)
