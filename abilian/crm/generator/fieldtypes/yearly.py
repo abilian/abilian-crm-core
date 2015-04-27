@@ -323,6 +323,18 @@ class Yearly(Field):
                          sa.ForeignKey(self.model.lower() + '.id'))
       attributes = dict()
       attributes[related_attr_id] = fk_col
+      attributes['_' + model_lower] = sa.orm.relationship(
+        model,
+        primaryjoin=u'{tablename}.c.{related_attr_id} == {remote}.c.id'.format(
+            tablename=tablename,
+            related_attr_id=related_attr_id,
+            remote=self.model.lower(),
+        ),
+      )
+      attributes['__auditable_entity__'] = ('_' + model_lower,
+                                            '__yearly_data__',
+                                            ('year',))
+
       generator.data['yearly'] = dict(
           name=type_name,
           type_name=type_name,
