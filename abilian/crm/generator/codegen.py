@@ -43,6 +43,9 @@ class CodeGenerator(object):
   def add_model_finalizer(self, finalizer):
     self._model_finalizers.append(finalizer)
 
+  def set_current_module(self, module):
+    self.module = module
+
   def prepare_data(self):
     """
     Massage data before models creations
@@ -100,6 +103,7 @@ class CodeGenerator(object):
       d['from_list'] = key_val_list
 
   def init_vocabularies(self, module):
+    self.set_current_module(module)
     for generated_name, definition in self.vocabularies.items():
       name = definition['name'].encode('ascii').strip()
       group = definition.get('group', u'').strip() or None
@@ -115,6 +119,7 @@ class CodeGenerator(object):
         setattr(module, generated_name, voc_cls)
 
   def gen_model(self, module):
+    self.set_current_module(module)
     table_args = self.data.get('table_args', [])
     model_name = self.data['name']
     type_name = self.data.get('type_name', model_name + 'Base')
@@ -176,6 +181,7 @@ class CodeGenerator(object):
     return cls
 
   def gen_form(self, module):
+    self.set_current_module(module)
     type_name = self.data['name'] + 'EditFormBase'
     type_bases = (object,)
     attributes = OrderedDict()
