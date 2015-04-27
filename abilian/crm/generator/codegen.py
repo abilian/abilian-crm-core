@@ -195,7 +195,7 @@ class CodeGenerator(object):
         continue
 
       if 'ignore' not in d:
-        group_name = d['group']
+        group_name = d.get('group', 'default group')
         groups.setdefault(group_name, []).append(d['name'])
         if group_name not in group_names:
           group_names.append(group_name)
