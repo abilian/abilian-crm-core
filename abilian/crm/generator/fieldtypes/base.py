@@ -118,6 +118,11 @@ class FormField(Registrable):
     self.required = data.get('required', False)
     self.multiple = data.get('multiple', False)
 
+  def get_form_attributes(self):
+    field_type = self.get_type()
+    extra_args = self.get_extra_args()
+    yield self.name, field_type(label=self.label, **extra_args)
+
   def get_type(self, *args, **kwargs):
     field_type = self.ff_type
 

@@ -204,9 +204,8 @@ class CodeGenerator(object):
         continue
 
       field = d['formfield']
-      field_type = field.get_type()
-      extra_args = field.get_extra_args()
-      attributes[field.name] = field_type(field.label, **extra_args)
+      for name, attr in field.get_form_attributes():
+        attributes[name] = attr
 
     attributes['_groups'] = [(name, groups[name]) for name in group_names]
     attributes['__module__'] = module.__name__
