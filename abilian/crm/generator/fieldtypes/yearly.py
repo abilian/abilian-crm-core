@@ -183,6 +183,12 @@ class YearlyAttrProxy(object):
       id(self))
 
 
+# proxy sa.inspect()
+sa.inspection._inspects(YearlyAttrProxy)(
+  lambda target: sa.inspect(target.yearly_data)
+)
+
+
 class YearlyCollectionProxy(dict):
   """
   Proxy the collection with :class:`YearlyAttrProxy` instances as values.
