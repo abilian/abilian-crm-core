@@ -24,12 +24,17 @@ from functools import total_ordering
 
 import sqlalchemy as sa
 from sqlalchemy.orm.collections import collection
+from wtforms.fields import FormField, IntegerField, FieldList
+from wtforms.utils import unset_value as unset_value
+
 from abilian.core.extensions import db
 from abilian.core.models import SYSTEM
+from abilian.web.forms import Form
+import abilian.web.forms.fields as awbff
+import abilian.web.forms.widgets as aw_widgets
 
-from .registry import model_field
-from .base import Field
-
+from .registry import model_field, form_field
+from .base import Field, FormField as FormFieldGeneratorBase
 _MARK = object()
 
 @total_ordering
@@ -301,8 +306,11 @@ class YearlyAttribute(object):
 @model_field
 class Yearly(Field):
 
+  default_ff_type = 'YearlyFormField'
+
   def __init__(self, model, data, generator, *args, **kwargs):
     super(Yearly, self).__init__(model, data, generator, *args, **kwargs)
+    self.data['type_args']['name'] = self.name
     generator.add_model_finalizer(self.finalize)
 
     if 'yearly' not in generator.data:
@@ -390,3 +398,54 @@ class Yearly(Field):
 
     attributes['__eq__'] = _eq
     attributes['__lt__'] = _lt
+
+
+class YearlyFieldList(awbff.ModelFieldList):
+
+  def process(self, formdata, data=unset_value):
+    if data is not unset_value and isinstance(data, dict):
+      data = data.values()
+    return super(YearlyFieldList, self).process(formdata, data)
+
+  def _add_entry(self, formdata=None, data=unset_value, index=None):
+    return FieldList._add_entry(self, formdata=formdata, data=data, index=index)
+
+  def populate_obj(self, obj, name):
+    state = obj._sa_instance_state
+
+    if not state.identity or self.population_strategy == 'replace':
+      return super(YearlyFieldList, self).populate_obj(obj, name)
+
+    entities = {}
+    for entry in self.entries:
+      data = entry.data
+      year = data['year']
+      entities[year] = data
+
+    setattr(obj, name, entities)
+
+
+@form_field
+class YearlyFormField(FormFieldGeneratorBase):
+  ff_type = YearlyFieldList
+
+  def __init__(self, *args, **kwargs):
+    super(YearlyFormField, self).__init__(*args, **kwargs)
+
+  def get_extra_args(self, *args, **kwargs):
+    from ..codegen import CodeGenerator
+    generator = CodeGenerator(data=self.data['type_args'])
+    year_field = IntegerField()
+    FormBase = generator.gen_form(self.generator.module)
+    ModelField = type(self.name + 'Form',
+                      (FormBase, Form,),
+                      {'year': year_field,})
+
+    extra_args = super(YearlyFormField, self).get_extra_args(*args, **kwargs)
+    extra_args['unbound_field'] = FormField(ModelField, default=dict)
+    extra_args['population_strategy'] = 'update'
+    return extra_args
+
+  def setup_widgets(self, extra_args):
+      extra_args['widget'] = aw_widgets.TabularFieldListWidget()
+      extra_args['view_widget'] = aw_widgets.ModelListWidget()
