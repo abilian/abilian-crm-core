@@ -444,6 +444,7 @@ class YearlyFormField(FormFieldGeneratorBase):
     extra_args = super(YearlyFormField, self).get_extra_args(*args, **kwargs)
     extra_args['unbound_field'] = FormField(ModelField, default=dict)
     extra_args['population_strategy'] = 'update'
+    extra_args['min_entries'] = 1
     return extra_args
 
   def setup_widgets(self, extra_args):
