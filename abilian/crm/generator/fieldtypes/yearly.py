@@ -27,6 +27,7 @@ from sqlalchemy.orm.collections import collection
 from wtforms.fields import FormField, IntegerField, FieldList
 from wtforms.utils import unset_value as unset_value
 
+from abilian.i18n import _l
 from abilian.core.extensions import db
 from abilian.core.models import SYSTEM
 from abilian.web.forms import Form
@@ -435,7 +436,7 @@ class YearlyFormField(FormFieldGeneratorBase):
   def get_extra_args(self, *args, **kwargs):
     from ..codegen import CodeGenerator
     generator = CodeGenerator(data=self.data['type_args'])
-    year_field = IntegerField()
+    year_field = IntegerField(label=_l(u'Year'))
     FormBase = generator.gen_form(self.generator.module)
     ModelField = type(self.name + 'Form',
                       (FormBase, Form,),
