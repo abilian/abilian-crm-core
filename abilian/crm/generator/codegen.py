@@ -172,6 +172,7 @@ class CodeGenerator(object):
       attributes['__table_args__'] = tuple(table_args)
 
     cls = type(type_name, (type_base,), attributes)
+    self.data['cls'] = cls
     setattr(module, type_name, cls)
     auto_name = unicode(self.data.get('auto_name') or u'').strip()
 
