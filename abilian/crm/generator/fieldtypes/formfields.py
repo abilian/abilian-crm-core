@@ -62,3 +62,17 @@ class URLField(TextField):
     super(URLField, self).__init__(model, data, *args, **kwargs)
     if 'view_widget' not in data:
       data['view_widget'] = aw_widgets.URLWidget()
+
+
+@form_field
+class FileField(FormField):
+  ff_type = awbff.FileField
+
+
+@form_field
+class ImageField(FileField):
+
+  def __init__(self, model, data, *args, **kwargs):
+    if 'widget' not in data:
+      data['widget'] = aw_widgets.ImageInput()
+    super(ImageField, self).__init__(model, data, *args, **kwargs)

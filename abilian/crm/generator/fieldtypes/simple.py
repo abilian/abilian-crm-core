@@ -8,6 +8,7 @@ import hashlib
 import sqlalchemy as sa
 import wtforms.fields
 from abilian.core.sqlalchemy import JSON, JSONList, JSONDict
+from abilian.core.models.blob import Blob
 import abilian.web.forms.fields as awbff
 
 from ..definitions import MAX_IDENTIFIER_LENGTH
@@ -69,6 +70,41 @@ class Float(Field):
 class Boolean(Field):
   sa_type = sa.types.Boolean
   default_ff_type = 'BooleanField'
+
+
+@model_field
+class File(Field):
+  sa_type = sa.types.Integer
+  default_ff_type = 'FileField'
+  allow_multiple = False
+
+  def get_model_attributes(self, *args, **kwargs):
+    col_name = self.name[:(MAX_IDENTIFIER_LENGTH - 3)] + '_id'
+    extra_args = {'nullable': not self.required}
+    extra_args['info'] = info = {}
+    info['label'] = self.label
+
+    attr = sa.schema.Column(
+      col_name,
+      self.sa_type(**self.sa_type_options),
+      sa.ForeignKey(Blob.id),
+      **extra_args)
+
+    yield col_name, attr
+
+    relationship = sa.orm.relationship(
+      Blob,
+      primaryjoin='{tablename}.c.{local} == Blob.id'.format(
+        tablename=self.model.lower(),
+        local=col_name
+      ),
+    )
+    yield self.name, relationship
+
+
+@model_field
+class Image(File):
+  default_ff_type = 'ImageField'
 
 
 @model_field
