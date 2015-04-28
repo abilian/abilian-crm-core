@@ -8,6 +8,7 @@ from collections import OrderedDict
 
 import sqlalchemy as sa
 import wtforms.fields
+
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets
 import abilian.web.forms.validators as aw_validators
@@ -36,6 +37,9 @@ class Field(Registrable):
   #: default form field type
   default_ff_type = 'TextField'
 
+  #: set to False is field supports only single values
+  allow_multiple = True
+
   def __init__(self, model, data, generator):
     """
     """
@@ -49,6 +53,11 @@ class Field(Registrable):
     self.required = data.get('required', False)
     self.indexed = data.get('indexed', False)
     self.multiple = data.get('multiple', False)
+
+    if self.multiple and not self.allow_multiple:
+      raise ValueError("Field {:r} doesn't support multiple values"
+                       "".format(self.name))
+
     ff_type = self.get_ff_type()
     data['formfield'] = ff_type(model=model, data=data, generator=generator)
 
