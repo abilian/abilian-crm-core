@@ -7,9 +7,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: abilian-crm 0.1.dev42+nc965b32\n"
+"Project-Id-Version: abilian-crm 0.1.dev47+n638179d\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-04-27 16:50+0200\n"
+"POT-Creation-Date: 2015-04-30 14:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: abilian/crm/generator/fieldtypes/yearly.py:439
+#: abilian/crm/forms.py:21
+msgid "postal_address_street_lines"
+msgstr ""
+
+#: abilian/crm/forms.py:22
+msgid "postal_address_street_lines_help"
+msgstr ""
+
+#: abilian/crm/forms.py:26
+msgid "postal_address_administrative_area"
+msgstr ""
+
+#: abilian/crm/forms.py:27
+msgid "postal_address_administrative_area_help"
+msgstr ""
+
+#: abilian/crm/forms.py:30
+msgid "postal_address_sub_administrative_area"
+msgstr ""
+
+#: abilian/crm/forms.py:31
+msgid "postal_address_sub_administrative_area_help"
+msgstr ""
+
+#: abilian/crm/forms.py:34
+msgid "postal_address_locality"
+msgstr ""
+
+#: abilian/crm/forms.py:35
+msgid "postal_address_locality_help"
+msgstr ""
+
+#: abilian/crm/forms.py:38
+msgid "postal_address_postal_code"
+msgstr ""
+
+#: abilian/crm/forms.py:39
+msgid "postal_address_postal_code_help"
+msgstr ""
+
+#: abilian/crm/forms.py:43
+msgid "postal_address_country"
+msgstr ""
+
+#: abilian/crm/generator/fieldtypes/yearly.py:451
 msgid "Year"
 msgstr ""
 

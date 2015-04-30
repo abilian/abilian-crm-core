@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: abilian-crm 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-04-27 16:50+0200\n"
-"PO-Revision-Date: 2015-04-27 16:50+0200\n"
+"POT-Creation-Date: 2015-04-30 14:53+0200\n"
+"PO-Revision-Date: 2015-04-30 14:52+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: fr <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
@@ -18,7 +18,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: abilian/crm/generator/fieldtypes/yearly.py:439
+#: abilian/crm/forms.py:21
+msgid "postal_address_street_lines"
+msgstr "Adresse"
+
+#: abilian/crm/forms.py:22
+msgid "postal_address_street_lines_help"
+msgstr "Numéro, rue, batiment, …"
+
+#: abilian/crm/forms.py:26
+msgid "postal_address_administrative_area"
+msgstr "État (si applicable)"
+
+#: abilian/crm/forms.py:27
+msgid "postal_address_administrative_area_help"
+msgstr "État / Province / Région / BP Militaire / …"
+
+#: abilian/crm/forms.py:30
+msgid "postal_address_sub_administrative_area"
+msgstr "Comté (si applicable)"
+
+#: abilian/crm/forms.py:31
+msgid "postal_address_sub_administrative_area_help"
+msgstr "Comté / District"
+
+#: abilian/crm/forms.py:34
+msgid "postal_address_locality"
+msgstr "Ville"
+
+#: abilian/crm/forms.py:35
+msgid "postal_address_locality_help"
+msgstr ""
+
+#: abilian/crm/forms.py:38
+msgid "postal_address_postal_code"
+msgstr "Code postal"
+
+#: abilian/crm/forms.py:39
+msgid "postal_address_postal_code_help"
+msgstr "Code postal / ZIP"
+
+#: abilian/crm/forms.py:43
+msgid "postal_address_country"
+msgstr "Pays"
+
+#: abilian/crm/generator/fieldtypes/yearly.py:451
 msgid "Year"
 msgstr "Année"
 
