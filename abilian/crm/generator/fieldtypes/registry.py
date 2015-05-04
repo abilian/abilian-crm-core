@@ -17,7 +17,7 @@ class Registrable(object):
     return (cls.__fieldname__
             if cls.__fieldname__ is not None
             else cls.__name__)
-    
+
 
 _SA_FIELD_REGISTRY = dict()
 _FF_FIELD_REGISTRY = dict()
@@ -31,7 +31,11 @@ def _register(registry, cls):
   if getattr(cls, reg_attr, False):
     return cls
   name = cls.__fieldtype__()
-  assert name not in registry
+
+  assert name not in registry, (
+    '{!r} cannot be registered as {!r}: already used by {!r}'
+    ''.format(cls, name, registry[name])
+  )
   registry[name] = cls
   setattr(cls, reg_attr, True)
   return cls
@@ -42,4 +46,3 @@ form_field = partial(_register, _FF_FIELD_REGISTRY)
 
 get_field = _SA_FIELD_REGISTRY.get
 get_formfield = _FF_FIELD_REGISTRY.get
-

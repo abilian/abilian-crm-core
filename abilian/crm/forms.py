@@ -14,8 +14,13 @@ from abilian.web.forms.widgets import TextArea, ModelWidget
 from abilian.web.forms.validators import required, flaghidden, optional
 from abilian.web.forms.filters import strip
 
-from .models import PostalAddress
+from .models import PostalAddress, PhoneNumber
+from .widgets import PhoneNumberWidget
 
+
+class PhoneNumberField(StringField):
+  widget = PhoneNumberWidget()
+  
 
 class PostalAddressForm(ModelForm):
 
@@ -47,7 +52,7 @@ class PostalAddressForm(ModelForm):
     _l(u'postal_address_country'),
     validators=[required()],
     filters=(strip,),
-    choices=country_choices(),
+    choices=country_choices,
   )
 
   class Meta:
@@ -64,3 +69,30 @@ class PostalAddressField(ModelFormField):
       del kwargs['validators']
     super(PostalAddressField, self).__init__(PostalAddressForm, *args, **kwargs)
 
+
+
+class PhoneNumberForm(ModelForm):
+  id = IntegerField(widget=HiddenInput(), validators=[optional(), flaghidden()])  
+  type = StringField(
+    _l(u'phonenumber_type'),
+    description=_l(u'phonenumber_type_help'),
+  )
+  number = PhoneNumberField(
+    _l(u'phonenumber_number'),
+    validators=[required()],
+  )
+  
+  class Meta:
+    model = PhoneNumber
+    include_primary_keys = True
+    assign_required = False
+
+    
+class PhoneNumberField(ModelFormField):
+  widget = ModelWidget(view_template='crm/widgets/phonenumber_model_view.html')
+
+  def __init__(self, *args, **kwargs):
+    if 'validators' in kwargs:
+      del kwargs['validators']
+    super(PhoneNumberField, self).__init__(PhoneNumberForm, *args, **kwargs)
+  

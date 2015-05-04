@@ -123,11 +123,6 @@ class JSONDict(Field):
 
 
 @model_field
-class PhoneNumber(UnicodeText):
-  pass
-
-
-@model_field
 class EmailAddress(UnicodeText):
   default_ff_type = 'EmailField'
 

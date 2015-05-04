@@ -28,3 +28,12 @@ class PostalAddress(IdMixin, Model):
     sa.schema.CheckConstraint(sa.sql.func.length(country) > 0),
   )
   
+
+class PhoneNumber(IdMixin, Model):
+  __tablename__ = 'crm_phonenumbers'
+
+  #: number type: mobile, pro... left as free text
+  type = sa.Column(sa.UnicodeText, default=u'', server_default=sa.sql.text(u"''"))
+  #: phone number
+  number = sa.Column(sa.UnicodeText, nullable=False)
+
