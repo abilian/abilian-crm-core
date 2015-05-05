@@ -19,6 +19,13 @@ def test_format_phonenumber():
     assert fmt(u'+33102030405') == u'+33 1 02 03 04 05'
     assert fmt(u'+33102030405', international=False) == u'+33 1 02 03 04 05'
 
+    # "vanity" number
+    # phonenumbers lib can parse it as a valid number. Maybe we could
+    # display both, one for keeping the "vanity" form, the other for explicit
+    # numbers.
+    assert fmt(u'(800) Flowers') == u'+1 800-356-9377'
+    assert fmt(u'1-800-Flowers', international=False) == u'(800) 356-9377'
+
     default_country.reset_mock()
     default_country.return_value = u'FR'
     assert fmt(u'+12025550166') == u'+1 202-555-0166'
