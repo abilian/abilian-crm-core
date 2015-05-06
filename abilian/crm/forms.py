@@ -5,11 +5,10 @@ from __future__ import absolute_import
 
 from wtforms.fields import StringField, TextAreaField, IntegerField
 from wtforms.widgets import HiddenInput
-from wtforms_alchemy import ModelFormField
 
 from abilian.i18n import _l, country_choices
 from abilian.web.forms import ModelForm
-from abilian.web.forms.fields import Select2Field
+from abilian.web.forms.fields import Select2Field, ModelFormField
 from abilian.web.forms.widgets import TextArea, ModelWidget
 from abilian.web.forms.validators import required, flaghidden, optional
 from abilian.web.forms.filters import strip
