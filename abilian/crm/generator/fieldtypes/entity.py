@@ -114,6 +114,15 @@ class EntityField(Field):
           rel_kw['secondaryjoin'] = tmpl.format(target_cls + '.id',
                                                 tbl_name, local_target_col)
 
+        if 'backref' in type_args:
+          backref_name = type_args['backref']
+          backref_kw = {}
+          if isinstance(backref_name, dict):
+            backref_kw.update(backref_name)
+            backref_name = backref_kw.pop('name')
+
+          rel_kw['backref'] = sa.orm.backref(backref_name, **backref_kw)
+
         return sa.orm.relationship(target_cls, **rel_kw)
 
       gen_m2m_relationship.func_name = func_name
