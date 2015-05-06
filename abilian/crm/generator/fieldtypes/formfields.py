@@ -12,6 +12,7 @@ from abilian.web.forms.filters import strip
 from .base import FormField
 from .registry import form_field
 
+
 @form_field
 class TextField(FormField):
   def get_filters(self, *args, **kwargs):
@@ -34,6 +35,11 @@ class BooleanField(FormField):
 @form_field
 class DateField(FormField):
   ff_type = awbff.DateField
+
+
+@form_field
+class DateTimeField(FormField):
+  ff_type = awbff.DateTimeField
 
 
 @form_field

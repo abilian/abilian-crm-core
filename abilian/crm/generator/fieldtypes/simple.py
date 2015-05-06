@@ -56,6 +56,12 @@ class Date(Field):
 
 
 @model_field
+class DateTime(Field):
+  sa_type = sa.types.DateTime
+  default_ff_type = 'DateTimeField'
+
+
+@model_field
 class Text(Field):
   sa_type = sa.types.Text
 
