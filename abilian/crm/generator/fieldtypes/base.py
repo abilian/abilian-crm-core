@@ -55,8 +55,8 @@ class Field(Registrable):
     self.multiple = data.get('multiple', False)
 
     if self.multiple and not self.allow_multiple:
-      raise ValueError("Field {:r} doesn't support multiple values"
-                       "".format(self.name))
+      raise ValueError("Field {!r}: {!r} doesn't support multiple values"
+                       "".format(self.name, self.__class__.__fieldname__))
 
     ff_type = self.get_ff_type()
     data['formfield'] = ff_type(model=model, data=data, generator=generator)
