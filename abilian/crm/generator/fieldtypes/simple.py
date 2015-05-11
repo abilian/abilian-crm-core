@@ -119,13 +119,14 @@ class JSON(Field):
 
 
 @model_field
-class JSONList(Field):
-  sa_type = JSONList
+class JSONListField(Field):
+  __fieldname__ = 'JSONList'
+  sa_type = staticmethod(JSONList)
 
 
 @model_field
 class JSONDict(Field):
-  sa_type = JSONDict
+  sa_type = staticmethod(JSONDict)
 
 
 @model_field
