@@ -1,0 +1,13 @@
+{%- macro m_render_phonenumber_form(form) %}
+<div class="form-group">
+    {{ form['id']() }}
+    <span class="col-xs-4 col-sm-4 col-lg-4">
+        {%- set attrs={'placeholder': form['type'].label.text, 'data-short-name': form['type'].short_name, 'class': 'form-control'} %}
+        {{ form['type'](**attrs) }}
+    </span>
+    <span class="col-xs-8 col-sm-8 col-lg-8">
+        {%- set attrs={'placeholder': form['number'].label.text, 'data-short-name': form['number'].short_name, 'class': 'form-control'} %}
+        {{ form['number'](**attrs) }}
+    </span>
+</div>
+{%- endmacro %}

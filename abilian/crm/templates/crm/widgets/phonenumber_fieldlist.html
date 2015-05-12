@@ -1,0 +1,16 @@
+{%- from "crm/widgets/macros.html" import m_render_phonenumber_form %}
+
+<table class="table js-widget" data-init-with="dynamicRowWidget" data-prefix="{{ field.name }}">
+  <thead>
+    <th>{{ field.label }}</th>    
+  </thead>
+  <tbody>
+    {%- for fieldform in field %}
+    <tr>
+      <td>
+        {{ m_render_phonenumber_form(fieldform) }}
+      </td>
+    </tr>
+    {%- endfor %}
+  </tbody>
+</table>

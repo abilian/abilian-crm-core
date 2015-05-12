@@ -8,7 +8,7 @@ import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets
 
 from ...models import PhoneNumber
-from ...forms import PhoneNumberField
+from ...forms import PhoneNumberField, PhoneNumberForm
 from .registry import model_field, form_field
 from .base import Field, FormField
 
@@ -27,14 +27,14 @@ class _PhoneNumberField(Field):
     if self.multiple:
       yield self.gen_m2m(*args, **kwargs)
       raise StopIteration
-    
+
     def gen_column(cls):
       fk_kw = dict(
         name=u'{}_{}_fkey'.format(cls.__name__.lower(), col_name),
         use_alter=True,
-        ondelete = 'SET NULL',
+        ondelete='SET NULL',
       )
-      target_col = str(PhoneNumber.id.parent.c.id)      
+      target_col = str(PhoneNumber.id.parent.c.id)
       fk = sa.ForeignKey(target_col, **fk_kw)
       return sa.Column(col_name, sa.types.Integer(), fk)
 
@@ -51,7 +51,6 @@ class _PhoneNumberField(Field):
 
     gen_relationship.func_name = self.name
     yield self.name, sa.ext.declarative.declared_attr(gen_relationship)
-        
 
   def gen_m2m(self, *args, **kwargs):
     model_name = self.model
@@ -66,7 +65,7 @@ class _PhoneNumberField(Field):
         cls.metadata,
         sa.Column(local_src_col, sa.ForeignKey(cls.id)),
         sa.Column(local_target_col, sa.ForeignKey(PhoneNumber.id)),
-        sa.schema.UniqueConstraint(local_src_col, local_target_col),        
+        sa.schema.UniqueConstraint(local_src_col, local_target_col),
       )
 
       rel_kw = dict(secondary=secondary_table)
@@ -75,23 +74,26 @@ class _PhoneNumberField(Field):
     gen_relationship.func_name = self.name
     return self.name, sa.ext.declarative.declared_attr(gen_relationship)
 
-    
+
 @form_field
 class PhoneNumberFormField(FormField):
   ff_type = PhoneNumberField
-  
+
   def get_type(self, *args, **kwargs):
     return (awbff.ModelFieldList if self.multiple else self.ff_type)
 
   def get_extra_args(self, *args, **kwargs):
     extra_args = super(PhoneNumberFormField, self)\
-                    .get_extra_args(*args, **kwargs)
+        .get_extra_args(*args, **kwargs)
     if self.multiple:
-      extra_args['unbound_field'] = awbff.ModelFormField(PhoneNumber)
+      extra_args['unbound_field'] = awbff.ModelFormField(PhoneNumberForm)
       extra_args['min_entries'] = 1
       extra_args['population_strategy'] = 'update'
       extra_args['widget'] = aw_widgets.TabularFieldListWidget(
-        template='widgets/model_fieldlist.html',
+        template='crm/widgets/phonenumber_fieldlist.html',
+      )
+      extra_args['view_widget'] = aw_widgets.FieldListWidget(
+        view_template='crm/widgets/phonenumber_fieldlist_view.html',
       )
 
     return extra_args
