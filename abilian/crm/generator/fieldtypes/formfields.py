@@ -28,8 +28,18 @@ class BooleanField(FormField):
     return ()
 
   def setup_widgets(self, extra_args):
+    super(BooleanField, self).setup_widgets(extra_args)
+
     if 'widget' not in extra_args:
-      extra_args['widget'] = aw_widgets.BooleanWidget()
+      kwargs = {}
+      options = self.data.get('widget_args', {})
+      kwargs['on_off_mode'] = bool(options)
+      if not isinstance(options, dict):
+        options = {}
+
+      kwargs['on_off_options'] = options
+      extra_args['widget'] = aw_widgets.BooleanWidget(**kwargs)
+
 
 
 @form_field
