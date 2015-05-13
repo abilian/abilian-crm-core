@@ -24,7 +24,7 @@ from functools import total_ordering
 
 import sqlalchemy as sa
 from sqlalchemy.orm.collections import collection
-from wtforms.fields import FormField, IntegerField, FieldList
+from wtforms.fields import IntegerField, FieldList
 from wtforms.utils import unset_value as unset_value
 
 from abilian.i18n import _l
@@ -37,6 +37,7 @@ import abilian.web.forms.widgets as aw_widgets
 from .registry import model_field, form_field
 from .base import Field, FormField as FormFieldGeneratorBase
 _MARK = object()
+
 
 @total_ordering
 class YearlyBase(db.Model):
@@ -230,8 +231,8 @@ class YearlyCollectionProxy(dict):
         raise ValueError('Incompatible attribute proxys: {!r}, {!r}'
                          ''.format(self, value))
       if key not in self and value:
-        self[key] # add key since value is nonzero
-        return # same proxy: no update needed
+        self[key]  # add key since value is nonzero
+        return  # same proxy: no update needed
 
     elif isinstance(value, dict):
       if set(value) - self.__attrs:
@@ -351,7 +352,7 @@ class Yearly(Field):
     self.yearly_data = generator.data['yearly']
 
   def get_model_attributes(self, *args, **kwargs):
-    forbidden_attrs = {'id', 'year',}
+    forbidden_attrs = {'id', 'year', }
     fields = self.data['type_args']['fields']
     if any(f['name'] in forbidden_attrs for f in fields):
       raise ValueError(
@@ -396,6 +397,7 @@ class Yearly(Field):
     rel_attr_id = self.yearly_data['related_attr_id']
     column_attributes = [attr for attr, definition in attributes.iteritems()
                          if isinstance(definition, sa.Column)]
+
     def _eq(self, other):
       return (
         isinstance(other, self.__class__)
@@ -407,7 +409,7 @@ class Yearly(Field):
       if getattr(self, rel_attr_id, -1) < getattr(other, rel_attr_id, -1):
         # dummy case, comparing objects not related to the same entity instance
         return True
-      return  self.year < other.year
+      return self.year < other.year
 
     attributes['__eq__'] = _eq
     attributes['__lt__'] = _lt
@@ -452,10 +454,10 @@ class YearlyFormField(FormFieldGeneratorBase):
     FormBase = generator.gen_form(self.generator.module)
     ModelField = type(self.name + 'Form',
                       (FormBase, Form,),
-                      {'year': year_field,})
+                      {'year': year_field, })
 
     extra_args = super(YearlyFormField, self).get_extra_args(*args, **kwargs)
-    extra_args['unbound_field'] = FormField(ModelField, default=dict)
+    extra_args['unbound_field'] = awbff.FormField(ModelField, default=dict)
     extra_args['population_strategy'] = 'update'
     extra_args['min_entries'] = 1
     return extra_args
