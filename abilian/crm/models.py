@@ -5,6 +5,7 @@ from __future__ import absolute_import
 
 import sqlalchemy as sa
 from abilian.core.models import Model, IdMixin
+from .jinja_filters import format_phonenumber
 
 
 class PostalAddress(IdMixin, Model):
@@ -22,12 +23,12 @@ class PostalAddress(IdMixin, Model):
   postal_code = sa.Column(sa.UnicodeText)
   #: Country ISO code
   country = sa.Column(sa.UnicodeText, nullable=False)
-  
+
   __table_args__ = (
     # we DO require a country
     sa.schema.CheckConstraint(sa.sql.func.length(country) > 0),
   )
-  
+
 
 class PhoneNumber(IdMixin, Model):
   __tablename__ = 'crm_phonenumbers'
@@ -37,3 +38,9 @@ class PhoneNumber(IdMixin, Model):
   #: phone number
   number = sa.Column(sa.UnicodeText, nullable=False)
 
+  def __unicode__(self):
+    if not self.number:
+      self.number = u''
+    if not self.type:
+      self.type = u''
+    return u'%s: %s' % (self.type, format_phonenumber(self.number, international=True))
