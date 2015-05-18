@@ -7,6 +7,7 @@ from mock import patch
 
 from abilian.crm import jinja_filters
 
+
 def test_format_phonenumber():
   fmt = jinja_filters.format_phonenumber
 
@@ -33,3 +34,8 @@ def test_format_phonenumber():
     assert fmt(u'+33102030405') == u'+33 1 02 03 04 05'
     assert fmt(u'+33102030405', international=False) == u'01 02 03 04 05'
     assert fmt(u'0102030405', international=False) == u'01 02 03 04 05'
+
+    # we want to avoid NumberParseException
+    with patch('abilian.crm.jinja_filters.logger.exception') as logger:
+      assert fmt(u'garbage long unparsable text &"é(§è!çà)-)') == u'garbage long unparsable text &"é(§è!çà)-)'
+      assert not logger.called
