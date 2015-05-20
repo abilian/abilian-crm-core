@@ -11,7 +11,9 @@ import re
 import sqlalchemy as sa
 from abilian.core.entities import Entity
 from abilian.core.util import slugify
+from abilian.services.security import Role
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
+from abilian.web.forms import FormPermissions, Form
 
 from .fieldtypes import get_field
 from . import autoname
@@ -184,21 +186,33 @@ class CodeGenerator(object):
   def gen_form(self, module):
     self.set_current_module(module)
     type_name = self.data['name'] + 'EditFormBase'
-    type_bases = (object,)
+    type_bases = (Form,)
     attributes = OrderedDict()
 
     groups = {}
     group_names = []
+    read_permissions = {}
+    write_permissions = {}
 
     for d in self.data['fields']:
       if 'ignore' in d or 'hidden' in d:
         continue
 
+      field_name = d['name']
+
       if 'ignore' not in d:
         group_name = d.get('group', 'default group')
-        groups.setdefault(group_name, []).append(d['name'])
+        groups.setdefault(group_name, []).append(field_name)
         if group_name not in group_names:
           group_names.append(group_name)
+
+        perms = d.get('permissions', {})
+        write = {Role(r.strip()) for r in perms.get('write', ())}
+        read = write | {Role(r.strip()) for r in perms.get('read', ())}
+        if write:
+          write_permissions[field_name] = write
+        if read:
+          read_permissions[field_name] = read
 
       if d['type'] == 'pass':
         # explicit manual handling - only declared in form groups
@@ -208,7 +222,12 @@ class CodeGenerator(object):
       for name, attr in field.get_form_attributes():
         attributes[name] = attr
 
-    attributes['_groups'] = [(name, groups[name]) for name in group_names]
+    attributes['_permissions'] = FormPermissions(
+      fields_read=read_permissions,
+      fields_write=write_permissions,
+    )
+    attributes['_groups'] = OrderedDict((name, groups[name])
+                                        for name in group_names)
     attributes['__module__'] = module.__name__
     cls = type(type_name, type_bases, attributes)
     setattr(module, type_name, cls)
