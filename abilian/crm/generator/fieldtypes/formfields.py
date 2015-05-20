@@ -5,6 +5,7 @@ from __future__ import absolute_import
 
 import wtforms.fields
 
+from abilian.web.action import FAIcon
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets
 from abilian.web.forms.filters import strip
@@ -67,8 +68,12 @@ class EmailField(TextField):
 
   def __init__(self, model, data, *args, **kwargs):
     super(EmailField, self).__init__(model, data, *args, **kwargs)
+    if 'widget' not in data:
+      data['widget'] = aw_widgets.EmailWidget()
     if 'view_widget' not in data:
-      data['view_widget'] = aw_widgets.EmailWidget()
+      widget = data['widget']
+      data['view_widget'] = (widget if isinstance(widget, aw_widgets.EmailWidget)
+                             else aw_widgets.EmailWidget())
 
 
 @form_field
