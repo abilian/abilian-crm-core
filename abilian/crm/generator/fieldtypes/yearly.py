@@ -426,11 +426,6 @@ class YearlyFieldList(awbff.ModelFieldList):
     return FieldList._add_entry(self, formdata=formdata, data=data, index=index)
 
   def populate_obj(self, obj, name):
-    state = obj._sa_instance_state
-
-    if not state.identity or self.population_strategy == 'replace':
-      return super(YearlyFieldList, self).populate_obj(obj, name)
-
     entities = {}
     for entry in self.entries:
       data = entry.data
