@@ -55,11 +55,13 @@ class EntityField(Field):
 
     # relationship
     def get_rel_attr(func_name, target_cls, col_name):
+      model_name = self.model
+
       def gen_relationship(cls):
         kw = dict(uselist=False)
         local = cls.__name__ + '.' + col_name
         remote = target_cls + '.id'
-        if cls.__name__ == target_cls:
+        if model_name == target_cls:
           local = 'foreign({})'.format(local)
           remote = 'remote({})'.format(remote)
         kw['primaryjoin'] = '{} == {}'.format(local, remote)
