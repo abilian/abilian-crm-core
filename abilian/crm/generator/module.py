@@ -35,7 +35,7 @@ def generate_module(fullname):
 
   for yml in directory.glob(u'*.yml'):
     logger.info('Loading: %s', yml)
-    with yml.open('r') as f:
+    with yml.open('rt', encoding='utf-8') as f:
       gen = CodeGenerator(yaml_file=f)
 
     gen.init_vocabularies(module)
