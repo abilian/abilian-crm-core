@@ -5,13 +5,6 @@ from __future__ import absolute_import
 
 import hashlib
 
-import # coding=utf-8
-"""
-"""
-from __future__ import absolute_import
-
-import hashlib
-
 import sqlalchemy as sa
 import wtforms.fields
 from abilian.core.sqlalchemy import JSON, JSONList, JSONDict
@@ -84,7 +77,9 @@ class Date(Field):
 
 
 @model_field
-cl
+class DateTime(Field):
+  sa_type = sa.types.DateTime
+  default_ff_type = 'DateTimeField'
 
 
 @model_field

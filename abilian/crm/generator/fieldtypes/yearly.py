@@ -438,7 +438,7 @@ class YearlyFieldList(awbff.ModelFieldList):
 @form_field
 class YearlyFormField(FormFieldGeneratorBase):
   ff_type = YearlyFieldList
-g
+
   def __init__(self, *args, **kwargs):
     super(YearlyFormField, self).__init__(*args, **kwargs)
 
