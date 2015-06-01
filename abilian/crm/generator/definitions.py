@@ -7,6 +7,7 @@ import wtforms.fields
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask_wtf.file import FileField
 from flask_wtf.html5 import TelField, IntegerField
+from abilian.i18n import country_choices
 
 from abilian.web.forms.validators import email, url, required, optional
 from abilian.web.forms.filters import strip, uppercase, lowercase
@@ -70,7 +71,7 @@ WIDGETS = (
 )
 WIDGETS = {t.__name__: t for t in WIDGETS}
 
-LIST_GENERATORS = {}
+LIST_GENERATORS = {'country': country_choices}
 
 def update(module):
   """

@@ -213,6 +213,8 @@ class FormField(Registrable):
       extra_args['choices'] = options
 
     if 'from_function' in d:
+      if self.multiple:
+        extra_args['view_widget'] = aw_widgets.ListWidget()
       extra_args['choices'] = LIST_GENERATORS[d['from_function']]()
 
     if 'lines' in d:
