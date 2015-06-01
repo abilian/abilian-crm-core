@@ -23,6 +23,16 @@ class Integer(Field):
 
 
 @model_field
+class SmallInteger(Integer):
+  sa_type = sa.types.SmallInteger
+
+
+@model_field
+class BigInteger(Integer):
+  sa_type = sa.types.BigInteger
+
+
+@model_field
 class PositiveInteger(Integer):
 
   def get_table_args(self, *args, **kwargs):
