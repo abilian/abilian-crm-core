@@ -5,6 +5,13 @@ from __future__ import absolute_import
 
 import hashlib
 
+import # coding=utf-8
+"""
+"""
+from __future__ import absolute_import
+
+import hashlib
+
 import sqlalchemy as sa
 import wtforms.fields
 from abilian.core.sqlalchemy import JSON, JSONList, JSONDict
@@ -18,23 +25,34 @@ from .registry import model_field
 
 @model_field
 class Integer(Field):
+  """
+  4 bytes: -2147483648 to +2147483647
+  """
   sa_type = sa.types.Integer
   default_ff_type = 'IntegerField'
 
 
 @model_field
 class SmallInteger(Integer):
+  """
+  2 bytes: -32768 to +32767
+  """
   sa_type = sa.types.SmallInteger
 
 
 @model_field
 class BigInteger(Integer):
+  """
+  8 bytes: -9223372036854775808 to 9223372036854775807
+  """
   sa_type = sa.types.BigInteger
 
 
 @model_field
 class PositiveInteger(Integer):
-
+  """
+  :class:`Integer` restricted to positive value: 0 to +2147483647
+  """
   def get_table_args(self, *args, **kwargs):
     col_name = self.name[:MAX_IDENTIFIER_LENGTH]
     name = 'check_{name}_positive'.format(name=col_name)
@@ -66,9 +84,7 @@ class Date(Field):
 
 
 @model_field
-class DateTime(Field):
-  sa_type = sa.types.DateTime
-  default_ff_type = 'DateTimeField'
+cl
 
 
 @model_field
