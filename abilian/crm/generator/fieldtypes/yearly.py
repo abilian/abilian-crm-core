@@ -47,7 +47,7 @@ class YearlyBase(db.Model):
   __abstract__ = True
 
   id = sa.Column(sa.Integer, primary_key=True, info=SYSTEM)
-  year = sa.Column(sa.Integer, nullable=False)
+  year = sa.Column(sa.SmallInteger, nullable=False)
 
   def __eq__(self, other):
     raise NotImplemented
@@ -438,7 +438,7 @@ class YearlyFieldList(awbff.ModelFieldList):
 @form_field
 class YearlyFormField(FormFieldGeneratorBase):
   ff_type = YearlyFieldList
-
+g
   def __init__(self, *args, **kwargs):
     super(YearlyFormField, self).__init__(*args, **kwargs)
 
