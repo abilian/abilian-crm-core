@@ -20,6 +20,7 @@ from .registry import Registrable, get_formfield
 
 _VALID_IDENTIFIER_RE = re.compile(r'[A-Za-z_][A-Za-z0-9_]*', re.UNICODE)
 
+
 def assert_valid_identifier(s):
   match = _VALID_IDENTIFIER_RE.match(s)
   if match is None or match.end() != match.endpos:
@@ -100,7 +101,6 @@ class Field(Registrable):
     :return: iterable
     """
     return ()
-
 
   def get_field(self, *args, **kwargs):
     """
@@ -215,7 +215,10 @@ class FormField(Registrable):
     if 'from_function' in d:
       if self.multiple:
         extra_args['view_widget'] = aw_widgets.ListWidget()
-      extra_args['choices'] = LIST_GENERATORS[d['from_function']]()
+      if 'from_function_nocall' in d and d['from_function_nocall']:
+          extra_args['choices'] = LIST_GENERATORS[d['from_function']]
+      else:
+        extra_args['choices'] = LIST_GENERATORS[d['from_function']]()
 
     if 'lines' in d:
       extra_args['widget'] = aw_widgets.TextArea(resizeable='vertical',
