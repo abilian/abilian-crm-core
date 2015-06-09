@@ -10,11 +10,13 @@ from itertools import ifilter
 
 from flask import request, current_app, flash, render_template, redirect
 
-from abilian.i18n import _
+from abilian.i18n import _, _l
 from abilian.web import views, csrf, url_for
 from abilian.web.util import capture_stream_errors
 from abilian.web.action import actions, Endpoint, FAIcon
-from abilian.web.frontend import ModuleView, ModuleAction
+from abilian.web.frontend import (
+  ModuleView, ModuleAction, ModuleActionDropDown, ModuleActionGroupItem,
+)
 
 from .manager import ExcelManager
 
@@ -299,15 +301,35 @@ class ExcelModuleMixin(object):
     
   def register_actions(self):
     super(ExcelModuleMixin, self).register_actions()
-    excel_actions = [
+
+    excel_actions = []
+    button = 'default' if not self.EXCEL_EXPORT_RELATED else None
+    excel_actions.append(
       ModuleAction(self, 'excel', 'export_xls',
                    title=_(u'Export to Excel'), icon=FAIcon('align-justify'),
                    endpoint=Endpoint(self.endpoint + '.export_xls'),
-                   button='default', css='datatable-export'),
-    ]
+                   button=button, css='datatable-export',))
+    
+    for column_set in self.EXCEL_EXPORT_RELATED:
+      excel_actions.append(
+        ModuleActionGroupItem(
+          self, 'excel', 'export_related_' + column_set.related_attr,
+          title=column_set.export_label, icon=FAIcon('align-justify'),
+          css='datatable-export',
+          endpoint=Endpoint(self.endpoint + '.export_xls',
+                            related=column_set.related_attr),
+          )
+      )
 
     if self.EXCEL_SUPPORT_IMPORT:
       pass
+
+    if len(excel_actions) > 1:
+      excel_actions = [ModuleActionDropDown(
+        self, 'excel', 'actions',
+        title=_l(u'Excel'), button='default',
+        items=excel_actions,
+      )]
     
     actions.register(*excel_actions)
   
