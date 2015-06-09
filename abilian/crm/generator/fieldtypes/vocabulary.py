@@ -49,7 +49,7 @@ class Vocabulary(Field):
       attr = get_rel_attr(relation_name, self.voc_cls)
       yield relation_name, sa.ext.declarative.declared_attr(attr)
 
-    else: # m2m
+    else:  # m2m
       def get_m2m_attr(func_name, target_cls, secondary_tbl_name=None):
         def gen_m2m_relationship(cls):
           src_name = cls.__tablename__
@@ -71,7 +71,6 @@ class Vocabulary(Field):
 
         gen_m2m_relationship.func_name = func_name
         return gen_m2m_relationship
-
 
       relation_secondary_tbl_name = \
           '{}_{}'.format(self.model.lower(), self.name.lower())
@@ -103,4 +102,6 @@ class VocabularyFormField(FormField):
     return extra_args
 
   def setup_widgets(self, extra_args):
+    extra_args['widget'] = aw_widgets.Select2(multiple=self.multiple,
+                                              unescape_html=True)
     extra_args['view_widget'] = aw_widgets.ListWidget()
