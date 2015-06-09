@@ -8,7 +8,7 @@ import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets
 
 from ...models import PhoneNumber
-from ...forms import PhoneNumberField, PhoneNumberForm
+from ...forms import PhoneNumberForm, PhoneNumberFormField as PNFormField
 from .registry import model_field, form_field
 from .base import Field, FormField
 
@@ -77,7 +77,7 @@ class _PhoneNumberField(Field):
 
 @form_field
 class PhoneNumberFormField(FormField):
-  ff_type = PhoneNumberField
+  ff_type = PNFormField
 
   def get_type(self, *args, **kwargs):
     return (awbff.ModelFieldList if self.multiple else self.ff_type)

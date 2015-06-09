@@ -7,9 +7,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: abilian-crm 0.1.dev50+n9482e4b\n"
+"Project-Id-Version: abilian-crm 0.1.dev78+nc476a83\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-05-04 18:03+0200\n"
+"POT-Creation-Date: 2015-06-09 11:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,63 +18,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: abilian/crm/forms.py:29
+#: abilian/crm/forms.py:78
 msgid "postal_address_street_lines"
 msgstr ""
 
-#: abilian/crm/forms.py:30
+#: abilian/crm/forms.py:79
 msgid "postal_address_street_lines_help"
 msgstr ""
 
-#: abilian/crm/forms.py:35
+#: abilian/crm/forms.py:85
 msgid "postal_address_administrative_area"
 msgstr ""
 
-#: abilian/crm/forms.py:36
+#: abilian/crm/forms.py:86
 msgid "postal_address_administrative_area_help"
 msgstr ""
 
-#: abilian/crm/forms.py:39
+#: abilian/crm/forms.py:89
 msgid "postal_address_sub_administrative_area"
 msgstr ""
 
-#: abilian/crm/forms.py:40
+#: abilian/crm/forms.py:90
 msgid "postal_address_sub_administrative_area_help"
 msgstr ""
 
-#: abilian/crm/forms.py:43
+#: abilian/crm/forms.py:93
 msgid "postal_address_locality"
 msgstr ""
 
-#: abilian/crm/forms.py:44
-msgid "postal_address_locality_help"
-msgstr ""
-
-#: abilian/crm/forms.py:47
+#: abilian/crm/forms.py:99
 msgid "postal_address_postal_code"
 msgstr ""
 
-#: abilian/crm/forms.py:48
+#: abilian/crm/forms.py:100
 msgid "postal_address_postal_code_help"
 msgstr ""
 
-#: abilian/crm/forms.py:52
+#: abilian/crm/forms.py:106
 msgid "postal_address_country"
 msgstr ""
 
-#: abilian/crm/forms.py:77
+#: abilian/crm/forms.py:128
 msgid "phonenumber_type"
 msgstr ""
 
-#: abilian/crm/forms.py:78
+#: abilian/crm/forms.py:129
 msgid "phonenumber_type_help"
 msgstr ""
 
-#: abilian/crm/forms.py:81
+#: abilian/crm/forms.py:132
 msgid "phonenumber_number"
 msgstr ""
 
-#: abilian/crm/generator/fieldtypes/yearly.py:451
+#: abilian/crm/forms.py:134
+msgid "for an extension number add \"#1234\""
+msgstr ""
+
+#: abilian/crm/generator/fieldtypes/yearly.py:448
 msgid "Year"
 msgstr ""
 

@@ -45,8 +45,6 @@ class RequireableFormField(object):
         f.flags.required = self.flags.required
         f.flags.optional = not self.flags.required
 
-
-
   def __filter_validators(self, field):
     required = self.flags.required
     if required == field.flags.required:
@@ -130,7 +128,10 @@ class PhoneNumberForm(ModelForm):
     _l(u'phonenumber_type'),
     description=_l(u'phonenumber_type_help'),
   )
-  number = PhoneNumberField(_l(u'phonenumber_number'), validators=[required()])
+  number = PhoneNumberField(
+    _l(u'phonenumber_number'),
+    description=_l(u'for an extension number add "#1234"'),
+    validators=[required()])
   
   class Meta:
     model = PhoneNumber
@@ -138,8 +139,8 @@ class PhoneNumberForm(ModelForm):
     assign_required = False
 
     
-class PhoneNumberField(RequireableFormField, ModelFormField):
+class PhoneNumberFormField(RequireableFormField, ModelFormField):
   widget = ModelWidget(view_template='crm/widgets/phonenumber_model_view.html')
 
   def __init__(self, *args, **kwargs):
-    super(PhoneNumberField, self).__init__(PhoneNumberForm, *args, **kwargs)    
+    super(PhoneNumberFormField, self).__init__(PhoneNumberForm, *args, **kwargs)

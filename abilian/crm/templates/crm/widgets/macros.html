@@ -4,10 +4,16 @@
     <span class="col-xs-4 col-sm-4 col-lg-4">
         {%- set attrs={'placeholder': form['type'].label.text, 'data-short-name': form['type'].short_name, 'class': 'form-control'} %}
         {{ form['type'](**attrs) }}
+        {%- if form['type'].description %}
+        <span class="help-block">{{ form['type'].description|safe }}</span>
+        {%- endif %}
     </span>
     <span class="col-xs-8 col-sm-8 col-lg-8">
         {%- set attrs={'placeholder': form['number'].label.text, 'data-short-name': form['number'].short_name, 'class': 'form-control'} %}
         {{ form['number'](**attrs) }}
+        {%- if form['number'].description %}
+        <span class="help-block">{{ form['number'].description|safe }}</span>
+        {%- endif %}
     </span>
 </div>
 {%- endmacro %}
