@@ -20,6 +20,8 @@ from .manager import ExcelManager
 
 logger = logging.getLogger(__name__)
 
+XLSX_MIME = u'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
 
 class _ItemUpdate(object):
   """
@@ -114,10 +116,10 @@ class ExcelExport(BaseExcelView):
 
     response = current_app.response_class(
         response_generator(),
-        mimetype='application/ms-excel',
+        mimetype=XLSX_MIME,
     )
-    filename = u"{}-{}.xls".format(self.module.managed_class.__name__,
-                                   strftime("%d:%m:%Y-%H:%M:%S", gmtime()))
+    filename = u"{}-{}.xlsx".format(self.module.managed_class.__name__,
+                                    strftime("%d:%m:%Y-%H:%M:%S", gmtime()))
     response.headers['content-disposition'] = \
         'attachment;filename="{}"'.format(filename)
 
