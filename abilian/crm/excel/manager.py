@@ -57,12 +57,15 @@ class ExcelManager(object):
   #: column to identify item by (unique) name (if no database id is
   # available). This is used by importer to import a many related sheet
   ID_BY_NAME_COL = None
+  
   #: list of columns that identify a unique object. If an import sheet has no id
   # one of this columns may identify an object. In this case the object is
   # updated with values from non-empty cells (like a dict.update())
   UNIQUE_ID_COLS = ()
+  
   #: sheet name where data should be, at import or export
   MAIN_SHEET_NAME = u'Sheet 1'
+  
   #: For many related export/import, set column at which object's columns is
   # splitted to insert related object columns
   MANY_SPLIT_COLUMN = 2
@@ -171,7 +174,9 @@ class ExcelManager(object):
       return self.export_many(objects, related_column_set)
 
     wb = Workbook()
-    ws, row = self._new_export_sheet(wb, self.MAIN_SHEET_NAME, self.columns)
+    if wb.worksheets:
+      wb.remove_sheet(wb.active)
+    ws, row = self._new_export_sheet(wb, self.model_cls.__name__, self.columns)
 
     for r, obj in enumerate(objects, row):
       md5 = hashlib.md5()
@@ -202,6 +207,9 @@ class ExcelManager(object):
     assert isinstance(related_columns_set, ManyRelatedColumnSet)
 
     wb = Workbook()
+    if wb.worksheets:
+      wb.remove_sheet(wb.active)
+    
     all_columns = self._columns_for_many_related(related_columns_set)
     ws, start_row = self._new_export_sheet(wb,
                                            related_columns_set.export_label,
