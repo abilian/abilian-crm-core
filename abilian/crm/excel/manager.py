@@ -5,6 +5,7 @@ from __future__ import absolute_import
 
 import logging
 import hashlib
+import math
 from functools import partial
 from itertools import izip, islice, chain
 import datetime
@@ -17,6 +18,7 @@ import itsdangerous
 import openpyxl
 from openpyxl import Workbook, styles
 from openpyxl.cell import STRING_TYPES
+from openpyxl.utils import units, get_column_letter
 from openpyxl.writer.dump_worksheet import WriteOnlyCell
 
 from flask import current_app
@@ -45,7 +47,8 @@ class ExcelManager(object):
 
   XF_HEADER = {
     'font': styles.Font(bold=True),
-    'alignment': styles.Alignment(horizontal='center', vertical='center')
+    'alignment': styles.Alignment(horizontal='center', vertical='center',
+                                  wrapText=True)
   }
   XF_EDITABLE = styles.Protection(locked=False)
   XF_DATE_EDITABLE = styles.Protection(locked=False)
@@ -167,7 +170,7 @@ class ExcelManager(object):
     if related_column_set is not None:
       return self.export_many(objects, related_column_set)
 
-    wb = Workbook(optimized_write=True)
+    wb = Workbook()
     ws, row = self._new_export_sheet(wb, self.MAIN_SHEET_NAME, self.columns)
 
     for r, obj in enumerate(objects, row):
@@ -188,7 +191,8 @@ class ExcelManager(object):
 
       cells[0].value=self.signer.sign(md5.hexdigest())
       ws.append(cells)
-      
+
+    self.finalize_worksheet(ws)
     return wb
 
   def export_many(self, objects, related_columns_set):
@@ -197,7 +201,7 @@ class ExcelManager(object):
     """
     assert isinstance(related_columns_set, ManyRelatedColumnSet)
 
-    wb = Workbook(optimized_write=True)
+    wb = Workbook()
     all_columns = self._columns_for_many_related(related_columns_set)
     ws, start_row = self._new_export_sheet(wb,
                                            related_columns_set.export_label,
@@ -284,22 +288,13 @@ class ExcelManager(object):
         cells[0].value = self.signer.sign(md5.hexdigest())
         ws.append(cells)
 
+    self.finalize_worksheet(ws)
     return wb
 
   def _new_export_sheet(self, wb, name, columns):
-    ws = wb.create_sheet()
-    ws.title = self.MAIN_SHEET_NAME
+    ws = wb.create_sheet(title=name)
     #ws.protect = True
-    
-    # ws.row_dimensions[0].hidden = True #  hide attributes names row
-    # ws.column_dimensions[0].hidden = True # hide md5 column
-    # ws.row_dimensions[1].height = 256 + 128
-    # ws.freeze_panes = ws.cell(row=2, column=3)
-    # ws.panes_frozen = True
-    # ws.horz_split_pos = 2
-    # ws.vert_split_pos = 3
-    # ws.remove_splits = True
-    
+          
     # attributes row
     row = 0
     md5 = hashlib.md5()
@@ -326,8 +321,33 @@ class ExcelManager(object):
     ws.append(cells)
     row += 1
 
+    # row / column properties
+    ws.row_dimensions[1].hidden = True #  hide attributes names row
+    ws.column_dimensions['A'].hidden = True # hide md5 column
+    MIN_WIDTH = units.BASE_COL_WIDTH
+    MAX_WIDTH = MIN_WIDTH * 2
+    overflow = 0
+    
+    for idx, cell in enumerate(cells, 1):
+      letter = get_column_letter(idx)
+      width = len(cell.value) + 1
+      if width > MAX_WIDTH:
+        overflow = max(overflow, width)
+        width = MAX_WIDTH
+      # BASE_COL_WIDTH <= custom width <= BASE_COL_WIDTH * 2
+      ws.column_dimensions[letter].width = max(MIN_WIDTH, width)
+
+    if overflow:
+      lines = int(math.ceil(overflow / float(MAX_WIDTH)))
+      ws.row_dimensions[2].height = units.DEFAULT_ROW_HEIGHT * lines
+      
     return ws, row
 
+  def finalize_worksheet(self, ws):
+    # if we do this during initialize, next ws.append() will occur at line 4,
+    # leaving a blank line.
+    ws.freeze_panes = ws.cell(row=3, column=3)
+  
   def _columns_for_many_related(self, related_cs):
     """
     Given a ManyRelatedColumnSet instance, returns a columns set with object
