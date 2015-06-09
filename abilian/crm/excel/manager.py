@@ -388,7 +388,7 @@ class ExcelManager(object):
     """
     wb = openpyxl.load_workbook(xls_file)
     try:
-      ws = wb[self.MAIN_SHEET_NAME]
+      ws = wb[self.model_cls.__name__]
     except KeyError:
       # last chance
       ws = wb['Sheet 1']
@@ -615,11 +615,10 @@ class ExcelManager(object):
       return
 
     try:
-      ws = wb.sheet_by_name[related_cs.export_label]
+      ws = wb[related_cs.export_label]
     except KeyError:
-      logger.debug('No sheet named "{}"'.format(
-        related_cs.export_label.encode('utf-8'))
-      )
+      logger.debug('No sheet named "%s"',
+                   related_cs.export_label.encode('utf-8'))
       return
 
     all_columns = self._columns_for_many_related(related_cs)
