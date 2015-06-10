@@ -7,12 +7,15 @@ from .base import ColumnSet
 
 
 class RelatedColumnSet(ColumnSet):
-  """ ColumnSet for a related entity
+  """
+  ColumnSet for a related entity
   """
   def __init__(self, related_attr, attrs, label=None, required=False):
-    """ related_attr: attribute name on main entity that connects to related one
+    """
+    :param related_attr: attribute name on main entity that connects to related
+    one.
 
-    attrs: iterable of tuple (attribute, label, types map, col_attr)
+    :param attrs: iterable of `tuple(attribute, label, types map, col_attr)`
     """
     self.related_attr = related_attr
     if label is None:
@@ -66,10 +69,10 @@ class ManyRelatedColumnSet(ColumnSet):
                form_cls=None, export_label=None, id_by_name_col=None,
                manager_cls=None):
     """
-    related_attr: attribute name on main entity that connects to related
+    :param related_attr: attribute name on main entity that connects to related
     ones
 
-    attrs: iterable of tuple (attribute, label, types map)
+    :param attrs: iterable of tuple (attribute, label, types map)
     """
     from abilian.crm.excel import ExcelManager
     
