@@ -58,15 +58,15 @@ class ExcelManager(object):
   #: column to identify item by (unique) name (if no database id is
   # available). This is used by importer to import a many related sheet
   ID_BY_NAME_COL = None
-  
+
   #: list of columns that identify a unique object. If an import sheet has no id
   # one of this columns may identify an object. In this case the object is
   # updated with values from non-empty cells (like a dict.update())
   UNIQUE_ID_COLS = ()
-  
+
   #: sheet name where data should be, at import or export
   MAIN_SHEET_NAME = u'Sheet 1'
-  
+
   #: For many related export/import, set column at which object's columns is
   # splitted to insert related object columns
   MANY_SPLIT_COLUMN = 2
@@ -74,7 +74,7 @@ class ExcelManager(object):
   #: list of field to skip
   SKIP_COLS = ()
 
-  def __init__(self, model_cls, form_cls, many_related_cs):
+  def __init__(self, model_cls, form_cls, many_related_cs=()):
     """
     model_cls: Model class
     form_cls: Form class
@@ -84,7 +84,8 @@ class ExcelManager(object):
     self.model_cls = model_cls
     self.form_cls = form_cls
     self.form = form_cls()
-    self.db_columns = sa.orm.class_mapper(model_cls).c
+    self.mapper = sa.inspect(model_cls)
+    self.db_columns = self.mapper.c
 
     if self.ID_BY_NAME_COL and self.ID_BY_NAME_COL not in self.UNIQUE_ID_COLS:
       self.UNIQUE_ID_COLS += (self.ID_BY_NAME_COL,)
@@ -210,7 +211,7 @@ class ExcelManager(object):
     wb = Workbook()
     if wb.worksheets:
       wb.remove_sheet(wb.active)
-    
+
     all_columns = self._columns_for_many_related(related_columns_set)
     ws, start_row = self._new_export_sheet(wb,
                                            related_columns_set.export_label,
@@ -249,10 +250,10 @@ class ExcelManager(object):
         col_offset = 1
         for c, cell in enumerate(head_data, 1):
           # FIXME: we could keep HEAD_MD5, and just extends `cells` with
-          # head_data          
+          # head_data
           cells.append(cell)
           self.update_md5(md5, value)
-          # ws.write(r+row_offset, c, value, style)          
+          # ws.write(r+row_offset, c, value, style)
           col_offset += 1
 
         data = related_columns_set.data(item)
@@ -287,9 +288,9 @@ class ExcelManager(object):
 
         for ignored in range(related_columns_len):
           cells.append(WriteOnlyCell(ws))
-          
+
         col_offset += related_columns_len
-        
+
         for c, cell in enumerate(tail_data, col_offset):
           cell.append(cell)
           self.update_md5(md5, value)
@@ -303,7 +304,7 @@ class ExcelManager(object):
   def _new_export_sheet(self, wb, name, columns):
     ws = wb.create_sheet(title=name)
     #ws.protect = True
-          
+
     # attributes row
     row = 0
     md5 = hashlib.md5()
@@ -325,7 +326,7 @@ class ExcelManager(object):
       cell.alignment = self.XF_HEADER['alignment']
       cells.append(cell)
       self.update_md5(md5, label)
-      
+
     cells[0].value = self.signer.sign(md5.hexdigest())
     ws.append(cells)
     row += 1
@@ -336,7 +337,7 @@ class ExcelManager(object):
     MIN_WIDTH = units.BASE_COL_WIDTH
     MAX_WIDTH = MIN_WIDTH * 2
     overflow = 0
-    
+
     for idx, cell in enumerate(cells, 1):
       letter = get_column_letter(idx)
       width = len(cell.value) + 1
@@ -349,14 +350,14 @@ class ExcelManager(object):
     if overflow:
       lines = int(math.ceil(overflow / float(MAX_WIDTH)))
       ws.row_dimensions[2].height = units.DEFAULT_ROW_HEIGHT * lines
-      
+
     return ws, row
 
   def finalize_worksheet(self, ws):
     # if we do this during initialize, next ws.append() will occur at line 4,
     # leaving a blank line.
     ws.freeze_panes = ws.cell(row=3, column=3)
-  
+
   def _columns_for_many_related(self, related_cs):
     """
     Given a ManyRelatedColumnSet instance, returns a columns set with object
@@ -962,7 +963,7 @@ class ExcelManager(object):
 
     if db_col is None:
       # relationship
-      mapper = sa.inspect(self.model_cls)
+      mapper = self.mapper
       prop = mapper.relationships[attr]
 
       if prop.direction is sa.orm.interfaces.MANYTOONE:
@@ -1105,7 +1106,7 @@ class ExcelManager(object):
     """
     cell = sheet.cell(row=row, column=col)
     value = cell.value
-    
+
     if isinstance(value, STRING_TYPES):
       value = cell.value.strip().replace(u'\r\n', u'\n')
       if u'\222' in value or u'\225' in value:
@@ -1155,4 +1156,3 @@ class ExcelManager(object):
       data['__metadata__']['unique_id_cols'][attr] = value
 
     return value
-
