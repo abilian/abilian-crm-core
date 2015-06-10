@@ -29,10 +29,11 @@ from abilian.core.sqlalchemy import JSON as JSONType
 from abilian.web.forms.fields import ModelFieldList
 from abilian.services.vocabularies.models import BaseVocabulary
 
+from ..models import PostalAddress
 from .exc import ExcelError, ExcelImportError
 from .columns import (
   Column, ColumnSet, RelatedColumnSet, ManyRelatedColumnSet,
-  VocabularyColumn, DateColumn, DateTimeColumn,
+  VocabularyColumn, PostalAddressColumn, DateColumn, DateTimeColumn,
   Invalid,
 )
 
@@ -970,6 +971,10 @@ class ExcelManager(object):
         if issubclass(target_class, BaseVocabulary):
           column_cls = VocabularyColumn
           type_ = target_class.query.active().by_label
+        elif issubclass(target_class, PostalAddress):
+          column_cls = PostalAddressColumn
+          type_ = None
+
     elif type_ is None and db_col is not None:
       try:
         type_ = db_col.type.python_type
