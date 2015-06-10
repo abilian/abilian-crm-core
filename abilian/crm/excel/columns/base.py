@@ -91,12 +91,12 @@ class Column(object):
 
   def __repr__(self):
     return (
-      u'{module}.{cls}(attr={attr}, label={label}, type_={type_}, '
-      u'required={required:}) at 0x{id:x}'
+      u'{module}.{cls}(attr={attr!r}, label={label!r}, type_={type_!r}, '
+      u'required={required:!r}) at 0x{id:x}'
       u''.format(module=self.__class__.__module__,
                  cls=self.__class__.__name__,
-                 attr=repr(self.attr), label=repr(self.label),
-                 type_=repr(self.type_), required=repr(self.required),
+                 attr=self.attr, label=self.label,
+                 type_=self.type_, required=self.required,
                  id=id(self)
       )
     ).encode('utf-8')
