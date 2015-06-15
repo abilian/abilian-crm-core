@@ -7,9 +7,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: abilian-crm 0.1.dev78+nc476a83\n"
+"Project-Id-Version: abilian-crm 0.1.dev79+n98208de\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-06-09 11:30+0200\n"
+"POT-Creation-Date: 2015-06-15 22:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,7 +70,7 @@ msgstr ""
 msgid "phonenumber_number"
 msgstr ""
 
-#: abilian/crm/forms.py:134
+#: abilian/crm/forms.py:133
 msgid "for an extension number add \"#1234\""
 msgstr ""
 

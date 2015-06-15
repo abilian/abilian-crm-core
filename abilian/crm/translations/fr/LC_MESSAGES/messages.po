@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: abilian-crm 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-06-09 11:30+0200\n"
+"POT-Creation-Date: 2015-06-15 22:22+0200\n"
 "PO-Revision-Date: 2015-06-09 11:30+0100\n"
 "Last-Translator: ybourbotte@abilian.com\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: abilian/crm/forms.py:78
 msgid "postal_address_street_lines"
-msgstr "Adresse"
+msgstr "Rue"
 
 #: abilian/crm/forms.py:79
 msgid "postal_address_street_lines_help"
@@ -70,7 +70,7 @@ msgstr "Standard, Fax, Pro, Mobile…"
 msgid "phonenumber_number"
 msgstr "Numéro"
 
-#: abilian/crm/forms.py:134
+#: abilian/crm/forms.py:133
 msgid "for an extension number add \"#1234\""
 msgstr "pour une extension (numéro de poste...) ajouter \"#1234\""
 
