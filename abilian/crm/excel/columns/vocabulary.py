@@ -11,7 +11,7 @@ __all__ = ['VocabularyColumn']
 
 class VocabularyColumn(Column):
   """
-  Colmns for :class:`abilian.services.models.BaseVocabulary` items
+  Columns for :class:`abilian.services.models.BaseVocabulary` items
   """
   expected_cell_types = STRING_TYPES
 

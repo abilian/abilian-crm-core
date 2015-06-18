@@ -23,7 +23,7 @@ class RequireableFormField(object):
 
   Basic FormField doesn't allow any validators, making harder to include an
   optional formfield with required fields.
-  """ 
+  """
   def __init__(self, *args, **kwargs):
     self.__validators = tuple(kwargs.pop('validators', ()))
     super(RequireableFormField, self).__init__(*args, **kwargs)
@@ -41,7 +41,7 @@ class RequireableFormField(object):
 
     for f in self.form:
       if f.flags.required:
-        f.validators = self.__filter_validators(f)        
+        f.validators = self.__filter_validators(f)
         f.flags.required = self.flags.required
         f.flags.optional = not self.flags.required
 
@@ -55,7 +55,7 @@ class RequireableFormField(object):
     validators = []
     remove = 'optional' if required else 'required'
     has_required = False
-    
+
     for v in field.validators:
       if required and any(f == 'required' for f in v.field_flags):
         has_required = True
@@ -67,15 +67,15 @@ class RequireableFormField(object):
       validators.append(required())
 
     return validators
-  
-        
+
+
 class PhoneNumberField(StringField):
   widget = PhoneNumberWidget()
-  
+
 
 class PostalAddressForm(ModelForm):
 
-  id = IntegerField(widget=HiddenInput(), validators=[optional(), flaghidden()])  
+  id = IntegerField(widget=HiddenInput(), validators=[optional(), flaghidden()])
   street_lines = TextAreaField(
     _l(u'postal_address_street_lines'),
     description=_l(u'postal_address_street_lines_help'),
@@ -103,7 +103,7 @@ class PostalAddressForm(ModelForm):
     validators=[required()],
     filters=(strip,),
   )
-  
+
   country = Select2Field(
     _l(u'postal_address_country'),
     validators=[required()],
@@ -119,27 +119,27 @@ class PostalAddressForm(ModelForm):
 
 class PostalAddressField(RequireableFormField, ModelFormField):
   widget = ModelWidget()
-  
+
   def __init__(self, *args, **kwargs):
     super(PostalAddressField, self).__init__(PostalAddressForm, *args, **kwargs)
 
 
 class PhoneNumberForm(ModelForm):
-  id = IntegerField(widget=HiddenInput(), validators=[optional(), flaghidden()])  
+  id = IntegerField(widget=HiddenInput(), validators=[optional(), flaghidden()])
   type = StringField(
     _l(u'phonenumber_type'),
     description=_l(u'phonenumber_type_help'),
   )
   number = PhoneNumberField(_l(u'phonenumber_number'), validators=[required()])
-  
+
   class Meta:
     model = PhoneNumber
     include_primary_keys = True
     assign_required = False
 
-    
+
 class PhoneNumberField(RequireableFormField, ModelFormField):
   widget = ModelWidget(view_template='crm/widgets/phonenumber_model_view.html')
 
   def __init__(self, *args, **kwargs):
-    super(PhoneNumberField, self).__init__(PhoneNumberForm, *args, **kwargs)    
+    super(PhoneNumberField, self).__init__(PhoneNumberForm, *args, **kwargs)
