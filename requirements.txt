@@ -1,3 +1,4 @@
 abilian-core
 
 phonenumbers
+openpyxl

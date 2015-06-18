@@ -11,6 +11,7 @@ import re
 import sqlalchemy as sa
 from abilian.core.entities import Entity
 from abilian.core.util import slugify
+from abilian.core.models import comment
 from abilian.services.security import Role
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
 from abilian.web.forms import FormPermissions, Form
@@ -176,10 +177,18 @@ class CodeGenerator(object):
     cls = type(type_name, (type_base,), attributes)
     self.data['cls'] = cls
     setattr(module, type_name, cls)
+
+    # automatic name from other fields
     auto_name = unicode(self.data.get('auto_name') or u'').strip()
 
     if auto_name:
       autoname.setup(cls, auto_name)
+
+    # commentable?
+    is_commentable = self.data.get('commentable', False)
+
+    if is_commentable:
+      comment.register(cls)
 
     return cls
 
