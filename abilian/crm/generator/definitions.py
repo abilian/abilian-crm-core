@@ -68,10 +68,12 @@ WIDGETS = (
     abilian_widgets.URLWidget,
     abilian_widgets.EmailWidget,
     abilian_widgets.MoneyWidget,
+    abilian_widgets.HoursWidget,
 )
 WIDGETS = {t.__name__: t for t in WIDGETS}
 
 LIST_GENERATORS = {'country': country_choices}
+
 
 def update(module):
   """
