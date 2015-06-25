@@ -224,6 +224,13 @@ class FormField(Registrable):
       extra_args['widget'] = aw_widgets.TextArea(resizeable='vertical',
                                                  rows=d['lines'])
 
+    self.setup_widgets_from_data(extra_args)
+
+  def setup_widgets_from_data(self, extra_args):
+    """
+    Setup widgets from specification in data ('widget' and 'view_widget' entries)
+    """
+    d = self.data
     for widget_arg in ('widget', 'view_widget'):
       if widget_arg not in d:
         continue

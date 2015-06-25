@@ -155,5 +155,10 @@ class EntityFormField(FormField):
     return extra_args
 
   def setup_widgets(self, extra_args):
-    extra_args['view_widget'] = aw_widgets.EntityWidget()
-    extra_args['widget'] = aw_widgets.Select2Ajax(multiple=self.multiple)
+    self.setup_widgets_from_data(extra_args)
+
+    if 'view_widget' not in extra_args:
+      extra_args['view_widget'] = aw_widgets.EntityWidget()
+
+    if 'widget' not in extra_args:
+      extra_args['widget'] = aw_widgets.Select2Ajax(multiple=self.multiple)
