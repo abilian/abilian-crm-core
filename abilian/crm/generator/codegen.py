@@ -11,8 +11,8 @@ import re
 import sqlalchemy as sa
 from abilian.core.entities import Entity
 from abilian.core.util import slugify
-from abilian.core.models import comment
-from abilian.services.security import Role
+from abilian.core.models import comment, attachment
+from abilian.services.security import Role, Permission, READ, WRITE
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
 from abilian.web.forms import FormPermissions, Form
 
@@ -31,8 +31,9 @@ def assert_ascii(s):
 
 class CodeGenerator(object):
 
-  def __init__(self, yaml_file=None, data=None):
+  def __init__(self, yaml_file=None, data=None, **options):
     self.vocabularies = {}
+    self.options = options
     self._model_finalizers = []
     if data is not None:
       self.data = data
@@ -136,6 +137,32 @@ class CodeGenerator(object):
     attributes['__module__'] = module.__name__
     attributes['__tablename__'] = self.data.get('tablename', model_name.lower())
 
+    # default permissions
+    permissions = self.data.get('permissions')
+    if permissions:
+      default_permissions = {}
+      for perm, roles in permissions.items():
+        perm = perm.strip()
+        if not perm:
+          raise TypeError('Found empty string for permission')
+        perm = Permission(perm)
+        roles = {Role(r.strip()) for r in roles if r.strip()}
+
+        if not roles:
+          continue
+
+        default_permissions[perm] = roles
+    else:
+      default_permissions = self.options.get('default_permissions', {})
+
+    if default_permissions:
+      if WRITE in default_permissions:
+        read_permissions = default_permissions.setdefault(READ, set())
+        read_permissions |= default_permissions[WRITE]
+
+      attributes['__default_permissions__'] = default_permissions
+
+    # Fields
     for d in self.data['fields']:
       if 'ignore' in d:
         continue
@@ -185,10 +212,12 @@ class CodeGenerator(object):
       autoname.setup(cls, auto_name)
 
     # commentable?
-    is_commentable = self.data.get('commentable', False)
-
-    if is_commentable:
+    if self.data.get('commentable', False):
       comment.register(cls)
+
+    # attachments support ?
+    if self.data.get('attachments', False):
+      attachment.register(cls)
 
     return cls
 

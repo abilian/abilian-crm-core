@@ -14,7 +14,7 @@ from .codegen import CodeGenerator
 logger = logging.getLogger(__name__)
 
 
-def generate_module(fullname):
+def generate_module(fullname, **kw):
   """
   :param module: existing module
 
@@ -36,7 +36,7 @@ def generate_module(fullname):
   for yml in directory.glob(u'*.yml'):
     logger.info('Loading: %s', yml)
     with yml.open('rt', encoding='utf-8') as f:
-      gen = CodeGenerator(yaml_file=f)
+      gen = CodeGenerator(yaml_file=f, **kw)
 
     gen.init_vocabularies(module)
     gen.gen_model(module)
@@ -50,15 +50,15 @@ class GeneratedModelsFinder(object):
   Module finder for generated models
   """
   def __init__(self):
-    self.managed_modules = set()
+    self.managed_modules = {}
     sys.meta_path.append(self)
 
-  def manage_module(self, package, name):
+  def manage_module(self, package, name, **kw):
     """
     Install module loader for 'package.name'
     """
     fullname = package + '.' + name
-    self.managed_modules.add(fullname)
+    self.managed_modules[fullname] = kw
 
   def find_module(self, fullname, path=None):
     """
@@ -75,7 +75,7 @@ class GeneratedModelsFinder(object):
     if fullname not in self.managed_modules:
       raise ImportError
 
-    module = generate_module(fullname)
+    module = generate_module(fullname, **self.managed_modules[fullname])
     module.__loader__ = self
     sys.modules[fullname] = module
     return module
