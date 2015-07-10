@@ -39,14 +39,16 @@ class Vocabulary(Field):
       yield attr_name, sa.ext.declarative.declared_attr(attr)
 
       # relationship
-      def get_rel_attr(func_name, target_cls):
+      def get_rel_attr(func_name, target_cls, attr_name):
         def gen_relationship(cls):
-          return sa.orm.relationship(target_cls)
+          primary_join = '{} == {}'.format(cls.__name__ + '.' + attr_name,
+                                           target_cls.__name__ + '.id')
+          return sa.orm.relationship(target_cls, primaryjoin=primary_join)
 
         gen_relationship.func_name = func_name
         return gen_relationship
 
-      attr = get_rel_attr(relation_name, self.voc_cls)
+      attr = get_rel_attr(relation_name, self.voc_cls, attr_name)
       yield relation_name, sa.ext.declarative.declared_attr(attr)
 
     else:  # m2m
