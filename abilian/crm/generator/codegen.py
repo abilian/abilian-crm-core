@@ -11,10 +11,11 @@ import re
 import sqlalchemy as sa
 from abilian.core.entities import Entity
 from abilian.core.util import slugify
-from abilian.core.models import comment, attachment
+from abilian.core.models import comment, attachment, tag
 from abilian.services.security import Role, Permission, READ, WRITE
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
 from abilian.web.forms import FormPermissions, Form
+from abilian.web.tags.extension import ns as tag_ns
 
 from .fieldtypes import get_field
 from . import autoname
@@ -218,6 +219,12 @@ class CodeGenerator(object):
     # attachments support ?
     if self.data.get('attachments', False):
       attachment.register(cls)
+
+    # tagging support ?
+    cls_tags_ns = self.data.get('tag', None)
+    if cls_tags_ns:
+      tag.register(cls)
+      tag_ns(cls_tags_ns)(cls)
 
     return cls
 
