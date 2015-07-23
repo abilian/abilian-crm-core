@@ -4,6 +4,7 @@
 from __future__ import absolute_import
 
 import wtforms.fields
+import wtforms.widgets as wtf_widgets
 
 from abilian.web.action import FAIcon
 import abilian.web.forms.fields as awbff
@@ -42,7 +43,6 @@ class BooleanField(FormField):
       extra_args['widget'] = aw_widgets.BooleanWidget(**kwargs)
 
 
-
 @form_field
 class DateField(FormField):
   ff_type = awbff.DateField
@@ -61,6 +61,11 @@ class DecimalField(FormField):
 @form_field
 class IntegerField(FormField):
   ff_type = wtforms.fields.IntegerField
+
+  def __init__(self, model, data, *args, **kwargs):
+    super(IntegerField, self).__init__(model, data, *args, **kwargs)
+    if 'widget' not in data:
+      data['widget'] = wtf_widgets.html5.NumberInput()
 
 
 @form_field
@@ -81,6 +86,8 @@ class URLField(TextField):
 
   def __init__(self, model, data, *args, **kwargs):
     super(URLField, self).__init__(model, data, *args, **kwargs)
+    if 'widget' not in data:
+      data['widget'] = wtf_widgets.html5.URLInput()
     if 'view_widget' not in data:
       data['view_widget'] = aw_widgets.URLWidget()
 
