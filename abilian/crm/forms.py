@@ -81,23 +81,27 @@ class PostalAddressForm(ModelForm):
     filters=(strip,),
     widget=TextArea(rows=4, resizeable=None),
   )
+
   administrative_area = StringField(
     _l(u'postal_address_administrative_area'),
     description=_l(u'postal_address_administrative_area_help'),
   )
+
   sub_administrative_area = StringField(
     _l(u'postal_address_sub_administrative_area'),
     description=_l(u'postal_address_sub_administrative_area_help'),
   )
-  locality = StringField(
-    _l(u'postal_address_locality'),
-    # description=_l(u'postal_address_locality_help'),
-    validators=[required()],
-    filters=(strip,),
-  )
+
   postal_code = StringField(
     _l(u'postal_address_postal_code'),
     description=_l(u'postal_address_postal_code_help'),
+    validators=[required()],
+    filters=(strip,),
+  )
+
+  locality = StringField(
+    _l(u'postal_address_locality'),
+    # description=_l(u'postal_address_locality_help'),
     validators=[required()],
     filters=(strip,),
   )
