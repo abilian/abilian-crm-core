@@ -13,9 +13,10 @@ from flask import request, current_app, flash, render_template, redirect
 from abilian.i18n import _, _l
 from abilian.web import views, csrf, url_for
 from abilian.web.util import capture_stream_errors
-from abilian.web.action import actions, Endpoint, FAIcon
+from abilian.web.action import Endpoint, FAIcon
 from abilian.web.frontend import (
   ModuleView, ModuleAction, ModuleActionDropDown, ModuleActionGroupItem,
+  ModuleComponent,
 )
 
 from .manager import ExcelManager
@@ -28,7 +29,7 @@ XLSX_MIME = u'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 class _ItemUpdate(object):
   """
   Holds item update data.
-  
+
   Used in import views.
 
   :param item_id: primary key
@@ -47,19 +48,28 @@ class BaseExcelView(ModuleView, views.View):
   """
   """
   excel_manager = ExcelManager
+  Form = None
 
-  def __init__(self, view_endpoint, *args, **kwargs):
+  def __init__(self, view_endpoint, Form=None, excel_manager=None,
+               *args, **kwargs):
     super(BaseExcelView, self).__init__(*args, **kwargs)
+    self.component = self.module.get_component('excel')
+    self.Form = Form if Form is not None else self.module.edit_form_class
+
+    if excel_manager is not None:
+      self.excel_manager =  excel_manager
+
+    self.EXCEL_EXPORT_RELATED = self.component.EXCEL_EXPORT_RELATED
     self.view_endpoint = view_endpoint
     self.__manager = None
-  
+
   def redirect_to_index(self):
     return redirect(self.view_endpoint)
-  
+
   @property
   def excel_export_actions(self):
     actions = []
-    for column_set in self.module.EXCEL_EXPORT_RELATED:
+    for column_set in self.EXCEL_EXPORT_RELATED:
       actions.append(
         (url_for('.export_to_xls', related=column_set.related_attr),
          column_set.export_label)
@@ -71,11 +81,11 @@ class BaseExcelView(ModuleView, views.View):
   def manager(self):
     if self.__manager is None:
       self.__manager = self.excel_manager(self.module.managed_class,
-                                          self.module.edit_form_class,
-                                          self.module.EXCEL_EXPORT_RELATED)
+                                          self.Form,
+                                          self.EXCEL_EXPORT_RELATED)
     return self.__manager
 
-  
+
 class ExcelExport(BaseExcelView):
   """
   """
@@ -89,7 +99,7 @@ class ExcelExport(BaseExcelView):
     if 'related' in request.args:
       related = request.args['related']
       related_cs = ifilter(lambda cs: cs.related_attr == related,
-                           self.module.EXCEL_EXPORT_RELATED)
+                           self.EXCEL_EXPORT_RELATED)
       try:
         related_cs = next(related_cs)
       except StopIteration:
@@ -127,12 +137,12 @@ class ExcelExport(BaseExcelView):
 
     return response
 
-  
+
 class ExcelImport(BaseExcelView):
   """
   """
   methods = ['POST']
-  
+
   @csrf.protect
   def post(self):
     xls = request.files['file']
@@ -188,7 +198,7 @@ class ExcelImportValidate(BaseExcelView):
   """
   """
   methods=['POST']
-  
+
   @csrf.protect
   def post(self):
     action = request.form.get('_action')
@@ -269,54 +279,57 @@ class ExcelImportValidate(BaseExcelView):
     return response
 
 
-class ExcelModuleMixin(object):
+class ExcelModuleComponent(ModuleComponent):
   """
-  Mixin for :class:`abilian.web.frontend.Module` objects
+  A :class:`ModuleComponent <Component>` for
+  :class:`abilian.web.frontend.Module` objects
   """
+  name = 'excel'
   EXCEL_SUPPORT_IMPORT = False
 
   #: tuple of ManyRelatedColumnSet()
   EXCEL_EXPORT_RELATED = ()
-  
-  def init_related_views(self):
-    super(ExcelModuleMixin, self).init_related_views()
-    self._setup_view('/export_xls', 'export_xls', ExcelExport,
-                     module=self,
-                     view_endpoint=self.endpoint + '.list_view',)
+
+  def init(self, *args, **kwargs):
+    super(ExcelModuleComponent, self).init(*args, **kwargs)
+    module = self.module
+    endpoint = module.endpoint
+    module._setup_view('/export_xls', 'export_xls', ExcelExport,
+                       module=module,
+                       view_endpoint=endpoint + '.list_view',)
 
     if not self.EXCEL_SUPPORT_IMPORT:
       return
-    
-    self._setup_view('/validate_imported_data', 'validate_imported_xls',
-                     ExcelImportValidate,
-                     methods=['POST'],
-                     module=self,
-                     view_endpoint=self.endpoint + '.list_view',)
-    
-    self._setup_view('/import_xls', 'import_xls', ExcelImport,
-                     methods=['POST'],
-                     module=self,
-                     view_endpoint=self.endpoint + '.list_view')
 
-    
-  def register_actions(self):
-    super(ExcelModuleMixin, self).register_actions()
+    module._setup_view('/validate_imported_data', 'validate_imported_xls',
+                       ExcelImportValidate,
+                       methods=['POST'],
+                       module=module,
+                       view_endpoint=endpoint + '.list_view',)
 
+    module._setup_view('/import_xls', 'import_xls', ExcelImport,
+                     methods=['POST'],
+                     module=module,
+                     view_endpoint=endpoint + '.list_view')
+
+
+  def get_actions(self):
     excel_actions = []
     button = 'default' if not self.EXCEL_EXPORT_RELATED else None
+    endpoint = self.module.endpoint
     excel_actions.append(
-      ModuleAction(self, 'excel', 'export_xls',
-                   title=_(u'Export to Excel'), icon=FAIcon('align-justify'),
-                   endpoint=Endpoint(self.endpoint + '.export_xls'),
+      ModuleAction(self.module, 'excel', 'export_xls',
+                   title=_l(u'Export to Excel'), icon=FAIcon('align-justify'),
+                   endpoint=Endpoint(endpoint + '.export_xls'),
                    button=button, css='datatable-export',))
-    
+
     for column_set in self.EXCEL_EXPORT_RELATED:
       excel_actions.append(
         ModuleActionGroupItem(
-          self, 'excel', 'export_related_' + column_set.related_attr,
+          self.module, 'excel', 'export_related_' + column_set.related_attr,
           title=column_set.export_label, icon=FAIcon('align-justify'),
           css='datatable-export',
-          endpoint=Endpoint(self.endpoint + '.export_xls',
+          endpoint=Endpoint(endpoint + '.export_xls',
                             related=column_set.related_attr),
           )
       )
@@ -326,10 +339,9 @@ class ExcelModuleMixin(object):
 
     if len(excel_actions) > 1:
       excel_actions = [ModuleActionDropDown(
-        self, 'excel', 'actions',
+        self.module, 'excel', 'actions',
         title=_l(u'Excel'), button='default',
         items=excel_actions,
       )]
-    
-    actions.register(*excel_actions)
-  
+
+    return excel_actions

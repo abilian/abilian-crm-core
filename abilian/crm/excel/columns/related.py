@@ -75,7 +75,7 @@ class ManyRelatedColumnSet(ColumnSet):
     :param attrs: iterable of tuple (attribute, label, types map)
     """
     from abilian.crm.excel import ExcelManager
-    
+
     self.ID_BY_NAME_COL = id_by_name_col
     self.related_attr = related_attr
     if label is None:
