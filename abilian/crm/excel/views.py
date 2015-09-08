@@ -290,12 +290,29 @@ class ExcelModuleComponent(ModuleComponent):
   #: tuple of ManyRelatedColumnSet()
   EXCEL_EXPORT_RELATED = ()
 
+  excel_manager = None
+  export_form = None
+
+  def __init__(self, export_form=None, excel_manager=None, *args, **kwargs):
+    super(ExcelModuleComponent, self).__init__(*args, **kwargs)
+
+    if export_form is not None:
+      self.export_form = export_form
+    if excel_manager is not None:
+      self.excel_manager = excel_manager
+
   def init(self, *args, **kwargs):
     super(ExcelModuleComponent, self).init(*args, **kwargs)
     module = self.module
     endpoint = module.endpoint
+
+    if self.export_form is None:
+      self.export_form = module.edit_form_class
+
     module._setup_view('/export_xls', 'export_xls', ExcelExport,
                        module=module,
+                       excel_manager=self.excel_manager,
+                       Form=self.export_form,
                        view_endpoint=endpoint + '.list_view',)
 
     if not self.EXCEL_SUPPORT_IMPORT:
