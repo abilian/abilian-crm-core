@@ -47,7 +47,7 @@ class RelatedColumnSet(ColumnSet):
       if not self.related_label:
         yield label
       else:
-        yield u'{}: {}'.format(self.related_label, label)
+        yield u'{}:\n {}'.format(self.related_label, label)
 
   def data(self, item):
     # if item is None we must nonetheless call data() for all columns and
@@ -104,4 +104,4 @@ class ManyRelatedColumnSet(ColumnSet):
       if not self.related_label:
         yield label
       else:
-        yield u'{}: {}'.format(self.related_label, label)
+        yield u'{}:\n {}'.format(self.related_label, label)
