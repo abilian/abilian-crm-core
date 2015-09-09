@@ -59,6 +59,12 @@ class Field(Registrable):
       raise ValueError("Field {!r}: {!r} doesn't support multiple values"
                        "".format(self.name, self.__class__.__fieldname__))
 
+    self.nullable = data.get('nullable', not self.required)
+    if self.nullable and self.required:
+      # if required, then it cannot be null
+      self.nullable = False
+
+
     ff_type = self.get_ff_type()
     data['formfield'] = ff_type(model=model, data=data, generator=generator)
 
@@ -75,9 +81,12 @@ class Field(Registrable):
     :return: iterable of `(name, type)`
     """
     col_name = self.name[:MAX_IDENTIFIER_LENGTH]
-    extra_args = {'nullable': not self.required}
+    extra_args = {'nullable': self.nullable}
     extra_args['info'] = info = {}
     info['label'] = self.label
+
+    if 'default' in self.data:
+      extra_args['default'] = self.data.get('default')
 
     if self.indexed:
       info['searchable'] = True
