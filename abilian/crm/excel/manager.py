@@ -168,17 +168,23 @@ class ExcelManager(object):
     return self._attr_to_main_column
 
 
-  def export(self, objects, related_column_set=None):
+  def export(self, objects, related_column_set=None, progress_callback=None):
     """
     Exports objects to a Workbook
     """
     if related_column_set is not None:
-      return self.export_many(objects, related_column_set)
+      return self.export_many(objects, related_column_set,
+                              progress_callback=progress_callback)
 
     wb = Workbook()
     if wb.worksheets:
       wb.remove_sheet(wb.active)
     ws, row = self._new_export_sheet(wb, self.model_cls.__name__, self.columns)
+
+    total = objects.count() if hasattr(objects, 'count') else len(objects)
+    exported = 0
+    if progress_callback:
+      progress_callback(exported=exported, total=total)
 
     for r, obj in enumerate(objects, row):
       md5 = hashlib.md5()
@@ -199,10 +205,17 @@ class ExcelManager(object):
       cells[0].value=self.signer.sign(md5.hexdigest())
       ws.append(cells)
 
+      exported += 1
+      if progress_callback:
+        progress_callback(exported=exported, total=total)
+
+    if progress_callback:
+        progress_callback(exported=total, total=total)
+
     self.finalize_worksheet(ws)
     return wb
 
-  def export_many(self, objects, related_columns_set):
+  def export_many(self, objects, related_columns_set, progress_callback=None):
     """
     :param related_columns_set: a :class:`ManyRelatedColumnSet` instance
     """
@@ -211,6 +224,11 @@ class ExcelManager(object):
     wb = Workbook()
     if wb.worksheets:
       wb.remove_sheet(wb.active)
+
+    total = objects.count() if hasattr(objects, 'count') else len(objects)
+    exported = 0
+    if progress_callback:
+      progress_callback(exported=exported, total=total)
 
     all_columns = self._columns_for_many_related(related_columns_set)
     ws, start_row = self._new_export_sheet(wb,
@@ -297,6 +315,13 @@ class ExcelManager(object):
 
         cells[0].value = self.signer.sign(md5.hexdigest())
         ws.append(cells)
+
+      exported += 1
+      if progress_callback:
+        progress_callback(exported=exported, total=total)
+
+    if progress_callback:
+        progress_callback(exported=total, total=total)
 
     self.finalize_worksheet(ws)
     return wb

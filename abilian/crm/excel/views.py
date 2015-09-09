@@ -8,10 +8,13 @@ import cStringIO as StringIO
 from time import strftime, gmtime
 from itertools import ifilter
 
-from flask import request, current_app, flash, render_template, redirect
+import celery
+from flask import request, current_app, flash, render_template
+from flask_login import current_user
 
 from abilian.i18n import _, _l
 from abilian.web import views, csrf, url_for
+from abilian.web.blueprints import Blueprint
 from abilian.web.util import capture_stream_errors
 from abilian.web.action import Endpoint, FAIcon
 from abilian.web.frontend import (
@@ -20,11 +23,13 @@ from abilian.web.frontend import (
 )
 
 from .manager import ExcelManager
+from .util import XLSX_MIME
+from .tasks import export as export_task
 
 logger = logging.getLogger(__name__)
 
-XLSX_MIME = u'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
+bp = Blueprint('crm_excel', __name__, url_prefix='/excel')
 
 class _ItemUpdate(object):
   """
@@ -63,8 +68,8 @@ class BaseExcelView(ModuleView, views.View):
     self.view_endpoint = view_endpoint
     self.__manager = None
 
-  def redirect_to_index(self):
-    return redirect(self.view_endpoint)
+  def index_url(self):
+    return url_for(self.view_endpoint)
 
   @property
   def excel_export_actions(self):
@@ -90,6 +95,25 @@ class ExcelExport(BaseExcelView):
   """
   """
   def get(self):
+    celery = current_app.extensions['celery']
+
+    if celery.conf.get('CELERY_ALWAYS_EAGER', True):
+      return self.generate_and_stream_file()
+
+    return self.generate_async()
+
+  def generate_async(self):
+    task_kwargs = dict(
+      app=self.module.crud_app.name,
+      module=self.module.id,
+      from_url=request.url,
+      user_id=current_user.id,
+      component=self.component.name,
+    )
+    task = export_task.apply_async(kwargs=task_kwargs)
+    return render_template('crm/excel/async_export.html', task=task)
+
+  def generate_and_stream_file(self):
     objects = []
     related_cs = None
 
@@ -136,6 +160,42 @@ class ExcelExport(BaseExcelView):
         'attachment;filename="{}"'.format(filename)
 
     return response
+
+
+class TaskStatusView(views.JSONView):
+  """
+  """
+  def data(self, *args, **kwargs):
+    task_id = request.args.get('task_id')
+    task = celery.result.AsyncResult(task_id)
+    result = dict(state=task.state, exported=0, total=0)
+
+    if task.state in ('FAILURE', 'REVOKED',):
+      return result
+
+    if task.state in ('PENDING', 'STARTED',):
+      return result
+
+    if task.state == 'PROGRESS':
+      result.update(task.result)
+      return result
+
+    if task.state == 'SUCCESS':
+      result.update(task.result)
+      handle = result['handle']
+      uploads = current_app.extensions['uploads']
+      filemeta = uploads.get_metadata(current_user, handle)
+      result['filename'] = filemeta.get('filename', 'export.xlsx')
+      result['downloadUrl'] = url_for('uploads.handle', handle=handle,
+                                      _external=True)
+      return result
+
+    # unattended state, return data anyway
+    #FIXME: log at error level for sentry?
+    return result
+
+
+bp.route('/export/task_status')(TaskStatusView.as_view('task_status'))
 
 
 class ExcelImport(BaseExcelView):
@@ -325,9 +385,9 @@ class ExcelModuleComponent(ModuleComponent):
                        view_endpoint=endpoint + '.list_view',)
 
     module._setup_view('/import_xls', 'import_xls', ExcelImport,
-                     methods=['POST'],
-                     module=module,
-                     view_endpoint=endpoint + '.list_view')
+                       methods=['POST'],
+                       module=module,
+                       view_endpoint=endpoint + '.list_view')
 
 
   def get_actions(self):
