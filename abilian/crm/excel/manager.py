@@ -243,20 +243,14 @@ class ExcelManager(object):
       # objects
       columns = iter(self.columns)
 
-      head_data = []
-      for col in islice(columns, self.MANY_SPLIT_COLUMN):
-        for import_val, value in col.data(obj):
-          cell = WriteOnlyCell(ws, value=import_val)
-          self.style_for(cell)
-          head_data.append(cell)
+      head_data = [import_val
+                   for col in islice(columns, self.MANY_SPLIT_COLUMN)
+                   for import_val, value in col.data(obj)]
 
-      tail_data = []
       # islice has started to consume 'columns' iterator, iter remaining columns
-      for col in columns:
-        for import_val, value in col.data(obj):
-          cell = WriteOnlyCell(ws, value=import_val)
-          self.style_for(cell)
-          tail_data.append(cell)
+      tail_data = [import_val
+                   for col in columns
+                   for import_val, value in col.data(obj)]
 
       # generate rows for each related object
       is_empty = True
@@ -266,9 +260,11 @@ class ExcelManager(object):
         is_empty = False
         row_offset += 1
         col_offset = 1
-        for c, cell in enumerate(head_data, 1):
+        for c, val in enumerate(head_data, 1):
           # FIXME: we could keep HEAD_MD5, and just extends `cells` with
           # head_data
+          cell = WriteOnlyCell(ws, value=val)
+          self.style_for(cell)
           cells.append(cell)
           self.update_md5(md5, value)
           # ws.write(r+row_offset, c, value, style)
@@ -283,7 +279,9 @@ class ExcelManager(object):
           self.update_md5(md5, import_val)
           col_offset += 1
 
-        for c, cell in enumerate(tail_data, col_offset):
+        for c, val in enumerate(tail_data, col_offset):
+          cell = WriteOnlyCell(ws, value=val)
+          self.style_for(cell)
           cells.append(cell)
           #ws.write(r+row_offset, c, value, style)
           self.update_md5(md5, value)
