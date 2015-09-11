@@ -6,7 +6,6 @@ from __future__ import absolute_import
 import pkg_resources
 
 import jinja2
-from flask import current_app
 from abilian.web import url_for
 from abilian.core.signals import register_js_api
 from abilian.core.util import fqcn
@@ -32,10 +31,10 @@ class AbilianCRM(object):
 
     app.extensions[FQCN] = self
     app.register_blueprint(excel_bp, url_prefix='/crm/excel')
-    
+
     # register i18n
     app.extensions['babel'].add_translations('abilian.crm')
-    
+
     jinja_filters.init_filters(app)
     app.register_jinja_loaders(jinja2.PackageLoader(__name__, 'templates'))
 
@@ -47,14 +46,14 @@ class AbilianCRM(object):
 
     app.register_asset('js', *JS)
     register_js_api.connect(self.register_js_api)
-    
+
   def register_js_api(self, sender):
     app = sender
     js_api = app.js_api.setdefault('crm', {})
     js_api = js_api.setdefault('excel', {})
     js_api['taskStatusUrl'] = url_for('crm_excel.task_status')
-    
-  
-  
+
+
+
 FQCN = fqcn(AbilianCRM)
 crm = AbilianCRM()
