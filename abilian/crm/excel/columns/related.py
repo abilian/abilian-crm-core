@@ -3,6 +3,8 @@
 """
 from __future__ import absolute_import
 
+from operator import attrgetter
+
 from .base import ColumnSet
 
 
@@ -15,11 +17,17 @@ class RelatedColumnSet(ColumnSet):
     :param related_attr: attribute name on main entity that connects to related
     one.
 
-    :param attrs: iterable of `tuple(attribute, label, types map, col_attr)`
+    :param attrs: iterable of :class:`Column` or :class:`ColumnSet` or
+                  `tuple(attribute, label, types map, col_attr)`.
     """
     self.related_attr = related_attr
+    self.get_related = attrgetter(self.related_attr)
+
     if label is None:
-      label = related_attr.replace(u'_', u' ')
+      label = unicode(related_attr)\
+        .replace(u'_', u' ')\
+        .replace(u'.', u' ')
+
     self.label = self.related_label = label
     self.required = required
     ColumnSet.__init__(self, *attrs)
@@ -55,12 +63,20 @@ class RelatedColumnSet(ColumnSet):
     # labels
     related = None
     if item is not None:
-      related = getattr(item, self.related_attr)
+      try:
+        related = self.get_related(item)
+      except AttributeError:
+        pass
 
     return ColumnSet.data(self, related)
 
   def data_for_import(self, item):
-    related = getattr(item, self.related_attr)
+    related = None
+    try:
+      related = self.get_related(item)
+    except AttributeError:
+      pass
+
     return related, related
 
 
