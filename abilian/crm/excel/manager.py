@@ -83,7 +83,7 @@ class ExcelManager(object):
     self.MANY_RELATED_CS = many_related_cs
     self.model_cls = model_cls
     self.form_cls = form_cls
-    self.form = form_cls()
+    self.form = form_cls(csrf_enabled=False)
     self.mapper = sa.inspect(model_cls)
     self.db_columns = self.mapper.c
 
