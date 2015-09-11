@@ -88,7 +88,8 @@ class ManyRelatedColumnSet(ColumnSet):
     :param related_attr: attribute name on main entity that connects to related
     ones
 
-    :param attrs: iterable of tuple (attribute, label, types map)
+    :param attrs: iterable of :class:`Column` or :class:`ColumnSet` or tuple
+                  (attribute, label, types map).
     """
     from abilian.crm.excel import ExcelManager
 
@@ -111,7 +112,24 @@ class ManyRelatedColumnSet(ColumnSet):
     return self.manager_cls(self.model_cls, self.form_cls, ())
 
   def iter_items(self, obj):
-    for item in getattr(obj, self.related_attr):
+    path = self.related_attr.split('.')
+
+    def iter_obj(obj, attrs):
+      if not attrs:
+        yield obj
+        raise StopIteration
+
+      objs = getattr(obj, attrs[0])
+      if not isinstance(objs, (set, list, tuple)):
+        objs = (objs,)
+
+      attrs = attrs[1:]
+      for item in objs:
+        # python 2.7 doesn't have "yield from"...
+        for yielded_item in iter_obj(item, attrs):
+          yield yielded_item
+
+    for item in iter_obj(obj, path):
       yield item
 
   @property
