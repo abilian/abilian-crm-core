@@ -7,16 +7,16 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: abilian-crm 0.1.dev79+n98208de\n"
+"Project-Id-Version: abilian-crm 0.1.dev111+n7b63f92\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-06-15 22:22+0200\n"
+"POT-Creation-Date: 2015-09-11 17:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.3\n"
+"Generated-By: Babel 2.0\n"
 
 #: abilian/crm/forms.py:78
 msgid "postal_address_street_lines"
@@ -26,55 +26,107 @@ msgstr ""
 msgid "postal_address_street_lines_help"
 msgstr ""
 
-#: abilian/crm/forms.py:85
+#: abilian/crm/forms.py:86
 msgid "postal_address_administrative_area"
 msgstr ""
 
-#: abilian/crm/forms.py:86
+#: abilian/crm/forms.py:87
 msgid "postal_address_administrative_area_help"
 msgstr ""
 
-#: abilian/crm/forms.py:89
+#: abilian/crm/forms.py:91
 msgid "postal_address_sub_administrative_area"
 msgstr ""
 
-#: abilian/crm/forms.py:90
+#: abilian/crm/forms.py:92
 msgid "postal_address_sub_administrative_area_help"
 msgstr ""
 
-#: abilian/crm/forms.py:93
-msgid "postal_address_locality"
-msgstr ""
-
-#: abilian/crm/forms.py:99
+#: abilian/crm/forms.py:96
 msgid "postal_address_postal_code"
 msgstr ""
 
-#: abilian/crm/forms.py:100
+#: abilian/crm/forms.py:97
 msgid "postal_address_postal_code_help"
 msgstr ""
 
-#: abilian/crm/forms.py:106
+#: abilian/crm/forms.py:103
+msgid "postal_address_locality"
+msgstr ""
+
+#: abilian/crm/forms.py:110
 msgid "postal_address_country"
 msgstr ""
 
-#: abilian/crm/forms.py:128
+#: abilian/crm/forms.py:132
 msgid "phonenumber_type"
 msgstr ""
 
-#: abilian/crm/forms.py:129
+#: abilian/crm/forms.py:133
 msgid "phonenumber_type_help"
 msgstr ""
 
-#: abilian/crm/forms.py:132
+#: abilian/crm/forms.py:136
 msgid "phonenumber_number"
 msgstr ""
 
-#: abilian/crm/forms.py:133
+#: abilian/crm/forms.py:137
 msgid "for an extension number add \"#1234\""
+msgstr ""
+
+#: abilian/crm/excel/manager.py:798
+msgid "This field is required"
+msgstr ""
+
+#: abilian/crm/excel/manager.py:1076
+msgid "Invalid cell format, value: {value}"
+msgstr ""
+
+#: abilian/crm/excel/manager.py:1095
+msgid ""
+"Cannot import related entity for attribute \"{}\" without a custom "
+"importer method"
+msgstr ""
+
+#: abilian/crm/excel/manager.py:1111
+msgid "\"{value}\" is invalid. Valid choices are: {valid}"
+msgstr ""
+
+#: abilian/crm/excel/views.py:181
+msgid "An error happened during generation of file."
+msgstr ""
+
+#: abilian/crm/excel/views.py:233
+msgid "Cannot read file {filename} as Excel file"
+msgstr ""
+
+#: abilian/crm/excel/views.py:242
+msgid "No change detected in file {filename}"
+msgstr ""
+
+#: abilian/crm/excel/views.py:325
+msgid ""
+"Import from {filename}: {changed} items changed, {created} items created,"
+" {skipped} ignored due to errors"
+msgstr ""
+
+#: abilian/crm/excel/views.py:399
+msgid "Export to Excel"
+msgstr ""
+
+#: abilian/crm/excel/views.py:420
+msgid "Excel"
 msgstr ""
 
 #: abilian/crm/generator/fieldtypes/yearly.py:448
 msgid "Year"
+msgstr ""
+
+#: abilian/crm/templates/crm/excel/async_export.html:5
+msgid "Generating file"
+msgstr ""
+
+#: abilian/crm/templates/crm/excel/async_export.html:12
+msgid "Waiting to start"
 msgstr ""
 
