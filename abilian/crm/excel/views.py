@@ -170,14 +170,15 @@ class TaskStatusView(views.JSONView):
     task = celery.result.AsyncResult(task_id)
     result = dict(state=task.state, exported=0, total=0)
 
-    if task.state in ('FAILURE', 'REVOKED',):
-      return result
-
-    if task.state in ('PENDING', 'STARTED',):
+    if task.state in ('REVOKED', 'PENDING', 'STARTED',):
       return result
 
     if task.state == 'PROGRESS':
       result.update(task.result)
+      return result
+
+    if task.state == 'FAILURE':
+      result['message'] = _(u'An error happened during generation of file.')
       return result
 
     if task.state == 'SUCCESS':

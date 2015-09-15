@@ -1,8 +1,8 @@
 (function(factory) {
 	'use strict';
-	require(['AbilianWidget', 'jquery'], factory);
+	require(['AbilianWidget', 'jquery', 'bootbox'], factory);
 })
-(function(Abilian, $) {
+(function(Abilian, $, bootbox) {
     'use strict';
 
     function TaskProgress(node, options) {
@@ -45,6 +45,7 @@
             break;
         case 'FAILURE':
             this.stopPolling();
+            this.notifyFailure(data);
             break;
         case 'REVOKED':
             this.stopPolling();
@@ -99,6 +100,24 @@
 //        window.open(downloadUrl);
 //        window.location = this.indexUrl;
 //        window.focus();
+    };
+
+    TaskProgress.prototype.notifyFailure = function (data) {
+        var indexUrl = this.indexUrl,
+            message = $('<p></p>')
+                .addClass('text-warning')
+                .append($('<i></i>').addClass('fa fa-exclamation-triangle'))
+                .append(data.message);
+
+        function redirectToIndex() {
+            window.location = indexUrl;
+        }
+
+        bootbox.alert({
+            message: message.html(),
+            callback: redirectToIndex
+            //locale: Abilian.i18n...
+        });
     };
 
     function initTaskProgress(params) {
