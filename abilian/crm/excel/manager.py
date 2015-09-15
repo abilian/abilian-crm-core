@@ -987,9 +987,9 @@ class ExcelManager(object):
     if db_col is None:
       # relationship
       mapper = self.mapper
-      prop = mapper.relationships[attr]
+      prop = mapper.relationships.get(attr)
 
-      if prop.direction is sa.orm.interfaces.MANYTOONE:
+      if prop is not None and prop.direction is sa.orm.interfaces.MANYTOONE:
         target_class = prop.mapper.class_
 
         if issubclass(target_class, BaseVocabulary):
