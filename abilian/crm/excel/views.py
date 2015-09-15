@@ -59,7 +59,7 @@ class BaseExcelView(ModuleView, views.View):
                *args, **kwargs):
     super(BaseExcelView, self).__init__(*args, **kwargs)
     self.component = self.module.get_component('excel')
-    self.Form = Form if Form is not None else self.module.edit_form_class
+    self.Form = Form if Form is not None else self.component.export_form
 
     if excel_manager is not None:
       self.excel_manager =  excel_manager
@@ -351,7 +351,7 @@ class ExcelModuleComponent(ModuleComponent):
   #: tuple of ManyRelatedColumnSet()
   EXCEL_EXPORT_RELATED = ()
 
-  excel_manager = None
+  excel_manager = ExcelManager
   export_form = None
 
   def __init__(self, export_form=None, excel_manager=None, *args, **kwargs):
