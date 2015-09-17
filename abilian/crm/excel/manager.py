@@ -308,7 +308,7 @@ class ExcelManager(object):
         col_offset += related_columns_len
 
         for c, cell in enumerate(tail_data, col_offset):
-          cell.append(cell)
+          cells.append(cell)
           self.update_md5(md5, value)
 
         cells[0].value = self.signer.sign(md5.hexdigest())
