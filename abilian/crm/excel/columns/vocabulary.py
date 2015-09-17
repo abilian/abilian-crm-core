@@ -16,7 +16,7 @@ class VocabularyColumn(Column):
   expected_cell_types = STRING_TYPES
 
   def data(self, item):
-    value = getattr(item, self.attr)
+    value = getattr(item, self.attr, None)
     import_value = unicode(value) if value is not None else u''
     yield import_value, value
 
