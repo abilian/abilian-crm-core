@@ -194,7 +194,6 @@ class ExcelManager(object):
         # one model column might be exported in multiple excel columns. Example:
         # a related entity like a contact: fullname, email, etc
         for rel_idx, (import_val, value) in enumerate(col.data(obj)):
-          dest_col = c + offset + rel_idx
           cell = WriteOnlyCell(ws, value=import_val)
           self.style_for(cell)
           cells.append(cell)
@@ -363,7 +362,7 @@ class ExcelManager(object):
 
     for idx, cell in enumerate(cells, 1):
       letter = get_column_letter(idx)
-      width = len(cell.value) + 1
+      width = max(len(l) for l in cell.value.split(u'\n')) + 1
       if width > MAX_WIDTH:
         overflow = max(overflow, width)
         width = MAX_WIDTH
