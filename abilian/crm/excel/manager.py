@@ -40,6 +40,12 @@ from .columns import (
 
 logger = logging.getLogger(__name__)
 
+#: column minimum width
+MIN_WIDTH = 3
+
+#: column maximum width
+MAX_WIDTH = units.BASE_COL_WIDTH * 2
+
 
 class ExcelManager(object):
   """
@@ -179,7 +185,13 @@ class ExcelManager(object):
     wb = Workbook()
     if wb.worksheets:
       wb.remove_sheet(wb.active)
+
     ws, row = self._new_export_sheet(wb, self.model_cls.__name__, self.columns)
+
+    cols_width = [MIN_WIDTH]
+    for idx, label in enumerate(self.columns.labels, 2):
+      letter = get_column_letter(idx)
+      cols_width.append(ws.column_dimensions[letter].width)
 
     total = objects.count() if hasattr(objects, 'count') else len(objects)
     exported = 0
@@ -199,6 +211,11 @@ class ExcelManager(object):
           cells.append(cell)
           self.update_md5(md5, import_val)
 
+          # estimate width
+          value = unicode(cell.value)
+          width = max(len(l) for l in value.split(u'\n')) + 1
+          cols_width[c] = max(width, cols_width[c])
+
         offset += rel_idx
 
       cells[0].value=self.signer.sign(md5.hexdigest())
@@ -211,7 +228,7 @@ class ExcelManager(object):
     if progress_callback:
         progress_callback(exported=total, total=total)
 
-    self.finalize_worksheet(ws)
+    self.finalize_worksheet(ws, cols_width=cols_width)
     return wb
 
   def export_many(self, objects, related_columns_set, progress_callback=None):
@@ -234,6 +251,11 @@ class ExcelManager(object):
                                            related_columns_set.export_label,
                                            all_columns)
     related_columns_len = related_columns_set.colspan
+
+    cols_width = [MIN_WIDTH]
+    for idx, label in enumerate(all_columns.labels, 2):
+      letter = get_column_letter(idx)
+      cols_width.append(ws.column_dimensions[letter].width)
 
     row_offset = 0
     for r, obj in enumerate(objects, start_row):
@@ -269,6 +291,11 @@ class ExcelManager(object):
           # ws.write(r+row_offset, c, value, style)
           col_offset += 1
 
+          # estimate width
+          value = unicode(cell.value)
+          width = max(len(l) for l in value.split(u'\n')) + 1
+          cols_width[c] = max(width, cols_width[c])
+
         data = related_columns_set.data(item)
         for c, (import_val, value) in enumerate(data, col_offset):
           cell = WriteOnlyCell(ws, value=import_val)
@@ -278,12 +305,22 @@ class ExcelManager(object):
           self.update_md5(md5, import_val)
           col_offset += 1
 
+          # estimate width
+          value = unicode(cell.value)
+          width = max(len(l) for l in value.split(u'\n')) + 1
+          cols_width[c] = max(width, cols_width[c])
+
         for c, val in enumerate(tail_data, col_offset):
           cell = WriteOnlyCell(ws, value=val)
           self.style_for(cell)
           cells.append(cell)
           #ws.write(r+row_offset, c, value, style)
           self.update_md5(md5, value)
+
+          # estimate width
+          value = unicode(cell.value)
+          width = max(len(l) for l in value.split(u'\n')) + 1
+          cols_width[c] = max(width, cols_width[c])
 
         cells[0].value = self.signer.sign(md5.hexdigest())
         ws.append(cells)
@@ -296,19 +333,31 @@ class ExcelManager(object):
         col_offset = 1
         # head data 1st, then adjust col_offset to skip related item columns,
         # then tail data
-        for c, cell in enumerate(head_data, 1):
+        for c, val in enumerate(head_data, 1):
+          cell = WriteOnlyCell(ws, value=val)
+          self.style_for(cell)
           cells.append(cell)
           self.update_md5(md5, value)
           col_offset += 1
+          # estimate width
+          value = unicode(cell.value)
+          width = max(len(l) for l in value.split(u'\n')) + 1
+          cols_width[c] = max(width, cols_width[c])
 
         for ignored in range(related_columns_len):
           cells.append(WriteOnlyCell(ws))
 
         col_offset += related_columns_len
 
-        for c, cell in enumerate(tail_data, col_offset):
+        for c, val in enumerate(tail_data, col_offset):
+          cell = WriteOnlyCell(ws, value=val)
+          self.style_for(cell)
           cells.append(cell)
           self.update_md5(md5, value)
+          # estimate width
+          value = unicode(cell.value)
+          width = max(len(l) for l in value.split(u'\n')) + 1
+          cols_width[c] = max(width, cols_width[c])
 
         cells[0].value = self.signer.sign(md5.hexdigest())
         ws.append(cells)
@@ -356,8 +405,6 @@ class ExcelManager(object):
     # row / column properties
     ws.row_dimensions[1].hidden = True #  hide attributes names row
     ws.column_dimensions['A'].hidden = True # hide md5 column
-    MIN_WIDTH = units.BASE_COL_WIDTH
-    MAX_WIDTH = MIN_WIDTH * 2
     overflow = 0
 
     for idx, cell in enumerate(cells, 1):
@@ -366,7 +413,7 @@ class ExcelManager(object):
       if width > MAX_WIDTH:
         overflow = max(overflow, width)
         width = MAX_WIDTH
-      # BASE_COL_WIDTH <= custom width <= BASE_COL_WIDTH * 2
+      # MIN_WIDTH <= custom width <= BASE_COL_WIDTH * 2
       ws.column_dimensions[letter].width = max(MIN_WIDTH, width)
 
     if overflow:
@@ -375,10 +422,16 @@ class ExcelManager(object):
 
     return ws, row
 
-  def finalize_worksheet(self, ws):
+  def finalize_worksheet(self, ws, cols_width=None):
     # if we do this during initialize, next ws.append() will occur at line 4,
     # leaving a blank line.
     ws.freeze_panes = ws.cell(row=3, column=3)
+
+    if cols_width is not None:
+      for idx, width in enumerate(cols_width, 1):
+        letter = get_column_letter(idx)
+        width = min(max(width, MIN_WIDTH), MAX_WIDTH)
+        ws.column_dimensions[letter].width = width
 
   def _columns_for_many_related(self, related_cs):
     """
