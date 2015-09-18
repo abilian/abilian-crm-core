@@ -54,7 +54,7 @@ class ExcelManager(object):
 
   XF_HEADER = {
     'font': styles.Font(bold=True),
-    'alignment': styles.Alignment(horizontal='center', vertical='center',
+    'alignment': styles.Alignment(horizontal='center', vertical='top',
                                   wrapText=True)
   }
   XF_EDITABLE = styles.Protection(locked=False)
