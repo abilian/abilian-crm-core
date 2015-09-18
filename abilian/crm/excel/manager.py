@@ -19,7 +19,7 @@ import openpyxl
 from openpyxl import Workbook, styles
 from openpyxl.cell import STRING_TYPES
 from openpyxl.utils import units, get_column_letter
-from openpyxl.writer.dump_worksheet import WriteOnlyCell
+from openpyxl.writer.write_only import WriteOnlyCell
 
 from flask import current_app
 
