@@ -58,7 +58,7 @@ class EntityField(Field):
       model_name = self.model
 
       def gen_relationship(cls):
-        kw = dict(uselist=False)
+        kw = dict(uselist=False, post_update=True)
         local = cls.__name__ + '.' + col_name
         remote = target_cls + '.id'
         if model_name == target_cls:
