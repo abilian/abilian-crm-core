@@ -369,7 +369,7 @@ class ExcelManager(object):
     if progress_callback:
         progress_callback(exported=total, total=total)
 
-    self.finalize_worksheet(ws)
+    self.finalize_worksheet(ws, cols_width=cols_width)
     return wb
 
   def _new_export_sheet(self, wb, name, columns):
