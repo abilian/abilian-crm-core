@@ -1,4 +1,4 @@
 abilian-core
 
-phonenumbers
+phonenumbers>=7.1.0
 openpyxl>=2.3.0b2
