@@ -52,6 +52,7 @@ class Field(Registrable):
     self.label = data.get('description', u'')
     self.sa_type_options = data.get('type_options', dict())
     self.required = data.get('required', False)
+    self.unique = data.get('unique', False)
     self.indexed = data.get('indexed', False)
     self.multiple = data.get('multiple', False)
 
@@ -109,7 +110,11 @@ class Field(Registrable):
 
     :return: iterable
     """
-    return ()
+    args = []
+    if self.unique:
+      args.append(sa.UniqueConstraint(self.name[:MAX_IDENTIFIER_LENGTH]))
+
+    return args
 
   def get_field(self, *args, **kwargs):
     """
