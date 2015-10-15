@@ -3,6 +3,8 @@
 """
 from __future__ import absolute_import
 
+from operator import attrgetter
+
 from markupsafe import Markup
 from wtforms.fields import FieldList
 from abilian.core.entities import Entity
@@ -131,8 +133,8 @@ class Column(object):
       else:
         return unicode(item)
 
-    value = getattr(item, self.attr)
-    import_value = item.display_value(self.attr)
+    value = attrgetter(self.attr)(item)
+    import_value = item.display_value(self.attr, value=value)
     if isinstance(import_value, Entity):
       import_value = import_value.name
     elif isinstance(import_value, list):
