@@ -94,7 +94,7 @@ class Column(object):
   def __repr__(self):
     return (
       u'{module}.{cls}(attr={attr!r}, label={label!r}, type_={type_!r}, '
-      u'required={required:!r}) at 0x{id:x}'
+      u'required={required!r}) at 0x{id:x}'
       u''.format(module=self.__class__.__module__,
                  cls=self.__class__.__name__,
                  attr=self.attr, label=self.label,
