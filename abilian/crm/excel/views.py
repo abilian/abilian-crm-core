@@ -52,7 +52,7 @@ class _ItemUpdate(object):
 class BaseExcelView(ModuleView, views.View):
   """
   """
-  excel_manager = ExcelManager
+  excel_manager = None
   Form = None
 
   def __init__(self, view_endpoint, Form=None, excel_manager=None,
@@ -63,6 +63,8 @@ class BaseExcelView(ModuleView, views.View):
 
     if excel_manager is not None:
       self.excel_manager =  excel_manager
+    elif self.excel_manager is None:
+      self.excel_manager = self.component.excel_manager
 
     self.EXCEL_EXPORT_RELATED = self.component.EXCEL_EXPORT_RELATED
     self.view_endpoint = view_endpoint
