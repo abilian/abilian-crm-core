@@ -3,6 +3,8 @@
 """
 from __future__ import absolute_import
 
+from future.utils import string_types
+
 import re
 from collections import OrderedDict
 
@@ -173,14 +175,14 @@ class FormField(Registrable):
 
     if 'validators' in d:
       validators = d['validators']
-      if isinstance(validators, basestring):
+      if isinstance(validators, string_types):
         validators = [validators]
       validators = [VALIDATORS[v]() for v in validators]
       extra_args['validators'].extend(validators)
 
     if 'filters' in d:
       filters = d['filters']
-      if isinstance(filters, basestring):
+      if isinstance(filters, string_types):
         filters = [filters]
       filters = [FORM_FILTERS[f] for f in filters]
       extra_args['filters'].extend(filters)
