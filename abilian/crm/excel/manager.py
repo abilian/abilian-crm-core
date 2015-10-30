@@ -97,8 +97,11 @@ class ExcelManager(object):
       self.UNIQUE_ID_COLS += (self.ID_BY_NAME_COL,)
 
     # collect exportable attributes
-    columns = [Column('id', 'id', int)]
+    columns = []
 
+    if 'id' not in self.form and 'id' not in self.SKIP_COLS:
+      columns.append(Column('id', 'id', int))
+    
     for field in self.form:
       info = self.columns_for(field, self.form)
       if info is not None:
