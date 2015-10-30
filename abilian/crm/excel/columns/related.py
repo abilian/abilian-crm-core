@@ -81,7 +81,7 @@ class RelatedColumnSet(ColumnSet):
 
 
 class ManyRelatedColumnSet(ColumnSet):
-  def __init__(self, related_attr, attrs, label=None, model_cls=None,
+  def __init__(self, related_attr, attrs=None, label=None, model_cls=None,
                form_cls=None, export_label=None, id_by_name_col=None,
                manager_cls=None):
     """
@@ -106,6 +106,10 @@ class ManyRelatedColumnSet(ColumnSet):
       export_label = label
     self.export_label = export_label
 
+    if attrs is None:
+      manager = self.create_manager()
+      attrs = manager.columns.columns
+    
     ColumnSet.__init__(self, *attrs)
 
   def create_manager(self):
