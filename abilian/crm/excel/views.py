@@ -55,10 +55,10 @@ class BaseExcelView(ModuleView, views.View):
   excel_manager = None
   Form = None
 
-  def __init__(self, view_endpoint, Form=None, excel_manager=None,
+  def __init__(self, view_endpoint, component='excel', Form=None, excel_manager=None,
                *args, **kwargs):
     super(BaseExcelView, self).__init__(*args, **kwargs)
-    self.component = self.module.get_component('excel')
+    self.component = self.module.get_component(component)
     self.Form = Form if Form is not None else self.component.export_form
 
     if excel_manager is not None:
@@ -374,6 +374,7 @@ class ExcelModuleComponent(ModuleComponent):
 
     module._setup_view('/export_xls', 'export_xls', ExcelExport,
                        module=module,
+                       component=self.name,
                        excel_manager=self.excel_manager,
                        Form=self.export_form,
                        view_endpoint=endpoint + '.list_view',)
@@ -384,11 +385,13 @@ class ExcelModuleComponent(ModuleComponent):
     module._setup_view('/validate_imported_data', 'validate_imported_xls',
                        ExcelImportValidate,
                        methods=['POST'],
+                       component=self.name,
                        module=module,
                        view_endpoint=endpoint + '.list_view',)
 
     module._setup_view('/import_xls', 'import_xls', ExcelImport,
                        methods=['POST'],
+                       component=self.name,
                        module=module,
                        view_endpoint=endpoint + '.list_view')
 
