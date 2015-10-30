@@ -8,8 +8,20 @@ from openpyxl.cell import STRING_TYPES, NUMERIC_TYPES
 from .base import Column
 
 
-__all__ = ['TextIntegerColumn']
+__all__ = ['EmptyColumn', 'TextIntegerColumn']
 
+class EmptyColumn(Column):
+  """
+  Useful when an export needs a blank column.
+  """
+  importable = False
+
+  def __init__(self, label=u''):
+    super(EmptyColumn, self).__init__('', label=label, type_=None)
+
+  def data(self, item):
+    yield None, None
+    
 
 class TextIntegerColumn(Column):
   """

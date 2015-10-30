@@ -9,11 +9,11 @@ from .dates import DateTimeColumn, DateColumn
 from .vocabulary import VocabularyColumn
 from .tags import TagsColumn
 from .postaladdress import PostalAddressColumn
-from .misc import TextIntegerColumn
+from .misc import EmptyColumn, TextIntegerColumn
 from .related import RelatedColumnSet, ManyRelatedColumnSet
 
 __all__ = [
-  'Column', 'ColumnSet', 'Invalid',
+  'Column', 'ColumnSet', 'Invalid', 'EmptyColumn',
   'DateTimeColumn', 'DateColumn',
   'VocabularyColumn',
   'TagsColumn',
