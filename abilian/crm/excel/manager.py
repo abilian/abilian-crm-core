@@ -96,11 +96,6 @@ class ExcelManager(object):
     if self.ID_BY_NAME_COL and self.ID_BY_NAME_COL not in self.UNIQUE_ID_COLS:
       self.UNIQUE_ID_COLS += (self.ID_BY_NAME_COL,)
 
-    # create signer
-    config = current_app.config
-    secret_key = config.get('SECRET_KEY')
-    self.signer = itsdangerous.TimestampSigner(secret_key, salt=__name__)
-
     # collect exportable attributes
     columns = [Column('id', 'id', int)]
 
@@ -119,6 +114,20 @@ class ExcelManager(object):
     """
     return []
 
+
+  _signer = None
+  
+  @property
+  def signer(self):
+    if self._signer is None:
+      # signer is created on 1st access. When it's never accessed, this instance
+      # can be used outside a flask application context
+      config = current_app.config
+      secret_key = config.get('SECRET_KEY')
+      self._signer = itsdangerous.TimestampSigner(secret_key, salt=__name__)
+      
+    return self._signer
+  
   @property
   def attrs(self):
     return self.columns.attrs
