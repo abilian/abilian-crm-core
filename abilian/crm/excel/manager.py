@@ -101,7 +101,7 @@ class ExcelManager(object):
 
     if 'id' not in self.form and 'id' not in self.SKIP_COLS:
       columns.append(Column('id', 'id', int))
-    
+
     for field in self.form:
       info = self.columns_for(field, self.form)
       if info is not None:
@@ -119,7 +119,7 @@ class ExcelManager(object):
 
 
   _signer = None
-  
+
   @property
   def signer(self):
     if self._signer is None:
@@ -128,9 +128,9 @@ class ExcelManager(object):
       config = current_app.config
       secret_key = config.get('SECRET_KEY')
       self._signer = itsdangerous.TimestampSigner(secret_key, salt=__name__)
-      
+
     return self._signer
-  
+
   @property
   def attrs(self):
     return self.columns.attrs
@@ -404,7 +404,7 @@ class ExcelManager(object):
     md5 = hashlib.md5()
     cells = [WriteOnlyCell(ws)]
     for c, label in enumerate(columns.labels, 1):
-      cell = WriteOnlyCell(ws, value=label)
+      cell = WriteOnlyCell(ws, value=unicode(label))
       cell.font = self.XF_HEADER['font']
       cell.alignment = self.XF_HEADER['alignment']
       cells.append(cell)
