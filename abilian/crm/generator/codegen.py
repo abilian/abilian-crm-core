@@ -12,7 +12,9 @@ import sqlalchemy as sa
 from abilian.core.entities import Entity
 from abilian.core.util import slugify
 from abilian.core.models import comment, attachment, tag
-from abilian.services.security import Role, Permission, READ, WRITE
+from abilian.services.security import (
+  Role, Permission, READ, WRITE, CREATE, DELETE,
+)
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
 from abilian.web.forms import FormPermissions, Form
 from abilian.web.tags.extension import ns as tag_ns
@@ -157,9 +159,15 @@ class CodeGenerator(object):
       default_permissions = self.options.get('default_permissions', {})
 
     if default_permissions:
+      for p in (WRITE, CREATE, DELETE):
+        if p in default_permissions:
+          read_permissions = default_permissions.setdefault(READ, set())
+          read_permissions |= default_permissions[p]
+
       if WRITE in default_permissions:
-        read_permissions = default_permissions.setdefault(READ, set())
-        read_permissions |= default_permissions[WRITE]
+        for p in (CREATE, DELETE):
+          if p not in default_permissions:
+            default_permissions[p] = set(default_permissions[WRITE])
 
       attributes['__default_permissions__'] = default_permissions
 
