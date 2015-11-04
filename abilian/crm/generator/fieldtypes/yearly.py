@@ -113,9 +113,18 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
     for key in self.keys():
       yield key
 
+  __iter__ = iterkeys
+
+  def values(self):
+    return sorted(super(YearlyCollection, self).values(),
+                  key=YearlyCollection._keyfunc)
+
+  def itervalues(self):
+    for v in self.values():
+      yield v
+
   def items(self):
-    return [(obj.year, obj)
-            for obj in sorted(self.itervalues(), key=YearlyCollection._keyfunc)]
+    return [(obj.year, obj) for obj in self.itervalues()]
 
   def iteritems(self):
     for item in self.items():
@@ -261,6 +270,33 @@ class YearlyCollectionProxy(dict):
     # dont't return default as passed but value as actually set.
     # allow to pass 'default' as dict and get a YearlyBase class in return
     return self.__getitem__(key)
+
+
+  def keys(self):
+    return sorted(super(YearlyCollectionProxy, self).keys())
+
+  def iterkeys(self):
+    for key in self.keys():
+      yield key
+
+  __iter__ = iterkeys
+
+  def values(self):
+    return sorted(super(YearlyCollectionProxy, self).values(),
+                  key=YearlyCollection._keyfunc)
+
+  def itervalues(self):
+    for v in self.values():
+      yield v
+
+  def items(self):
+    return [(obj.year, obj)
+            for obj in sorted(self.itervalues(),
+                              key=YearlyCollectionProxy._keyfunc)]
+
+  def iteritems(self):
+    for item in self.items():
+      yield item
 
 
 class YearlyAttribute(object):
