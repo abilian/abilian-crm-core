@@ -67,7 +67,6 @@ class Field(Registrable):
       # if required, then it cannot be null
       self.nullable = False
 
-
     ff_type = self.get_ff_type()
     data['formfield'] = ff_type(model=model, data=data, generator=generator)
 
@@ -129,6 +128,19 @@ class Field(Registrable):
 
 
 class FormField(Registrable):
+  """
+  name: Text
+  help: Text
+  lines: int   -> TextAreaField
+  from_list:      -> Select2Field
+  from_function:  -> Select2Field
+  type_options: Dict
+  description: Text
+  multiple: Boolean
+  required: Boolean
+  validator_length_max: int > 0
+  validator_length_min: int > 0
+  """
   #: form field type
   ff_type = wtforms.fields.TextField
 
@@ -142,6 +154,12 @@ class FormField(Registrable):
     self.sa_type_options = data.get('type_options', dict())
     self.required = data.get('required', False)
     self.multiple = data.get('multiple', False)
+    self.validator_length_max = data.get('validator_length_max', -1)
+    self.validator_length_min = data.get('validator_length_min', -1)
+    if self.validator_length_max < -1:
+      self.validator_length_max = -1
+    if self.validator_length_min < -1:
+      self.validator_length_min = -1
 
   def get_form_attributes(self):
     field_type = self.get_type()
@@ -163,7 +181,7 @@ class FormField(Registrable):
   def get_extra_args(self, *args, **kwargs):
     extra_args = {
       'filters': list(self.get_filters()),
-      'validators': list(self.get_validators()),
+      'validators': self.get_validators(),
     }
 
     # extra validators & filters specified in data
@@ -204,10 +222,16 @@ class FormField(Registrable):
     """
     Default validators
     """
+    validators = []
     if self.required:
-      return (aw_validators.required(),)
+      validators.append(aw_validators.required())
     else:
-      return (aw_validators.optional(),)
+      validators.append(aw_validators.optional())
+
+    if self.validator_length_max != -1 or self.validator_length_min != -1:
+      validators.append(aw_validators.Length(min=self.validator_length_min,
+                                             max=self.validator_length_max))
+    return validators
 
   def setup_widgets(self, extra_args):
     """
