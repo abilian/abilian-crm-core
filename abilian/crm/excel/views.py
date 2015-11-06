@@ -13,6 +13,7 @@ from flask import request, current_app, flash, render_template
 from flask_login import current_user
 
 from abilian.i18n import _, _l
+from abilian.core.util import fqcn
 from abilian.web import views, csrf, url_for
 from abilian.web.blueprints import Blueprint
 from abilian.web.util import capture_stream_errors
@@ -112,6 +113,10 @@ class ExcelExport(BaseExcelView):
       user_id=current_user.id,
       component=self.component.name,
     )
+
+    if self.excel_manager != self.component.excel_manager:
+      task_kwargs['manager'] = fqcn(self.excel_manager)
+
     task = export_task.apply_async(kwargs=task_kwargs)
     return render_template('crm/excel/async_export.html', task=task)
 

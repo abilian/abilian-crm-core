@@ -9,6 +9,7 @@ from urlparse import urlparse
 from cStringIO import StringIO
 from time import strftime, gmtime
 
+from werkzeug.utils import import_string
 from flask import current_app, request
 from celery import shared_task
 from flask_login import login_user
@@ -18,7 +19,8 @@ from abilian.core.models.subjects import User
 from .util import XLSX_MIME
 
 @shared_task(bind=True, track_started=True, ignore_result=False)
-def export(self, app, module, from_url, user_id, component='excel'):
+def export(self, app, module, from_url, user_id, component='excel',
+           manager=None):
   """
   Async export xls task.
 
@@ -51,9 +53,14 @@ def export(self, app, module, from_url, user_id, component='excel'):
     login_user(user, remember=False, force=False)
     objects = module.ordered_query(request)
     related_cs = None
-    manager = component.excel_manager(module.managed_class,
-                                      component.export_form,
-                                      component.EXCEL_EXPORT_RELATED)
+    if manager is not None:
+      manager = import_string(manager)
+    else:
+      manager = component.excel_manager
+
+    manager = manager(module.managed_class,
+                      component.export_form,
+                      component.EXCEL_EXPORT_RELATED)
 
     if 'related' in request.args:
       related = request.args['related']
