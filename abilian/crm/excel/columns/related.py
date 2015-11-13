@@ -109,7 +109,7 @@ class ManyRelatedColumnSet(ColumnSet):
     if attrs is None:
       manager = self.create_manager()
       attrs = manager.columns.columns
-    
+
     ColumnSet.__init__(self, *attrs)
 
   def create_manager(self):

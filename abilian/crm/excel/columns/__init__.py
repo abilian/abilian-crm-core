@@ -11,6 +11,7 @@ from .tags import TagsColumn
 from .postaladdress import PostalAddressColumn
 from .misc import EmptyColumn, TextIntegerColumn
 from .related import RelatedColumnSet, ManyRelatedColumnSet
+from .yearly import ManyYearlyColumnSet
 
 __all__ = [
   'Column', 'ColumnSet', 'Invalid', 'EmptyColumn',
@@ -20,4 +21,5 @@ __all__ = [
   'PostalAddressColumn',
   'TextIntegerColumn',
   'RelatedColumnSet', 'ManyRelatedColumnSet',
+  'ManyYearlyColumnSet',
 ]
