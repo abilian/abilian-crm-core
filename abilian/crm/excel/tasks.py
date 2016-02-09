@@ -18,7 +18,11 @@ from abilian.core.models.subjects import User
 
 from .util import XLSX_MIME
 
-@shared_task(bind=True, track_started=True, ignore_result=False)
+DEFAULT_EXPIRES = 1800 # generally user will not wait 1/2h. No need to process
+                       # this long task
+
+@shared_task(bind=True, track_started=True, ignore_result=False,
+             expires=DEFAULT_EXPIRES,)
 def export(self, app, module, from_url, user_id, component='excel',
            manager=None):
   """
