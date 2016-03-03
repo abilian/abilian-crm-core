@@ -40,7 +40,6 @@ setuptools.setup(
     extras_require={},
     include_package_data=True,
     classifiers=[
-        'Private :: Do Not Upload',  # not published for now
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
