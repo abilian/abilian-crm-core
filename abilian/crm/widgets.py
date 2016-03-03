@@ -10,11 +10,11 @@ from .jinja_filters import format_phonenumber
 
 
 class PhoneNumberWidget(TextInput):
-  pre_icon = FAIcon('phone')
+    pre_icon = FAIcon('phone')
 
-  def render_view(self, field, **kwargs):
-    data = field.data
-    if not data:
-      return u''
+    def render_view(self, field, **kwargs):
+        data = field.data
+        if not data:
+            return u''
 
-    return format_phonenumber(data, international=True)
+        return format_phonenumber(data, international=True)
