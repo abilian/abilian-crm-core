@@ -34,7 +34,7 @@ bp = Blueprint('crm_excel', __name__, url_prefix='/excel')
 
 
 class _ItemUpdate(object):
-    """ Holds item update data.
+    """Holds item update data.
 
     Used in import views.
 
@@ -231,13 +231,13 @@ class ExcelImport(BaseExcelView):
             try:
                 modified_items = manager.import_data(
                     xls, self.module.EXCEL_EXPORT_RELATED)
-            except xlrd.XLRDError as e:
-                error = True
-                flash(_(u'Cannot read file {filename} as Excel file').format(
-                        filename=filename),
-                      'error')
-                logger.error(e, exc_info=True)
-            except ExcelError, e:
+            # except xlrd.XLRDError as e:
+            #     error = True
+            #     flash(_(u'Cannot read file {filename} as Excel file').format(
+            #             filename=filename),
+            #           'error')
+            #     logger.error(e, exc_info=True)
+            except Exception, e:
                 error = True
                 flash(e.message, 'error')
 
