@@ -1,6 +1,4 @@
 # coding=utf-8
-"""
-"""
 from __future__ import absolute_import
 
 import setuptools
@@ -8,7 +6,7 @@ from distutils.command.build import build as _build
 from setuptools.command.sdist import sdist as _sdist
 from setuptools.command.develop import develop as _develop
 
-REQUIREMENTS = ['abilian-core', 'phonenumbers>=7.1.0', 'openpyxl>=2.3.0b2']
+REQUIREMENTS = ['abilian-core', 'phonenumbers>=7.1.0', 'openpyxl>=2.3.3',]
 
 
 class build(_build):
@@ -27,13 +25,13 @@ class develop(_develop):
 
 
 setuptools.setup(
-    name='abilian-crm',
+    name='abilian-crm-core',
     use_scm_version=True,
     url='http://docs.abilian.com/',
     license='LGPL',
     author='Abilian SAS',
     author_email='contact@abilian.com',
-    description='Social Business / Enterprise Social Networking platform',
+    description='Core framework for CRM applications',
     packages=['abilian.crm'],
     zip_safe=False,
     platforms='any',
@@ -55,4 +53,4 @@ setuptools.setup(
         'build': build,
         'sdist': sdist,
         'develop': develop,
-    },)
+    })
