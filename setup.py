@@ -10,10 +10,7 @@ from setuptools.command.develop import develop as _develop
 
 import pip
 
-session = session=pip.download.PipSession()
-_install_requires = pip.req.parse_requirements(
-    'requirements.txt', session=session)
-install_requires = [str(ir.req) for ir in _install_requires]
+REQUIREMENTS = ['abilian-core', 'phonenumbers>=7.1.0', 'openpyxl>=2.3.0b2']
 
 
 class build(_build):
@@ -42,7 +39,7 @@ setuptools.setup(
   zip_safe=False,
   platforms='any',
   setup_requires=['babel', 'setuptools-git', 'setuptools_scm'],
-  install_requires=install_requires,
+  install_requires=REQUIREMENTS,
   extras_require={},
   include_package_data=True,
   classifiers=[

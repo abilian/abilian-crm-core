@@ -91,6 +91,7 @@ clean:
 	rm -rf tests.functional.test/
 
 tidy: clean
+	rm -rf instance
 	rm -rf .tox
 
 update-pot:
