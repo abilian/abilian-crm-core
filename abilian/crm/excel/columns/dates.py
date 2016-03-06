@@ -14,8 +14,7 @@ __all__ = ('DateTimeColumn', 'DateColumn')
 
 
 class DateTimeColumn(Column):
-    """ Column for datetime.datetime objects
-  """
+    """Column for datetime.datetime objects."""
     _date_fmt = '%Y-%m-%d %H:%M:%S'
     expected_cell_types = TIME_TYPES
     adapt_cell_types = TIME_TYPES + NUMERIC_TYPES
@@ -30,7 +29,7 @@ class DateTimeColumn(Column):
 
         if type(value) in NUMERIC_TYPES:
             max_year = datetime.datetime.now().year + 1
-            if value > 2000 and value < max_year:
+            if 2000 < value < max_year:
                 # just current year
                 return datetime.datetime(int(value), 1, 1)
 
@@ -46,8 +45,7 @@ class DateTimeColumn(Column):
 
 
 class DateColumn(DateTimeColumn):
-    """ Column for datetime.date objects
-  """
+    """Column for datetime.date objects."""
     _date_fmt = '%Y-%m-%d'
     _text_adapt = '%d/%m/%Y'
 
