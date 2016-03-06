@@ -50,10 +50,10 @@ class YearlyBase(db.Model):
     year = sa.Column(sa.SmallInteger, nullable=False)
 
     def __eq__(self, other):
-        raise NotImplemented
+        raise NotImplementedError
 
     def __lt__(self, other):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 class YearlyCollection(sa.orm.collections.MappedCollection):
@@ -137,8 +137,8 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
 
     def latest(self, attr):
         """
-    Return the most recent tuple `(year, value)` for given :attr:
-    """
+        Return the most recent tuple `(year, value)` for given :attr:
+        """
         getter = attrgetter(attr)
         for year, infos in reversed(self.items()):
             val = getter(infos)
@@ -416,6 +416,7 @@ class Yearly(Field):
     def create_related_model(self, module):
         # cannot import at top of the file
         from ..codegen import CodeGenerator
+
         generator = CodeGenerator(data=self.yearly_data)
         generator.add_model_finalizer(self.yearly_model_finalizer)
         generator.init_vocabularies(module)
