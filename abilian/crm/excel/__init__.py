@@ -8,5 +8,5 @@ from .manager import ExcelManager
 from .views import ExcelModuleComponent
 from .columns import RelatedColumnSet, ManyRelatedColumnSet
 
-__all__ = (ExcelManager, ExcelModuleComponent, RelatedColumnSet,
-           ManyRelatedColumnSet)
+__all__ = ("ExcelManager", "ExcelModuleComponent", "RelatedColumnSet",
+           "ManyRelatedColumnSet")

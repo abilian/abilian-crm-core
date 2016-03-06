@@ -9,5 +9,6 @@ from .registry import model_field, form_field, get_field, get_formfield
 from . import (simple, formfields, vocabulary, entity, yearly, postaladdress,
                phonenumber)
 
-__all__ = (model_field, form_field, get_field, get_formfield, simple,
-           formfields, vocabulary, entity, yearly, postaladdress, phonenumber)
+__all__ = ("model_field", "form_field", "get_field", "get_formfield", "simple",
+           "formfields", "vocabulary", "entity", "yearly", "postaladdress",
+           "phonenumber")
