@@ -53,11 +53,9 @@ class CodeGenerator(object):
         self.module = module
 
     def prepare_data(self):
-        """
-    Massage data before models creations
-    """
+        """Massage data before models creations."""
         for d in self.data['fields']:
-            vocabulary = d.get('vocabulary', None)
+            vocabulary = d.get('vocabulary')
             if vocabulary:
                 name = u'Vocabulary_'
                 group = vocabulary.get('group', u'').strip()
@@ -76,7 +74,7 @@ class CodeGenerator(object):
                 continue
 
             # slugify list items
-            from_list = d.get('from_list', None)
+            from_list = d.get('from_list')
             if from_list is None:
                 continue
 
@@ -229,7 +227,7 @@ class CodeGenerator(object):
             attachment.register(cls)
 
         # tagging support ?
-        cls_tags_ns = self.data.get('tag', None)
+        cls_tags_ns = self.data.get('tag')
         if cls_tags_ns:
             tag.register(cls)
             tag_ns(cls_tags_ns)(cls)

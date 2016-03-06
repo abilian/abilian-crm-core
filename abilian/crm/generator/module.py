@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 
 def generate_module(fullname, **kw):
     """
-  :param module: existing module
+    :param module: existing module
 
-  :param name: module name for generated classes
+    :param name: module name for generated classes
 
-  :param directory: directory where resides *.yml files.
-  By default, directory `name` in `module` directory.
-  """
+    :param directory: directory where resides *.yml files.
+    By default, directory `name` in `module` directory.
+    """
     module = imp.new_module(fullname)
 
     parent_module, name = fullname.rsplit('.', 1)
@@ -47,8 +47,8 @@ def generate_module(fullname, **kw):
 
 class GeneratedModelsFinder(object):
     """
-  Module finder for generated models
-  """
+    Module finder for generated models
+    """
 
     def __init__(self):
         self.managed_modules = {}
@@ -56,23 +56,23 @@ class GeneratedModelsFinder(object):
 
     def manage_module(self, package, name, **kw):
         """
-    Install module loader for 'package.name'
-    """
+        Install module loader for 'package.name'
+        """
         fullname = package + '.' + name
         self.managed_modules[fullname] = kw
 
     def find_module(self, fullname, path=None):
         """
-    PEP 302 finder
-    """
+        PEP 302 finder
+        """
         if fullname in self.managed_modules:
             return self
         return None
 
     def load_module(self, fullname):
         """
-    PEP 302 loader
-    """
+        PEP 302 loader
+        """
         if fullname not in self.managed_modules:
             raise ImportError
 
