@@ -27,7 +27,7 @@ class develop(_develop):
 setuptools.setup(
     name='abilian-crm-core',
     use_scm_version=True,
-    url='http://docs.abilian.com/',
+    url='https://github.com/abilian/abilian-crm-core',
     license='LGPL',
     author='Abilian SAS',
     author_email='contact@abilian.com',
