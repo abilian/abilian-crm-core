@@ -3,17 +3,17 @@
 """
 from __future__ import absolute_import
 
-from wtforms.fields import StringField, TextAreaField, IntegerField
+from wtforms.fields import IntegerField, StringField, TextAreaField
 from wtforms.widgets import HiddenInput
 
 from abilian.i18n import _l, country_choices
 from abilian.web.forms import ModelForm
-from abilian.web.forms.fields import Select2Field, ModelFormField
-from abilian.web.forms.widgets import TextArea, ModelWidget
-from abilian.web.forms.validators import required, flaghidden, optional
+from abilian.web.forms.fields import ModelFormField, Select2Field
 from abilian.web.forms.filters import strip
+from abilian.web.forms.validators import flaghidden, optional, required
+from abilian.web.forms.widgets import ModelWidget, TextArea
 
-from .models import PostalAddress, PhoneNumber
+from .models import PhoneNumber, PostalAddress
 from .widgets import PhoneNumberWidget
 
 

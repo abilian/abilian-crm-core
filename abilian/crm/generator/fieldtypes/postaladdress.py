@@ -4,13 +4,14 @@
 from __future__ import absolute_import
 
 import sqlalchemy as sa
+
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets
 
-from ...models import PostalAddress
 from ...forms import PostalAddressField, PostalAddressForm
-from .registry import model_field, form_field
+from ...models import PostalAddress
 from .base import Field, FormField
+from .registry import form_field, model_field
 
 
 @model_field

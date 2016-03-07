@@ -4,15 +4,15 @@ Celery task for async export
 """
 from __future__ import absolute_import
 
-from itertools import ifilter
-from urlparse import urlparse
 from cStringIO import StringIO
-from time import strftime, gmtime
+from itertools import ifilter
+from time import gmtime, strftime
+from urlparse import urlparse
 
-from werkzeug.utils import import_string
-from flask import current_app, request
 from celery import shared_task
+from flask import current_app, request
 from flask_login import login_user
+from werkzeug.utils import import_string
 
 from abilian.core.models.subjects import User
 

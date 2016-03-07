@@ -3,37 +3,36 @@
 """
 from __future__ import absolute_import
 
-import logging
-import hashlib
-import math
-from functools import partial
-from itertools import izip, islice, chain
 import datetime
-from operator import attrgetter
-from collections import defaultdict
+import hashlib
+import logging
+import math
 import pprint
+from collections import defaultdict
+from functools import partial
+from itertools import chain, islice, izip
+from operator import attrgetter
 
-import sqlalchemy as sa
 import itsdangerous
 import openpyxl
+import sqlalchemy as sa
+from flask import current_app
 from openpyxl import Workbook, styles
 from openpyxl.cell import STRING_TYPES
-from openpyxl.utils import units, get_column_letter
+from openpyxl.utils import get_column_letter, units
 from openpyxl.writer.write_only import WriteOnlyCell
 
-from flask import current_app
-
-from abilian.i18n import _
 from abilian.core.extensions import db
 from abilian.core.sqlalchemy import JSON as JSONType
-from abilian.web.forms.fields import ModelFieldList
+from abilian.i18n import _
 from abilian.services.vocabularies.models import BaseVocabulary
+from abilian.web.forms.fields import ModelFieldList
 
 from ..models import PostalAddress
+from .columns import (Column, ColumnSet, DateColumn, DateTimeColumn, Invalid,
+                      ManyRelatedColumnSet, PostalAddressColumn,
+                      RelatedColumnSet, VocabularyColumn)
 from .exc import ExcelError, ExcelImportError
-from .columns import (Column, ColumnSet, RelatedColumnSet, ManyRelatedColumnSet,
-                      VocabularyColumn, PostalAddressColumn, DateColumn,
-                      DateTimeColumn, Invalid)
 
 logger = logging.getLogger(__name__)
 

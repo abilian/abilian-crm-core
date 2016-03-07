@@ -3,8 +3,8 @@
 """
 from __future__ import absolute_import
 
-from abilian.crm.models import PostalAddress
 from abilian.crm.forms import PostalAddressForm
+from abilian.crm.models import PostalAddress
 
 from .related import RelatedColumnSet
 

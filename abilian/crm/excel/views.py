@@ -3,30 +3,28 @@
 """
 from __future__ import absolute_import
 
-import logging
 import cStringIO as StringIO
-from time import strftime, gmtime
+import logging
 from itertools import ifilter
+from time import gmtime, strftime
 
 import celery
-from flask import request, current_app, flash, render_template
+from flask import current_app, flash, render_template, request
 from flask_login import current_user
 
-from abilian.i18n import _, _l
 from abilian.core.util import fqcn
-from abilian.web import views, csrf, url_for
-from abilian.web.blueprints import Blueprint
-from abilian.web.util import capture_stream_errors
+from abilian.i18n import _, _l
+from abilian.web import csrf, url_for, views
 from abilian.web.action import Endpoint, FAIcon
-from abilian.web.frontend import (ModuleView,
-                                  ModuleAction,
-                                  ModuleActionDropDown,
-                                  ModuleActionGroupItem,
-                                  ModuleComponent,)
+from abilian.web.blueprints import Blueprint
+from abilian.web.frontend import (ModuleAction, ModuleActionDropDown,
+                                  ModuleActionGroupItem, ModuleComponent,
+                                  ModuleView)
+from abilian.web.util import capture_stream_errors
 
 from .manager import ExcelManager
-from .util import XLSX_MIME
 from .tasks import export as export_task
+from .util import XLSX_MIME
 
 logger = logging.getLogger(__name__)
 

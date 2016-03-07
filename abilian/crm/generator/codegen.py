@@ -4,22 +4,23 @@
 from __future__ import absolute_import
 
 import logging
-from collections import OrderedDict
-import yaml
 import re
+from collections import OrderedDict
 
 import sqlalchemy as sa
+import yaml
+
 from abilian.core.entities import Entity
+from abilian.core.models import attachment, comment, tag
 from abilian.core.util import slugify
-from abilian.core.models import comment, attachment, tag
-from abilian.services.security import (Role, Permission, READ, WRITE, CREATE,
-                                       DELETE)
+from abilian.services.security import (CREATE, DELETE, READ, WRITE, Permission,
+                                       Role)
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
-from abilian.web.forms import FormPermissions, Form
+from abilian.web.forms import Form, FormPermissions
 from abilian.web.tags.extension import ns as tag_ns
 
-from .fieldtypes import get_field
 from . import autoname
+from .fieldtypes import get_field
 
 logger = logging.getLogger(__name__)
 

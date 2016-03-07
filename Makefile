@@ -72,6 +72,10 @@ pytest-flakes:
 pep8:
 	pep8 -r *.py abilian
 
+clean-code:
+	isort -rc abilian
+	yapf --style google -r -i abilian
+
 clean:
 	find . -name "*.pyc" | xargs rm -f
 	find . -name .DS_Store | xargs rm -f

@@ -4,6 +4,7 @@
 from __future__ import absolute_import, print_function
 
 import pytest
+
 from .base import assert_valid_identifier
 
 

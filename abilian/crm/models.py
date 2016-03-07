@@ -4,7 +4,9 @@
 from __future__ import absolute_import
 
 import sqlalchemy as sa
-from abilian.core.models import Model, IdMixin
+
+from abilian.core.models import IdMixin, Model
+
 from .jinja_filters import format_phonenumber
 
 

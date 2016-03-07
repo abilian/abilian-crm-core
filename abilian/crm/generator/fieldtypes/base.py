@@ -3,22 +3,19 @@
 """
 from __future__ import absolute_import
 
-from future.utils import string_types
-
 import re
 from collections import OrderedDict
 
 import sqlalchemy as sa
 import wtforms.fields
+from future.utils import string_types
 
 import abilian.web.forms.fields as awbff
-import abilian.web.forms.widgets as aw_widgets
 import abilian.web.forms.validators as aw_validators
-from ..definitions import (MAX_IDENTIFIER_LENGTH,
-                           VALIDATORS,
-                           FORM_FILTERS,
-                           WIDGETS,
-                           LIST_GENERATORS,)
+import abilian.web.forms.widgets as aw_widgets
+
+from ..definitions import (FORM_FILTERS, LIST_GENERATORS, MAX_IDENTIFIER_LENGTH,
+                           VALIDATORS, WIDGETS)
 from .registry import Registrable, get_formfield
 
 _VALID_IDENTIFIER_RE = re.compile(r'[A-Za-z_][A-Za-z0-9_]*', re.UNICODE)

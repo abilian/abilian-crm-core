@@ -4,8 +4,8 @@ Set up listener to automatically set 'name' from various attributes.
 """
 from __future__ import absolute_import
 
-from operator import attrgetter
 import string
+from operator import attrgetter
 
 import sqlalchemy as sa
 

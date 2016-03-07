@@ -5,7 +5,7 @@ from __future__ import absolute_import
 
 import datetime
 
-from openpyxl.cell import STRING_TYPES, TIME_TYPES, NUMERIC_TYPES
+from openpyxl.cell import NUMERIC_TYPES, STRING_TYPES, TIME_TYPES
 from openpyxl.utils.datetime import from_excel
 
 from .base import Column

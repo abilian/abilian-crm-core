@@ -6,8 +6,9 @@ from __future__ import absolute_import
 import hashlib
 
 import sqlalchemy as sa
-from abilian.core.sqlalchemy import JSON, JSONList, JSONDict
+
 from abilian.core.models.blob import Blob
+from abilian.core.sqlalchemy import JSON, JSONDict, JSONList
 
 from ..definitions import MAX_IDENTIFIER_LENGTH
 from .base import Field

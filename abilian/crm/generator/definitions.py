@@ -4,15 +4,15 @@
 from __future__ import absolute_import
 
 import wtforms.fields
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flask_wtf.file import FileField
-from flask_wtf.html5 import TelField, IntegerField
-from abilian.i18n import country_choices
+from flask_wtf.html5 import IntegerField, TelField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 
-from abilian.web.forms.validators import email, url, required, optional
-from abilian.web.forms.filters import strip, uppercase, lowercase
 import abilian.web.forms.fields as awbff
+from abilian.i18n import country_choices
 from abilian.web.forms import widgets as abilian_widgets
+from abilian.web.forms.filters import lowercase, strip, uppercase
+from abilian.web.forms.validators import email, optional, required, url
 
 __all__ = ('FORM_FIELDS', 'FORM_FILTERS', 'LIST_GENERATORS', 'VALIDATORS',
            'WIDGETS')

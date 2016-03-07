@@ -7,6 +7,7 @@ from operator import attrgetter
 
 from markupsafe import Markup
 from wtforms.fields import FieldList
+
 from abilian.core.entities import Entity
 
 _NULL_MARK = object()

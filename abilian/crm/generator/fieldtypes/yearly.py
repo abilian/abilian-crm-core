@@ -19,23 +19,25 @@ In yml they are specified like this:
 """
 from __future__ import absolute_import
 
-from operator import attrgetter
 from functools import total_ordering
+from operator import attrgetter
 
 import sqlalchemy as sa
 from sqlalchemy.orm.collections import collection
-from wtforms.fields import IntegerField, FieldList
+from wtforms.fields import FieldList, IntegerField
 from wtforms.utils import unset_value as unset_value
 
-from abilian.i18n import _l
-from abilian.core.extensions import db
-from abilian.core.models import SYSTEM
-from abilian.web.forms import Form
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets
+from abilian.core.extensions import db
+from abilian.core.models import SYSTEM
+from abilian.i18n import _l
+from abilian.web.forms import Form
 
-from .registry import model_field, form_field
-from .base import Field, FormField as FormFieldGeneratorBase
+from .base import FormField as FormFieldGeneratorBase
+from .base import Field
+from .registry import form_field, model_field
+
 _MARK = object()
 
 

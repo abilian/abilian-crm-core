@@ -3,12 +3,12 @@
 """
 from __future__ import absolute_import
 
+import jinja2
 import pkg_resources
 
-import jinja2
-from abilian.web import url_for
 from abilian.core.signals import register_js_api
 from abilian.core.util import fqcn
+from abilian.web import url_for
 
 from . import jinja_filters
 from .excel.views import bp as excel_bp

@@ -3,10 +3,11 @@
 """
 from __future__ import absolute_import
 
-import sys
 import imp
 import logging
+import sys
 from importlib import import_module
+
 from pathlib import Path
 
 from .codegen import CodeGenerator
