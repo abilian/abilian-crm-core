@@ -102,10 +102,10 @@ class Field(Registrable):
 
     def get_table_args(self, *args, **kwargs):
         """
-    Arguments to be added to __table_args__
+        Arguments to be added to __table_args__
 
-    :return: iterable
-    """
+        :return: iterable
+        """
         args = []
         if self.unique:
             args.append(sa.UniqueConstraint(self.name[:MAX_IDENTIFIER_LENGTH]))
@@ -114,8 +114,8 @@ class Field(Registrable):
 
     def get_field(self, *args, **kwargs):
         """
-    return a tuple (attribute name, `wtforms.fields.Field` instance)
-    """
+        return a tuple (attribute name, `wtforms.fields.Field` instance)
+        """
         field_kw = self.get_field_extra_args(self, *args, **kwargs)
         field_type = self.get_field_type()
         field = field_type(self.description, field_kw)
@@ -124,18 +124,18 @@ class Field(Registrable):
 
 class FormField(Registrable):
     """
-  name: Text
-  help: Text
-  lines: int   -> TextAreaField
-  from_list:      -> Select2Field
-  from_function:  -> Select2Field
-  type_options: Dict
-  description: Text
-  multiple: Boolean
-  required: Boolean
-  validator_length_max: int > 0
-  validator_length_min: int > 0
-  """
+    name: Text
+    help: Text
+    lines: int   -> TextAreaField
+    from_list:      -> Select2Field
+    from_function:  -> Select2Field
+    type_options: Dict
+    description: Text
+    multiple: Boolean
+    required: Boolean
+    validator_length_max: int > 0
+    validator_length_min: int > 0
+    """
     #: form field type
     ff_type = wtforms.fields.TextField
 
@@ -208,14 +208,14 @@ class FormField(Registrable):
 
     def get_filters(self, *args, **kwargs):
         """
-    Default filters
-    """
+        Default filters
+        """
         return ()
 
     def get_validators(self, *args, **kwargs):
         """
-    Default validators
-    """
+        Default validators
+        """
         validators = []
         if self.required:
             validators.append(aw_validators.required())
@@ -230,8 +230,8 @@ class FormField(Registrable):
 
     def setup_widgets(self, extra_args):
         """
-    set 'widget' and 'view_widget' in extra_args
-    """
+        set 'widget' and 'view_widget' in extra_args
+        """
         d = self.data
 
         if 'from_list' in d:
@@ -263,8 +263,8 @@ class FormField(Registrable):
 
     def setup_widgets_from_data(self, extra_args):
         """
-    Setup widgets from specification in data ('widget' and 'view_widget' entries)
-    """
+        Setup widgets from specification in data ('widget' and 'view_widget' entries)
+        """
         d = self.data
         for widget_arg in ('widget', 'view_widget'):
             if widget_arg not in d:

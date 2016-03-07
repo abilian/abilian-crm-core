@@ -19,11 +19,11 @@ from .widgets import PhoneNumberWidget
 
 class RequireableFormField(object):
     """
-  Mixin for Formfield based class, to allow toggle required / optional
+    Mixin for Formfield based class, to allow toggle required / optional
 
-  Basic FormField doesn't allow any validators, making harder to include an
-  optional formfield with required fields.
-  """
+    Basic FormField doesn't allow any validators, making harder to include an
+    optional formfield with required fields.
+    """
 
     def __init__(self, *args, **kwargs):
         self.__validators = tuple(kwargs.pop('validators', ()))

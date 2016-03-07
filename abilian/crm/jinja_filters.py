@@ -13,14 +13,13 @@ logger = logging.getLogger(__name__)
 
 
 def format_phonenumber(n, international=True):
+    """Format phone number for display.
+
+    No formatting is applied if the number is not a valid phonenumber.
+
+    :param international: always use international format, unless number is in
+    national format OR country is the same as app's default country.
     """
-  Format phone number for display.
-
-  No formatting is applied if the number is not a valid phonenumber.
-
-  :param international: always use international format, unless number is in
-  national format OR country is the same as app's default country.
-  """
     country = default_country() or u'FR'
     try:
         pn = phonenumbers.parse(n, country)
