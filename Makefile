@@ -100,3 +100,9 @@ tidy: clean
 
 update-pot:
 	python setup.py extract_messages update_catalog compile_catalog
+
+release:
+	rm -rf /tmp/abilian-crm-core
+	git clone . /tmp/abilian-crm-core
+	cd /tmp/abilian-crm-core ; python setup.py sdist
+	cd /tmp/abilian-crm-core ; python setup.py sdist upload
