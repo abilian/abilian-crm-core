@@ -18,7 +18,7 @@ import openpyxl
 import sqlalchemy as sa
 from flask import current_app
 from openpyxl import Workbook, styles
-from openpyxl.cell import STRING_TYPES
+from openpyxl.cell import STRING_TYPES, IllegalCharacterError
 from openpyxl.utils import get_column_letter, units
 from openpyxl.writer.write_only import WriteOnlyCell
 
@@ -217,7 +217,10 @@ class ExcelManager(object):
                 # one model column might be exported in multiple excel columns. Example:
                 # a related entity like a contact: fullname, email, etc
                 for rel_idx, (import_val, value) in enumerate(col.data(obj)):
-                    cell = WriteOnlyCell(ws, value=import_val)
+                    try:
+                        cell = WriteOnlyCell(ws, value=import_val)
+                    except IllegalCharacterError:
+                        cell = WriteOnlyCell(ws, value="[ERROR (illegal characters)]")
                     self.style_for(cell)
                     cells.append(cell)
                     self.update_md5(md5, import_val)
