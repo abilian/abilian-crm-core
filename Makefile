@@ -72,7 +72,7 @@ pytest-flakes:
 pep8:
 	pep8 -r *.py abilian
 
-clean-code:
+format:
 	isort -rc abilian
 	yapf --style google -r -i abilian
 

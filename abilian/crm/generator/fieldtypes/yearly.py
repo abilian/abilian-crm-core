@@ -366,8 +366,7 @@ class Yearly(Field):
             attributes[related_attr_id] = fk_col
             attributes['_' + model_lower] = sa.orm.relationship(
                 model,
-                primaryjoin=
-                u'{tablename}.c.{related_attr_id} == {remote}.c.id'.format(
+                primaryjoin=u'{tablename}.c.{related_attr_id} == {remote}.c.id'.format(
                     tablename=tablename,
                     related_attr_id=related_attr_id,
                     remote=self.model.lower()))
@@ -407,8 +406,8 @@ class Yearly(Field):
         yearly_cls = self.yearly_data['cls']
         primaryjoin = u'{local} == {remote}'.format(
             local=u'{__tablename__}.c.id'.format(**attributes),
-            remote=u'{tablename}.c.{related_attr_id}'.format(**
-                                                             self.yearly_data),)
+            remote=u'{tablename}.c.{related_attr_id}'.format(
+                **self.yearly_data),)
         attributes['__yearly_data__'] = sa.orm.relationship(
             yearly_cls,
             primaryjoin=primaryjoin,
@@ -429,8 +428,7 @@ class Yearly(Field):
     def yearly_model_finalizer(self, attributes, *args, **kwargs):
         """Implements total_ordering methods."""
         rel_attr_id = self.yearly_data['related_attr_id']
-        column_attributes = [attr
-                             for attr, definition in attributes.iteritems()
+        column_attributes = [attr for attr, definition in attributes.iteritems()
                              if isinstance(definition, sa.Column)]
 
         def _eq(self, other):
@@ -456,10 +454,9 @@ class YearlyFieldList(awbff.ModelFieldList):
         return super(YearlyFieldList, self).process(formdata, data)
 
     def _add_entry(self, formdata=None, data=unset_value, index=None):
-        return FieldList._add_entry(self,
-                                    formdata=formdata,
-                                    data=data,
-                                    index=index)
+        return FieldList._add_entry(
+            self, formdata=formdata,
+            data=data, index=index)
 
     def populate_obj(self, obj, name):
         entities = {}

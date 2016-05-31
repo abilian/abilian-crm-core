@@ -179,8 +179,7 @@ class ExcelManager(object):
     """
         if not hasattr(self, '_attr_to_main_column'):
             self._attr_to_main_column = self.get_attr_to_column(
-                self.columns,
-                map_related_attr=True)
+                self.columns, map_related_attr=True)
         return self._attr_to_main_column
 
     def export(self, objects, related_column_set=None, progress_callback=None):
@@ -220,7 +219,8 @@ class ExcelManager(object):
                     try:
                         cell = WriteOnlyCell(ws, value=import_val)
                     except IllegalCharacterError:
-                        cell = WriteOnlyCell(ws, value="[ERROR (illegal characters)]")
+                        cell = WriteOnlyCell(
+                            ws, value="[ERROR (illegal characters)]")
                     self.style_for(cell)
                     cells.append(cell)
                     self.update_md5(md5, import_val)
@@ -247,8 +247,8 @@ class ExcelManager(object):
 
     def export_many(self, objects, related_columns_set, progress_callback=None):
         """
-    :param related_columns_set: a :class:`ManyRelatedColumnSet` instance
-    """
+        :param related_columns_set: a :class:`ManyRelatedColumnSet` instance
+        """
         assert isinstance(related_columns_set, ManyRelatedColumnSet)
 
         wb = Workbook()
@@ -448,9 +448,9 @@ class ExcelManager(object):
 
     def _columns_for_many_related(self, related_cs):
         """
-    Given a ManyRelatedColumnSet instance, returns a columns set with object
-    columns and related columns
-    """
+        Given a ManyRelatedColumnSet instance, returns a columns set with object
+        columns and related columns
+        """
         SPLIT_COLUMN = self.MANY_SPLIT_COLUMN
         main_cols = list(self.columns)
         head_cols = main_cols[:SPLIT_COLUMN]
@@ -537,8 +537,8 @@ class ExcelManager(object):
                     val = data.get(col_name)
                     if val is not None:
                         try:
-                            item = q.filter(getattr(self.model_cls, col_name) ==
-                                            val).one()
+                            item = q.filter(
+                                getattr(self.model_cls, col_name) == val).one()
                         except sa.orm.exc.NoResultFound:
                             pass
                         except sa.orm.exc.MultipleResultsFound:
@@ -575,8 +575,7 @@ class ExcelManager(object):
                 current_data = getattr(item, cs.related_attr)
                 current_data_map = {name_getter(o): o for o in current_data}
                 related_attr_to_col = self.get_attr_to_column(
-                    related_cs,
-                    map_related_attr=True)
+                    related_cs, map_related_attr=True)
 
                 for item_data in related_data:
                     rel_metadata = item_data.pop('__metadata__')
@@ -598,8 +597,7 @@ class ExcelManager(object):
 
             if modified or modified_relateds:
                 # FIXME: use itsdangerous.TimedSerializer instead of joining a list
-                valid_keys = (k
-                              for k in modified
+                valid_keys = (k for k in modified
                               if not (required_missing or modified[k].error))
                 attr_sig = self.signer.sign(u';'.join(sorted(valid_keys)))
                 attr_sig = self.extract_signature(attr_sig)
@@ -835,12 +833,12 @@ class ExcelManager(object):
                 update = None
                 try:
                     update = self._import_value(obj, col, current, value)
-                except ExcelImportError, e:
+                except ExcelImportError as e:
                     update = col.UpdateCls(attr, current, value, None)
                     update.error = True
                     update.error_msg = e.message
                     update.update = e.imported_value
-                except ValueError, e:
+                except ValueError as e:
                     update = col.UpdateCls(attr, current, value, None)
                     update.error = True
                     update.error_msg = e.message
@@ -945,8 +943,7 @@ class ExcelManager(object):
                         prop_key = prop.key
                         del prop
                         rel_attr_to_col = self.get_attr_to_column(
-                            cs,
-                            map_related_attr=True)
+                            cs, map_related_attr=True)
 
                         for update in updates:
                             obj = cs.model_cls()
