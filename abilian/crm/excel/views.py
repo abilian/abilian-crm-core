@@ -171,7 +171,7 @@ class TaskStatusView(views.JSONView):
         task = celery.result.AsyncResult(task_id)
         result = dict(state=task.state, exported=0, total=0)
 
-        if task.state in ('REVOKED', 'PENDING', 'STARTED',):
+        if task.state in ('REVOKED', 'PENDING', 'STARTED'):
             return result
 
         if task.state == 'PROGRESS':

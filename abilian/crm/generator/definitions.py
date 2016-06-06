@@ -46,7 +46,9 @@ VALIDATORS = {
     'optional': optional,
 }
 
-FORM_FILTERS = {'strip': strip, 'uppercase': uppercase, 'lowercase': lowercase,}
+FORM_FILTERS = {'strip': strip,
+                'uppercase': uppercase,
+                'lowercase': lowercase,}
 
 WIDGETS = (abilian_widgets.BooleanWidget,
            abilian_widgets.URLWidget,

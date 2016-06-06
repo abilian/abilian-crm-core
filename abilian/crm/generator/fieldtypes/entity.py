@@ -147,8 +147,8 @@ class EntityFormField(FormField):
         self.module_endpoint = data.get('endpoint', self.name.lower())
 
     def get_type(self, *args, **kwargs):
-        return (awbff.JsonSelect2MultipleField if self.multiple else
-                awbff.JsonSelect2Field)
+        return (awbff.JsonSelect2MultipleField
+                if self.multiple else awbff.JsonSelect2Field)
 
     def get_extra_args(self, *args, **kwargs):
         extra_args = super(EntityFormField, self).get_extra_args(*args,

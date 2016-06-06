@@ -91,7 +91,8 @@ def export(self,
         # save in uploads dir, return handle needed for download
         filename = u"{}-{}.xlsx".format(module.managed_class.__name__,
                                         strftime("%d:%m:%Y-%H:%M:%S", gmtime()))
-        handle = uploads.add_file(
-            user, fd, filename=filename,
-            mimetype=XLSX_MIME)
+        handle = uploads.add_file(user,
+                                  fd,
+                                  filename=filename,
+                                  mimetype=XLSX_MIME)
         return dict(handle=handle)

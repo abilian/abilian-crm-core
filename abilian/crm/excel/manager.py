@@ -1080,8 +1080,8 @@ class ExcelManager(object):
                     type_ = lambda v: v in (True, 'True', '1', 1)
                 elif type_ in (datetime.date, datetime.datetime):
                     # native excel type, no need to set cast function
-                    column_cls = (DateColumn if type_ is datetime.date else
-                                  DateTimeColumn)
+                    column_cls = (DateColumn
+                                  if type_ is datetime.date else DateTimeColumn)
                     type_ = None
             except NotImplementedError:
                 pass
@@ -1092,8 +1092,8 @@ class ExcelManager(object):
         if not column.importable:
             return False
 
-        attr_name = (column.related_attr if isinstance(column, RelatedColumnSet)
-                     else column.attr)
+        attr_name = (column.related_attr
+                     if isinstance(column, RelatedColumnSet) else column.attr)
 
         custom_import = 'import_{}'.format(attr_name)
         if hasattr(self, custom_import):

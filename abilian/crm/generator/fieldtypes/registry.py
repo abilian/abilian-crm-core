@@ -15,8 +15,8 @@ class Registrable(object):
         """
         :return: identifier name for this field type
         """
-        return (cls.__fieldname__ if cls.__fieldname__ is not None else
-                cls.__name__)
+        return (cls.__fieldname__
+                if cls.__fieldname__ is not None else cls.__name__)
 
 
 _SA_FIELD_REGISTRY = dict()

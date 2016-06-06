@@ -42,8 +42,6 @@ class Field(Registrable):
     allow_multiple = True
 
     def __init__(self, model, data, generator):
-        """
-    """
         self.model = model
         self.data = data
         self.generator = generator
@@ -75,11 +73,10 @@ class Field(Registrable):
         return ff_type
 
     def get_model_attributes(self, *args, **kwargs):
-        """
-    Return attributes to be set on generated model.
+        """Return attributes to be set on generated model.
 
-    :return: iterable of `(name, type)`
-    """
+        :return: iterable of `(name, type)`
+        """
         col_name = self.name[:MAX_IDENTIFIER_LENGTH]
         extra_args = {'nullable': self.nullable}
         extra_args['info'] = info = {}
@@ -102,7 +99,7 @@ class Field(Registrable):
 
     def get_table_args(self, *args, **kwargs):
         """
-        Arguments to be added to __table_args__
+        Arguments to be added to `__table_args__`.
 
         :return: iterable
         """
@@ -114,7 +111,7 @@ class Field(Registrable):
 
     def get_field(self, *args, **kwargs):
         """
-        return a tuple (attribute name, `wtforms.fields.Field` instance)
+        Return a tuple (attribute name, `wtforms.fields.Field` instance).
         """
         field_kw = self.get_field_extra_args(self, *args, **kwargs)
         field_type = self.get_field_type()
@@ -168,8 +165,8 @@ class FormField(Registrable):
             field_type = wtforms.fields.TextAreaField
 
         if 'from_list' in self.data or 'from_function' in self.data:
-            field_type = (awbff.Select2Field if not self.multiple else
-                          awbff.Select2MultipleField)
+            field_type = (awbff.Select2Field
+                          if not self.multiple else awbff.Select2MultipleField)
         return field_type
 
     def get_extra_args(self, *args, **kwargs):
@@ -199,7 +196,7 @@ class FormField(Registrable):
             filters = [FORM_FILTERS[f] for f in filters]
             extra_args['filters'].extend(filters)
 
-        for key in ('filters', 'validators',):
+        for key in ('filters', 'validators'):
             if not extra_args[key]:
                 del extra_args[key]
 
@@ -223,9 +220,9 @@ class FormField(Registrable):
             validators.append(aw_validators.optional())
 
         if self.validator_length_max != -1 or self.validator_length_min != -1:
-            validators.append(
-                aw_validators.Length(min=self.validator_length_min,
-                                     max=self.validator_length_max))
+            validators.append(aw_validators.Length(
+                min=self.validator_length_min,
+                max=self.validator_length_max))
         return validators
 
     def setup_widgets(self, extra_args):
