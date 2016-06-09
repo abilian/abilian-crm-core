@@ -79,7 +79,7 @@ class PostalAddressFormField(FormField):
     ff_type = PostalAddressField
 
     def get_type(self, *args, **kwargs):
-        return (awbff.ModelFieldList if self.multiple else self.ff_type)
+        return awbff.ModelFieldList if self.multiple else self.ff_type
 
     def get_extra_args(self, *args, **kwargs):
         extra_args = super(PostalAddressFormField, self)\

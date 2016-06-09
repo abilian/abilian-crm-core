@@ -98,7 +98,7 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
         if not isinstance(value, YearlyBase):
             if not isinstance(value, dict):
                 raise ValueError(
-                    'Value must a YearlyBase based class or a dict')
+                    'Value must be a YearlyBase based class or a dict')
 
             value['year'] = key
             value = self.yearly_cls(**value)

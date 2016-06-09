@@ -15,8 +15,8 @@ _NULL_MARK = object()
 
 class Invalid(object):
     """
-  Mark invalid values
-  """
+    Mark invalid values
+    """
 
     def __init__(self, value):
         self.value = value
@@ -36,18 +36,18 @@ class Invalid(object):
 
 class Update(object):
     """
-  Holds information about a value update.  Used in import_data()
-  """
+    Holds information about a value update.  Used in import_data()
+    """
     error = False
     error_msg = None
 
     def __init__(self, attr, current, update, value=_NULL_MARK):
         """
-    @param current: current value
-    @param update: updated value as received in XLS file (Entity key for
-    example)
-    @param value: value to be set on object (Entity instance for example)
-    """
+        @param current: current value
+        @param update: updated value as received in XLS file (Entity key for
+        example)
+        @param value: value to be set on object (Entity instance for example)
+        """
         self.attr = attr
         self.current = current
         self.update = update
@@ -75,8 +75,8 @@ class Update(object):
 
 class Column(object):
     """
-  a single column
-  """
+    A single column
+    """
     # a column may be declared unconditionnaly not importable
     importable = True
     expected_cell_types = None
@@ -84,8 +84,8 @@ class Column(object):
     UpdateCls = Update
 
     def __init__(self, attr, label, type_, required=False, col_attr=None):
-        """ type_: callable to convert an imported value to model one
-    """
+        """ type_: callable to convert an imported value to model one.
+        """
         self.attr = attr
         self.col_attr = col_attr if col_attr is not None else attr
         self.label = label
@@ -173,8 +173,8 @@ class Column(object):
 
 class ColumnSet(object):
     """
-  A set of columns to be added to current export / import
-  """
+    A set of columns to be added to current export / import
+    """
     # a columnset may be declared unconditionnaly not importable
     importable = True
     expected_cell_types = None
@@ -223,9 +223,11 @@ class ColumnSet(object):
 
     def data_for_import(self, item):
         """ Like ::meth `data`, but for import. The difference is that it must
-    return a tuple like Column.data. In the generic context of a ColumnSet it
-    has no sense, but a RelatedColumnSet may return the related entity.
-    """
+        return a tuple like Column.data.
+
+        In the generic context of a ColumnSetit has no sense, but
+        a RelatedColumnSet may return the related entity.
+        """
         return _NULL_MARK, _NULL_MARK
 
     def serialize(self, value):

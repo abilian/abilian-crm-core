@@ -79,10 +79,10 @@ class ExcelManager(object):
 
     def __init__(self, model_cls, form_cls, many_related_cs=()):
         """
-    model_cls: Model class
-    form_cls: Form class
-    many_related_cs: iterable of ManyRelatedColumnSet instances
-    """
+        model_cls: Model class
+        form_cls: Form class
+        many_related_cs: iterable of ManyRelatedColumnSet instances
+        """
         self.MANY_RELATED_CS = many_related_cs
         self.model_cls = model_cls
         self.form_cls = form_cls
@@ -110,8 +110,8 @@ class ExcelManager(object):
 
     def additional_columns(self):
         """
-    To be overriden by subclasses that want to add specific columns
-    """
+        To be overriden by subclasses that want to add specific columns
+        """
         return []
 
     _signer = None
@@ -133,9 +133,8 @@ class ExcelManager(object):
         return self.columns.attrs
 
     def attrs_signature(self, columns=None):
+        """Return hash for current labels.
         """
-    Return hash for current labels.
-    """
         if columns is None:
             columns = self.columns
         md5 = hashlib.md5()
@@ -148,12 +147,11 @@ class ExcelManager(object):
         return self.columns.labels
 
     def get_attr_to_column(self, columnset, map_related_attr=False):
-        """
-    map attribute names to their respective Column instance.
+        """Map attribute names to their respective Column instance.
 
-    If map_related_attr is True, also map related's attributes to their
-    RelatedColumnSet instance
-    """
+        If map_related_attr is True, also map related's attributes to their
+        RelatedColumnSet instance
+        """
         attr_map = dict(izip(columnset.attrs, columnset.iter_flatened()))
         # we also want to collect related
         # attributes of RelatedColumnSets. self.columns.attrs doesn't show them
@@ -174,18 +172,17 @@ class ExcelManager(object):
 
     @property
     def attr_to_main_column(self):
-        """ Return a mapping of attribute name: column instance, with the exception
-    of attributes of related instances mapped to a RelatedColumnSet() instance.
-    """
+        """Return a mapping of attribute name: column instance, with the exception
+        of attributes of related instances mapped to a RelatedColumnSet() instance.
+        """
         if not hasattr(self, '_attr_to_main_column'):
             self._attr_to_main_column = self.get_attr_to_column(
                 self.columns, map_related_attr=True)
         return self._attr_to_main_column
 
     def export(self, objects, related_column_set=None, progress_callback=None):
+        """Exports objects to a Workbook.
         """
-    Exports objects to a Workbook
-    """
         if related_column_set is not None:
             return self.export_many(objects,
                                     related_column_set,
