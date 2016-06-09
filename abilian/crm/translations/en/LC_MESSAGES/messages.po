@@ -8,29 +8,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: abilian-crm 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-09-11 17:03+0200\n"
+"POT-Creation-Date: 2016-06-09 16:06+0200\n"
 "PO-Revision-Date: 2015-06-09 11:30+0100\n"
 "Last-Translator: ybourbotte@abilian.com\n"
+"Language: en\n"
 "Language-Team: en <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.0\n"
+"Generated-By: Babel 2.3.4\n"
 
-#: abilian/crm/forms.py:78
+#: abilian/crm/forms.py:80
 msgid "postal_address_street_lines"
 msgstr "Street lines"
 
-#: abilian/crm/forms.py:79
+#: abilian/crm/forms.py:81
 msgid "postal_address_street_lines_help"
 msgstr ""
 
-#: abilian/crm/forms.py:86
+#: abilian/crm/forms.py:87
 msgid "postal_address_administrative_area"
 msgstr "State"
 
-#: abilian/crm/forms.py:87
+#: abilian/crm/forms.py:88
 msgid "postal_address_administrative_area_help"
 msgstr "State / Province / Region / Military PO / …"
 
@@ -42,83 +43,79 @@ msgstr "County"
 msgid "postal_address_sub_administrative_area_help"
 msgstr "County / District"
 
-#: abilian/crm/forms.py:96
+#: abilian/crm/forms.py:95
 msgid "postal_address_postal_code"
 msgstr "ZIP code"
 
-#: abilian/crm/forms.py:97
+#: abilian/crm/forms.py:96
 msgid "postal_address_postal_code_help"
 msgstr "ZIP code / postal code"
 
-#: abilian/crm/forms.py:103
+#: abilian/crm/forms.py:101
 msgid "postal_address_locality"
 msgstr "City"
 
-#: abilian/crm/forms.py:110
+#: abilian/crm/forms.py:107
 msgid "postal_address_country"
 msgstr "Country"
 
-#: abilian/crm/forms.py:132
+#: abilian/crm/forms.py:130
 msgid "phonenumber_type"
 msgstr "Type"
 
-#: abilian/crm/forms.py:133
+#: abilian/crm/forms.py:131
 msgid "phonenumber_type_help"
 msgstr "standard, fax, pro, mobile…"
 
-#: abilian/crm/forms.py:136
+#: abilian/crm/forms.py:133
 msgid "phonenumber_number"
 msgstr "Number"
 
-#: abilian/crm/forms.py:137
+#: abilian/crm/forms.py:134
 msgid "for an extension number add \"#1234\""
 msgstr ""
 
-#: abilian/crm/excel/manager.py:798
+#: abilian/crm/excel/manager.py:858
 msgid "This field is required"
 msgstr ""
 
-#: abilian/crm/excel/manager.py:1076
+#: abilian/crm/excel/manager.py:1142
 msgid "Invalid cell format, value: {value}"
 msgstr ""
 
-#: abilian/crm/excel/manager.py:1095
+#: abilian/crm/excel/manager.py:1161
 msgid ""
 "Cannot import related entity for attribute \"{}\" without a custom "
 "importer method"
 msgstr ""
 
-#: abilian/crm/excel/manager.py:1111
+#: abilian/crm/excel/manager.py:1178
 msgid "\"{value}\" is invalid. Valid choices are: {valid}"
 msgstr ""
 
-#: abilian/crm/excel/views.py:181
+#: abilian/crm/excel/views.py:182
 msgid "An error happened during generation of file."
 msgstr ""
 
-#: abilian/crm/excel/views.py:233
-msgid "Cannot read file {filename} as Excel file"
-msgstr ""
-
-#: abilian/crm/excel/views.py:242
+#: abilian/crm/excel/views.py:243
 msgid "No change detected in file {filename}"
 msgstr ""
 
-#: abilian/crm/excel/views.py:325
+#: abilian/crm/excel/views.py:326
 msgid ""
 "Import from {filename}: {changed} items changed, {created} items created,"
 " {skipped} ignored due to errors"
 msgstr ""
 
-#: abilian/crm/excel/views.py:399
+#: abilian/crm/excel/views.py:408
 msgid "Export to Excel"
 msgstr ""
 
-#: abilian/crm/excel/views.py:420
+#: abilian/crm/excel/views.py:433
 msgid "Excel"
 msgstr ""
 
-#: abilian/crm/generator/fieldtypes/yearly.py:448
+#: abilian/crm/generator/fieldtypes/yearly.py:485
 msgid "Year"
 msgstr "Year"
 
@@ -132,4 +129,7 @@ msgstr ""
 
 #~ msgid "postal_address_locality_help"
 #~ msgstr "City / Town"
+
+#~ msgid "Cannot read file {filename} as Excel file"
+#~ msgstr ""
 
