@@ -46,5 +46,5 @@ class PhoneNumber(IdMixin, Model):
             self.number = u''
         if not self.type:
             self.type = u''
-        return u'%s: %s' % (self.type, format_phonenumber(self.number,
+        return u'{0!s}: {1!s}'.format(self.type, format_phonenumber(self.number,
                                                           international=True))
