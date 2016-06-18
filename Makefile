@@ -91,7 +91,7 @@ clean:
 	rm -rf doc/_build
 	rm -rf static/gen static/.webassets-cache
 	rm -rf htmlcov
-	rm -rf junit-py27.xml ghostdriver.log coverage.xml
+	rm -rf junit-*.xml ghostdriver.log coverage.xml
 	rm -rf tests.functional.test/
 
 tidy: clean
