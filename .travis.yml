@@ -22,7 +22,7 @@ before_install:
 install:
   - pip install -r etc/dev-requirements.txt
   - pip install -e .
-  - npm install -g less eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard
+  - npm install -g less eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard eslint-plugin-html
 
 # Create DB
 before_script:
