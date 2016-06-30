@@ -48,29 +48,17 @@ vagrant-tests:
 	#vagrant ssh -c 'cp -a /vagrant src && cd src && tox'
 
 #
-# Linting
+# Linting / formatting
 #
-lint: lint-js lint-python
-
-lint-js:
-	@echo "--> Linting JavaScript files"
-	@jshint ./abilian/crm/apps/
+lint: lint-python lint-js
 
 lint-python:
 	@echo "--> Linting Python files"
-	@make pytest-pep8
-	@make pytest-flakes
+	flake8 --config=setup.cfg abilian *.py
 
-pytest-pep8:
-	@echo "--> Checking PEP8 conformance"
-	py.test --pep8 -m pep8 $(SRC) tests
-
-pytest-flakes:
-	@echo "--> Other static checks"
-	py.test --flakes -m flakes $(SRC) # tests
-
-pep8:
-	pep8 -r *.py abilian
+lint-js:
+	@echo "--> Linting JavaScript files"
+	@eslint abilian
 
 format:
 	isort -rc abilian

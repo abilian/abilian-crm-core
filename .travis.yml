@@ -32,6 +32,7 @@ before_script:
 # Run tests
 script:
   - py.test --tb=short -q --cov abilian abilian
+  - make lint
 
 # Report coverage
 after_success:
