@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: abilian-crm 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-06-09 16:06+0200\n"
+"POT-Creation-Date: 2016-07-12 19:52+0200\n"
 "PO-Revision-Date: 2015-09-11 17:08+0200\n"
 "Last-Translator: ybourbotte@abilian.com\n"
 "Language: fr\n"
@@ -99,7 +99,7 @@ msgstr "Une erreur est survenue pendant la création du fichier d'export."
 
 #: abilian/crm/excel/views.py:243
 msgid "No change detected in file {filename}"
-msgstr ""
+msgstr "Aucun changement détecté dans le fichier {filename}"
 
 #: abilian/crm/excel/views.py:326
 msgid ""
