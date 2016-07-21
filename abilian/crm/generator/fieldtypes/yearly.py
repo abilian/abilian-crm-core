@@ -196,8 +196,9 @@ class YearlyAttrProxy(object):
         return super(YearlyAttrProxy, self).__setattr__(name, value)
 
     def __nonzero__(self):
-        return any(getattr(self.yearly_data, attr, None) is not None
-                   for attr in self.attrs)
+        return any(
+            getattr(self.yearly_data, attr, None) is not None
+            for attr in self.attrs)
 
     def __repr__(self):
         return '<{} for {}: {!r}) at 0x{:x}>'.format(
@@ -296,8 +297,8 @@ class YearlyCollectionProxy(dict):
 
     def items(self):
         return [(obj.year, obj)
-                for obj in sorted(self.itervalues(),
-                                  key=YearlyCollectionProxy._keyfunc)]
+                for obj in sorted(
+                    self.itervalues(), key=YearlyCollectionProxy._keyfunc)]
 
     def iteritems(self):
         for item in self.items():
@@ -434,9 +435,9 @@ class Yearly(Field):
                              if isinstance(definition, sa.Column)]
 
         def _eq(self, other):
-            return (isinstance(other, self.__class__) and
-                    all(getattr(self, attr) == getattr(other, attr)
-                        for attr in column_attributes))
+            return (isinstance(other, self.__class__) and all(
+                getattr(self, attr) == getattr(other, attr)
+                for attr in column_attributes))
 
         def _lt(self, other):
             if getattr(self, rel_attr_id, -1) < getattr(other, rel_attr_id, -1):
@@ -456,10 +457,8 @@ class YearlyFieldList(awbff.ModelFieldList):
         return super(YearlyFieldList, self).process(formdata, data)
 
     def _add_entry(self, formdata=None, data=unset_value, index=None):
-        return FieldList._add_entry(self,
-                                    formdata=formdata,
-                                    data=data,
-                                    index=index)
+        return FieldList._add_entry(
+            self, formdata=formdata, data=data, index=index)
 
     def populate_obj(self, obj, name):
         entities = {}

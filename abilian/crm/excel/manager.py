@@ -29,9 +29,9 @@ from abilian.services.vocabularies.models import BaseVocabulary
 from abilian.web.forms.fields import ModelFieldList
 
 from ..models import PostalAddress
-from .columns import (Column, ColumnSet, DateColumn, DateTimeColumn, Invalid,
-                      ManyRelatedColumnSet, PostalAddressColumn,
-                      RelatedColumnSet, VocabularyColumn)
+from .columns import Column, ColumnSet, DateColumn, DateTimeColumn, Invalid, \
+    ManyRelatedColumnSet, PostalAddressColumn, RelatedColumnSet, \
+    VocabularyColumn
 from .exc import ExcelError, ExcelImportError
 
 logger = logging.getLogger(__name__)
@@ -50,9 +50,8 @@ class ExcelManager(object):
 
     XF_HEADER = {
         'font': styles.Font(bold=True),
-        'alignment': styles.Alignment(horizontal='center',
-                                      vertical='top',
-                                      wrapText=True)
+        'alignment': styles.Alignment(
+            horizontal='center', vertical='top', wrapText=True)
     }
     XF_EDITABLE = styles.Protection(locked=False)
     XF_DATE_EDITABLE = styles.Protection(locked=False)
@@ -123,8 +122,8 @@ class ExcelManager(object):
             # can be used outside a flask application context
             config = current_app.config
             secret_key = config.get('SECRET_KEY')
-            self._signer = itsdangerous.TimestampSigner(secret_key,
-                                                        salt=__name__)
+            self._signer = itsdangerous.TimestampSigner(
+                secret_key, salt=__name__)
 
         return self._signer
 
@@ -184,9 +183,10 @@ class ExcelManager(object):
         """Exports objects to a Workbook.
         """
         if related_column_set is not None:
-            return self.export_many(objects,
-                                    related_column_set,
-                                    progress_callback=progress_callback)
+            return self.export_many(
+                objects,
+                related_column_set,
+                progress_callback=progress_callback)
 
         wb = Workbook()
         if wb.worksheets:
@@ -540,11 +540,12 @@ class ExcelManager(object):
                             pass
                         except sa.orm.exc.MultipleResultsFound:
                             # log this to sentry
-                            logger.error('Multiple items match %s[%s] == ""%s"',
-                                         self.model_cls.__name__,
-                                         col_name,
-                                         unicode(val).encode('utf-8'),
-                                         extra={'stack': True})
+                            logger.error(
+                                'Multiple items match %s[%s] == ""%s"',
+                                self.model_cls.__name__,
+                                col_name,
+                                unicode(val).encode('utf-8'),
+                                extra={'stack': True})
                         else:
                             is_new = metadata['is_new'] = False
                             is_update = metadata['is_update'] = True
@@ -586,8 +587,9 @@ class ExcelManager(object):
                         obj, item_data, related_attr_to_col, is_new)
 
                     if rel_modified:
-                        rel_items.append(dict(modified=rel_modified,
-                                              metadata=rel_metadata))
+                        rel_items.append(
+                            dict(
+                                modified=rel_modified, metadata=rel_metadata))
 
                 if rel_items:
                     modified_relateds[cs.related_attr] = rel_items
@@ -599,12 +601,14 @@ class ExcelManager(object):
                 attr_sig = self.signer.sign(u';'.join(sorted(valid_keys)))
                 attr_sig = self.extract_signature(attr_sig)
 
-                modified_items.append(dict(item=item,
-                                           metadata=metadata,
-                                           required_missing=required_missing,
-                                           modified=modified,
-                                           many_relateds=modified_relateds,
-                                           attr_signature=attr_sig))
+                modified_items.append(
+                    dict(
+                        item=item,
+                        metadata=metadata,
+                        required_missing=required_missing,
+                        modified=modified,
+                        many_relateds=modified_relateds,
+                        attr_signature=attr_sig))
 
         # FIXME: also return list of invalid_rows?
         return modified_items
@@ -751,8 +755,8 @@ class ExcelManager(object):
             attrs = iter(self.attrs)
             md5 = hashlib.md5()
             # main item: head data
-            for idx, attr in enumerate(
-                    islice(attrs, self.MANY_SPLIT_COLUMN), 1):
+            for idx, attr in enumerate(islice(attrs, self.MANY_SPLIT_COLUMN),
+                                       1):
                 if is_new and attr == 'id':
                     continue
                 value = cell(idx)
@@ -972,15 +976,17 @@ class ExcelManager(object):
 
             except Exception as e:
                 if isinstance(e, sa.exc.StatementError):
-                    logger.error('Import error: %s%s\n%s',
-                                 e.message,
-                                 e.statement,
-                                 pprint.pformat(e.params),
-                                 exc_info=True)
+                    logger.error(
+                        'Import error: %s%s\n%s',
+                        e.message,
+                        e.statement,
+                        pprint.pformat(e.params),
+                        exc_info=True)
                 else:
-                    logger.error('Import error: %s',
-                                 unicode(e).encode('utf-8'),
-                                 exc_info=True)
+                    logger.error(
+                        'Import error: %s',
+                        unicode(e).encode('utf-8'),
+                        exc_info=True)
                     raise
                 error_happened = True
                 skipped_items += 1
@@ -998,10 +1004,11 @@ class ExcelManager(object):
             logger.error('Excel import error', extra={'stack': True,})
 
         db.session.commit()
-        return dict(changed_items=changed_items,
-                    created_items=created_items,
-                    skipped_items=skipped_items,
-                    error_happened=error_happened)
+        return dict(
+            changed_items=changed_items,
+            created_items=created_items,
+            skipped_items=skipped_items,
+            error_happened=error_happened)
 
     def update_md5(self, md5, value):
         """ Compute consistent md5 for exported and imported value.

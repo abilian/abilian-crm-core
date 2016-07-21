@@ -13,8 +13,8 @@ import yaml
 from abilian.core.entities import Entity
 from abilian.core.models import attachment, comment, tag
 from abilian.core.util import slugify
-from abilian.services.security import (CREATE, DELETE, READ, WRITE, Permission,
-                                       Role)
+from abilian.services.security import CREATE, DELETE, READ, WRITE, \
+    Permission, Role
 from abilian.services.vocabularies import Vocabulary, get_vocabulary
 from abilian.web.forms import Form, FormPermissions
 from abilian.web.tags.extension import ns as tag_ns

@@ -40,9 +40,8 @@ class AbilianCRM(object):
         app.register_jinja_loaders(jinja2.PackageLoader(__name__, 'templates'))
 
         # crm static assets
-        app.add_static_url('abilian/crm',
-                           STATIC_DIR,
-                           endpoint='abilian_crm_static')
+        app.add_static_url(
+            'abilian/crm', STATIC_DIR, endpoint='abilian_crm_static')
         app.extensions['webassets'].append_path(
             STATIC_DIR, app.static_url_path + '/abilian/crm')
 

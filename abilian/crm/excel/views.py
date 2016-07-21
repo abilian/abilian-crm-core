@@ -17,9 +17,8 @@ from abilian.i18n import _, _l
 from abilian.web import csrf, url_for, views
 from abilian.web.action import Endpoint, FAIcon
 from abilian.web.blueprints import Blueprint
-from abilian.web.frontend import (ModuleAction, ModuleActionDropDown,
-                                  ModuleActionGroupItem, ModuleComponent,
-                                  ModuleView)
+from abilian.web.frontend import ModuleAction, ModuleActionDropDown, \
+    ModuleActionGroupItem, ModuleComponent, ModuleView
 from abilian.web.util import capture_stream_errors
 
 from .manager import ExcelManager
@@ -80,8 +79,8 @@ class BaseExcelView(ModuleView, views.View):
     def excel_export_actions(self):
         actions = []
         for column_set in self.EXCEL_EXPORT_RELATED:
-            actions.append((url_for('.export_to_xls',
-                                    related=column_set.related_attr),
+            actions.append((url_for(
+                '.export_to_xls', related=column_set.related_attr),
                             column_set.export_label))
 
         return actions
@@ -105,11 +104,12 @@ class ExcelExport(BaseExcelView):
         return self.generate_async()
 
     def generate_async(self):
-        task_kwargs = dict(app=self.module.crud_app.name,
-                           module=self.module.id,
-                           from_url=request.url,
-                           user_id=current_user.id,
-                           component=self.component.name,)
+        task_kwargs = dict(
+            app=self.module.crud_app.name,
+            module=self.module.id,
+            from_url=request.url,
+            user_id=current_user.id,
+            component=self.component.name,)
 
         if self.excel_manager != self.component.excel_manager:
             task_kwargs['manager'] = fqcn(self.excel_manager)
@@ -154,8 +154,9 @@ class ExcelExport(BaseExcelView):
             # useful only in DEBUG mode, to get the debug toolbar in browser
             return '<html><body>Exported</body></html>'
 
-        response = current_app.response_class(response_generator(),
-                                              mimetype=XLSX_MIME,)
+        response = current_app.response_class(
+            response_generator(),
+            mimetype=XLSX_MIME,)
         filename = u"{}-{}.xlsx".format(self.module.managed_class.__name__,
                                         strftime("%d:%m:%Y-%H:%M:%S", gmtime()))
         response.headers['content-disposition'] = \
@@ -188,9 +189,8 @@ class TaskStatusView(views.JSONView):
             uploads = current_app.extensions['uploads']
             filemeta = uploads.get_metadata(current_user, handle)
             result['filename'] = filemeta.get('filename', 'export.xlsx')
-            result['downloadUrl'] = url_for('uploads.handle',
-                                            handle=handle,
-                                            _external=True)
+            result['downloadUrl'] = url_for(
+                'uploads.handle', handle=handle, _external=True)
             return result
 
         # unattended state, return data anyway
@@ -244,12 +244,13 @@ class ExcelImport(BaseExcelView):
                     filename=filename)),
                     u'info')
 
-            yield render_template('crm/import_xls.html',
-                                  is_error=error,
-                                  redirect_to=redirect_to,
-                                  modified_items=modified_items,
-                                  excel=manager,
-                                  filename=filename)
+            yield render_template(
+                'crm/import_xls.html',
+                is_error=error,
+                redirect_to=redirect_to,
+                modified_items=modified_items,
+                excel=manager,
+                filename=filename)
 
         response = current_app.response_class(generate())
         return response
@@ -296,15 +297,15 @@ class ExcelImportValidate(BaseExcelView):
                     item_modified[attr] = value
 
                 # fetch 'many relateds' values'
-                many_relateds_attrs = f.getlist(key.format(
-                    'many_relateds_attrs'))
+                many_relateds_attrs = f.getlist(
+                    key.format('many_relateds_attrs'))
                 many_relateds = {}
 
                 for rel_attr in many_relateds_attrs:
                     rkey = key.format(rel_attr) + '_{}'
                     objs = []
-                    for ridx in range(1, int(f.get(
-                            rkey.format('count'), 0)) + 1):
+                    for ridx in range(1,
+                                      int(f.get(rkey.format('count'), 0)) + 1):
                         modified = {}
                         robjkey = rkey.format(ridx) + '_{}'
                         r_attrs = f.getlist(robjkey.format('attrs'))
@@ -333,8 +334,8 @@ class ExcelImportValidate(BaseExcelView):
                   'error' if result['error_happened'] else 'info'
               )
 
-            yield render_template('crm/xls_data_saved.html',
-                                  redirect_to=redirect_to)
+            yield render_template(
+                'crm/xls_data_saved.html', redirect_to=redirect_to)
 
         response = current_app.response_class(generate())
         return response
@@ -370,68 +371,75 @@ class ExcelModuleComponent(ModuleComponent):
         if self.export_form is None:
             self.export_form = module.edit_form_class
 
-        module._setup_view('/export_xls',
-                           b'export_xls',
-                           ExcelExport,
-                           module=module,
-                           component=self.name,
-                           excel_manager=self.excel_manager,
-                           Form=self.export_form,
-                           view_endpoint=endpoint + '.list_view')
+        module._setup_view(
+            '/export_xls',
+            b'export_xls',
+            ExcelExport,
+            module=module,
+            component=self.name,
+            excel_manager=self.excel_manager,
+            Form=self.export_form,
+            view_endpoint=endpoint + '.list_view')
 
         if not self.EXCEL_SUPPORT_IMPORT:
             return
 
-        module._setup_view('/validate_imported_data',
-                           b'validate_imported_xls',
-                           ExcelImportValidate,
-                           methods=['POST'],
-                           component=self.name,
-                           module=module,
-                           view_endpoint=endpoint + '.list_view')
+        module._setup_view(
+            '/validate_imported_data',
+            b'validate_imported_xls',
+            ExcelImportValidate,
+            methods=['POST'],
+            component=self.name,
+            module=module,
+            view_endpoint=endpoint + '.list_view')
 
-        module._setup_view('/import_xls',
-                           b'import_xls',
-                           ExcelImport,
-                           methods=['POST'],
-                           component=self.name,
-                           module=module,
-                           view_endpoint=endpoint + '.list_view')
+        module._setup_view(
+            '/import_xls',
+            b'import_xls',
+            ExcelImport,
+            methods=['POST'],
+            component=self.name,
+            module=module,
+            view_endpoint=endpoint + '.list_view')
 
     def get_actions(self):
         excel_actions = []
         button = 'default' if not self.EXCEL_EXPORT_RELATED else None
         endpoint = self.module.endpoint
-        excel_actions.append(ModuleAction(self.module,
-                                          'excel',
-                                          'export_xls',
-                                          title=_l(u'Export to Excel'),
-                                          icon=FAIcon('align-justify'),
-                                          endpoint=Endpoint(endpoint +
-                                                            '.export_xls'),
-                                          button=button,
-                                          css='datatable-export'))
-
-        for column_set in self.EXCEL_EXPORT_RELATED:
-            excel_actions.append(ModuleActionGroupItem(
+        excel_actions.append(
+            ModuleAction(
                 self.module,
                 'excel',
-                'export_related_' + column_set.related_attr,
-                title=column_set.export_label,
+                'export_xls',
+                title=_l(u'Export to Excel'),
                 icon=FAIcon('align-justify'),
-                css='datatable-export',
-                endpoint=Endpoint(endpoint + '.export_xls',
-                                  related=column_set.related_attr)))
+                endpoint=Endpoint(endpoint + '.export_xls'),
+                button=button,
+                css='datatable-export'))
+
+        for column_set in self.EXCEL_EXPORT_RELATED:
+            excel_actions.append(
+                ModuleActionGroupItem(
+                    self.module,
+                    'excel',
+                    'export_related_' + column_set.related_attr,
+                    title=column_set.export_label,
+                    icon=FAIcon('align-justify'),
+                    css='datatable-export',
+                    endpoint=Endpoint(
+                        endpoint + '.export_xls',
+                        related=column_set.related_attr)))
 
         if self.EXCEL_SUPPORT_IMPORT:
             pass
 
         if len(excel_actions) > 1:
-            excel_actions = [ModuleActionDropDown(self.module,
-                                                  'excel',
-                                                  'actions',
-                                                  title=_l(u'Excel'),
-                                                  button='default',
-                                                  items=excel_actions)]
+            excel_actions = [ModuleActionDropDown(
+                self.module,
+                'excel',
+                'actions',
+                title=_l(u'Excel'),
+                button='default',
+                items=excel_actions)]
 
         return excel_actions

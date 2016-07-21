@@ -22,10 +22,11 @@ DEFAULT_EXPIRES = 1800  # generally user will not wait 1/2h. No need to process
 # this long task
 
 
-@shared_task(bind=True,
-             track_started=True,
-             ignore_result=False,
-             expires=DEFAULT_EXPIRES,)
+@shared_task(
+    bind=True,
+    track_started=True,
+    ignore_result=False,
+    expires=DEFAULT_EXPIRES,)
 def export(self,
            app,
            module,
@@ -55,9 +56,9 @@ def export(self,
         query_string=url.query,)
 
     def progress_callback(exported=0, total=0, **kw):
-        self.update_state(state='PROGRESS',
-                          meta={'exported': exported,
-                                'total': total})
+        self.update_state(
+            state='PROGRESS', meta={'exported': exported,
+                                    'total': total})
 
     uploads = current_app.extensions['uploads']
 
@@ -82,17 +83,14 @@ def export(self,
             except StopIteration:
                 related_cs = None
 
-        workbook = manager.export(objects,
-                                  related_cs,
-                                  progress_callback=progress_callback)
+        workbook = manager.export(
+            objects, related_cs, progress_callback=progress_callback)
         fd = StringIO()
         workbook.save(fd)
         fd.seek(0)
         # save in uploads dir, return handle needed for download
         filename = u"{}-{}.xlsx".format(module.managed_class.__name__,
                                         strftime("%d:%m:%Y-%H:%M:%S", gmtime()))
-        handle = uploads.add_file(user,
-                                  fd,
-                                  filename=filename,
-                                  mimetype=XLSX_MIME)
+        handle = uploads.add_file(
+            user, fd, filename=filename, mimetype=XLSX_MIME)
         return dict(handle=handle)

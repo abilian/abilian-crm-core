@@ -30,9 +30,10 @@ class Vocabulary(Field):
             def get_column_attr(func_name, col_name, target_col):
 
                 def gen_column(cls):
-                    return sa.schema.Column(col_name,
-                                            sa.ForeignKey(target_col,
-                                                          ondelete='SET NULL'),)
+                    return sa.schema.Column(
+                        col_name,
+                        sa.ForeignKey(
+                            target_col, ondelete='SET NULL'),)
 
                 gen_column.func_name = func_name
                 return gen_column
@@ -47,8 +48,8 @@ class Vocabulary(Field):
                     primary_join = '{} == {}'.format(
                         cls.__name__ + '.' + attr_name,
                         target_cls.__name__ + '.id')
-                    return sa.orm.relationship(target_cls,
-                                               primaryjoin=primary_join)
+                    return sa.orm.relationship(
+                        target_cls, primaryjoin=primary_join)
 
                 gen_relationship.func_name = func_name
                 return gen_relationship
@@ -73,8 +74,8 @@ class Vocabulary(Field):
                         sa.Column(src_col, sa.ForeignKey(src_name + '.id')),
                         sa.Column('voc_id', sa.ForeignKey(target_name + '.id')),
                         sa.schema.UniqueConstraint(src_col, 'voc_id'),)
-                    return sa.orm.relationship(target_cls,
-                                               secondary=secondary_table)
+                    return sa.orm.relationship(
+                        target_cls, secondary=secondary_table)
 
                 gen_m2m_relationship.func_name = func_name
                 return gen_m2m_relationship
@@ -111,6 +112,6 @@ class VocabularyFormField(FormField):
         return extra_args
 
     def setup_widgets(self, extra_args):
-        extra_args['widget'] = aw_widgets.Select2(multiple=self.multiple,
-                                                  unescape_html=True)
+        extra_args['widget'] = aw_widgets.Select2(
+            multiple=self.multiple, unescape_html=True)
         extra_args['view_widget'] = aw_widgets.ListWidget()

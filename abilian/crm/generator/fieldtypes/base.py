@@ -14,8 +14,8 @@ import abilian.web.forms.fields as awbff
 import abilian.web.forms.validators as aw_validators
 import abilian.web.forms.widgets as aw_widgets
 
-from ..definitions import (FORM_FILTERS, LIST_GENERATORS, MAX_IDENTIFIER_LENGTH,
-                           VALIDATORS, WIDGETS)
+from ..definitions import FORM_FILTERS, LIST_GENERATORS, \
+    MAX_IDENTIFIER_LENGTH, VALIDATORS, WIDGETS
 from .registry import Registrable, get_formfield
 
 _VALID_IDENTIFIER_RE = re.compile(r'[A-Za-z_][A-Za-z0-9_]*', re.UNICODE)
@@ -220,9 +220,10 @@ class FormField(Registrable):
             validators.append(aw_validators.optional())
 
         if self.validator_length_max != -1 or self.validator_length_min != -1:
-            validators.append(aw_validators.Length(
-                min=self.validator_length_min,
-                max=self.validator_length_max))
+            validators.append(
+                aw_validators.Length(
+                    min=self.validator_length_min,
+                    max=self.validator_length_max))
         return validators
 
     def setup_widgets(self, extra_args):
@@ -253,8 +254,8 @@ class FormField(Registrable):
                 extra_args['choices'] = LIST_GENERATORS[d['from_function']]()
 
         if 'lines' in d:
-            extra_args['widget'] = aw_widgets.TextArea(resizeable='vertical',
-                                                       rows=d['lines'])
+            extra_args['widget'] = aw_widgets.TextArea(
+                resizeable='vertical', rows=d['lines'])
 
         self.setup_widgets_from_data(extra_args)
 

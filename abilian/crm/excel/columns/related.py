@@ -34,12 +34,13 @@ class RelatedColumnSet(ColumnSet):
     def __repr__(self):
         return (u'{module}.{cls}(related_attr={attr}, label={label}, '
                 u'required={required:}) at 0x{id:x}'
-                u''.format(module=self.__class__.__module__,
-                           cls=self.__class__.__name__,
-                           attr=repr(self.related_attr),
-                           label=repr(self.related_label),
-                           required=repr(self.required),
-                           id=id(self))).encode('utf-8')
+                u''.format(
+                    module=self.__class__.__module__,
+                    cls=self.__class__.__name__,
+                    attr=repr(self.related_attr),
+                    label=repr(self.related_label),
+                    required=repr(self.required),
+                    id=id(self))).encode('utf-8')
 
     @property
     def attrs(self):

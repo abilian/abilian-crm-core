@@ -63,7 +63,8 @@ lint-js:
 
 format:
 	isort -rc abilian
-	yapf --style google -r -i abilian
+	-yapf --style google -r -i abilian
+	isort -rc abilian
 
 clean:
 	find . -name "*.pyc" | xargs rm -f
