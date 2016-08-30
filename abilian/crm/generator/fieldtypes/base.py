@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 import sqlalchemy as sa
 import wtforms.fields
-from future.utils import string_types
+from six import string_types
 
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.validators as aw_validators
