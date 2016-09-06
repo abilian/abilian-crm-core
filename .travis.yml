@@ -16,7 +16,7 @@ addons:
 
 # Install OS dependencies
 before_install:
- - pip install pip>=8.1 setuptools
+ - pip install 'pip>=8.1' setuptools
 
 # Install Python dependencies
 install:
