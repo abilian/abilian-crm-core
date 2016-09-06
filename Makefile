@@ -59,7 +59,7 @@ lint-python:
 
 lint-js:
 	@echo "--> Linting JavaScript files"
-	@eslint abilian
+	eslint abilian
 
 format:
 	isort -rc abilian
