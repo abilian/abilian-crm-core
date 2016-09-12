@@ -20,8 +20,8 @@ before_install:
 
 # Install Python dependencies
 install:
-  - pip install -r etc/dev-requirements.txt
-  - pip install -e .
+  - pip install -U -r etc/dev-requirements.txt
+  - pip install -U -e .
   - npm install -g less eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard eslint-plugin-html
 
 # Create DB
