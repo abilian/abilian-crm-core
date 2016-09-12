@@ -367,7 +367,8 @@ class Yearly(Field):
             attributes[related_attr_id] = fk_col
             attributes['_' + model_lower] = sa.orm.relationship(
                 model,
-                primaryjoin=u'{tablename}.c.{related_attr_id} == {remote}.c.id'.format(
+                primaryjoin=u'{tablename}.c.{related_attr_id} == {remote}.c.id'.
+                format(
                     tablename=tablename,
                     related_attr_id=related_attr_id,
                     remote=self.model.lower()))
