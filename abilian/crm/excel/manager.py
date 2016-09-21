@@ -18,7 +18,7 @@ import openpyxl
 import sqlalchemy as sa
 from flask import current_app
 from openpyxl import Workbook, styles
-from openpyxl.cell import STRING_TYPES, IllegalCharacterError
+from openpyxl.utils.exceptions import IllegalCharacterError
 from openpyxl.utils import get_column_letter, units
 from openpyxl.writer.write_only import WriteOnlyCell
 
@@ -27,6 +27,7 @@ from abilian.core.sqlalchemy import JSON as JSONType
 from abilian.i18n import _
 from abilian.services.vocabularies.models import BaseVocabulary
 from abilian.web.forms.fields import ModelFieldList
+from six import string_types
 
 from ..models import PostalAddress
 from .columns import Column, ColumnSet, DateColumn, DateTimeColumn, Invalid, \
@@ -1206,7 +1207,7 @@ class ExcelManager(object):
         cell = sheet.cell(row=row, column=col)
         value = cell.value
 
-        if isinstance(value, STRING_TYPES):
+        if isinstance(value, string_types):
             value = cell.value.strip().replace(u'\r\n', u'\n')
             if u'\222' in value or u'\225' in value:
                 # handle weird copy paste that may happen in excel: value is not actual
