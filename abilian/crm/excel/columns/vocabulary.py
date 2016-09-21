@@ -3,7 +3,7 @@
 """
 from __future__ import absolute_import
 
-from openpyxl.cell import STRING_TYPES
+from openpyxl.cell.cell import STRING_TYPES
 
 from .base import Column
 
@@ -12,8 +12,8 @@ __all__ = ('VocabularyColumn',)
 
 class VocabularyColumn(Column):
     """
-  Columns for :class:`abilian.services.models.BaseVocabulary` items
-  """
+    Columns for :class:`abilian.services.models.BaseVocabulary` items
+    """
     expected_cell_types = STRING_TYPES
 
     def data(self, item):

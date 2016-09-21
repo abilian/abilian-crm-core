@@ -3,7 +3,7 @@
 """
 from __future__ import absolute_import
 
-from openpyxl.cell import NUMERIC_TYPES, STRING_TYPES
+from openpyxl.cell.cell import NUMERIC_TYPES, STRING_TYPES
 
 from .base import Column
 

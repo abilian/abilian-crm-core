@@ -4,7 +4,7 @@
 from __future__ import absolute_import
 
 from flask import current_app
-from openpyxl.cell import STRING_TYPES
+from openpyxl.cell.cell import STRING_TYPES
 
 from .base import Column
 
