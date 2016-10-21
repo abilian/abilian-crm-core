@@ -108,8 +108,8 @@ class EntityField(Field):
                     cls.metadata,
                     sa.Column(local_src_col, sa.ForeignKey(src_pk)),
                     sa.Column(local_target_col, sa.ForeignKey(target_col)),
-                    sa.schema.UniqueConstraint(local_src_col,
-                                               local_target_col),)
+                    sa.schema.UniqueConstraint(local_src_col, local_target_col),
+                )
 
                 rel_kw = dict(secondary=secondary_table)
                 if is_self_referential:

@@ -92,7 +92,8 @@ class Field(Registrable):
         if 'from_list' in self.data:
             info['choices'] = OrderedDict(self.data['from_list'])
 
-        attr = sa.schema.Column(col_name, self.sa_type(**self.sa_type_options),
+        attr = sa.schema.Column(col_name,
+                                self.sa_type(**self.sa_type_options),
                                 **extra_args)
 
         return ((self.name, attr),)

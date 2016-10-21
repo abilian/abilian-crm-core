@@ -23,20 +23,21 @@ __all__ = ('FORM_FIELDS', 'FORM_FILTERS', 'LIST_GENERATORS', 'VALIDATORS',
 #
 MAX_IDENTIFIER_LENGTH = 63
 
-FORM_FIELDS = (wtforms.fields.SelectField,
-               wtforms.fields.BooleanField,
-               wtforms.fields.TextField,
-               wtforms.fields.TextAreaField,
-               wtforms.fields.FloatField,
-               wtforms.fields.DecimalField,
-               wtforms.fields.IntegerField,
-               QuerySelectField,
-               FileField,
-               TelField,
-               IntegerField,
-               awbff.Select2Field,
-               awbff.Select2MultipleField,
-               awbff.DateField,)
+FORM_FIELDS = (
+    wtforms.fields.SelectField,
+    wtforms.fields.BooleanField,
+    wtforms.fields.TextField,
+    wtforms.fields.TextAreaField,
+    wtforms.fields.FloatField,
+    wtforms.fields.DecimalField,
+    wtforms.fields.IntegerField,
+    QuerySelectField,
+    FileField,
+    TelField,
+    IntegerField,
+    awbff.Select2Field,
+    awbff.Select2MultipleField,
+    awbff.DateField,)
 FORM_FIELDS = {t.__name__: t for t in FORM_FIELDS}
 
 VALIDATORS = {
@@ -46,15 +47,18 @@ VALIDATORS = {
     'optional': optional,
 }
 
-FORM_FILTERS = {'strip': strip,
-                'uppercase': uppercase,
-                'lowercase': lowercase,}
+FORM_FILTERS = {
+    'strip': strip,
+    'uppercase': uppercase,
+    'lowercase': lowercase,
+}
 
-WIDGETS = (abilian_widgets.BooleanWidget,
-           abilian_widgets.URLWidget,
-           abilian_widgets.EmailWidget,
-           abilian_widgets.MoneyWidget,
-           abilian_widgets.HoursWidget,)
+WIDGETS = (
+    abilian_widgets.BooleanWidget,
+    abilian_widgets.URLWidget,
+    abilian_widgets.EmailWidget,
+    abilian_widgets.MoneyWidget,
+    abilian_widgets.HoursWidget,)
 WIDGETS = {t.__name__: t for t in WIDGETS}
 
 LIST_GENERATORS = {'country': country_choices}

@@ -205,6 +205,7 @@ class YearlyAttrProxy(object):
             self.__class__.__name__, self.yearly_data.__class__.__name__,
             tuple(sorted(self.attrs)), id(self))
 
+
 # proxy sa.inspect()
 sa.inspection._inspects(YearlyAttrProxy)(
     lambda target: sa.inspect(target.yearly_data))
@@ -383,8 +384,9 @@ class Yearly(Field):
                 related_attr_id=related_attr_id,
                 related_attr=model_lower,
                 cls=None,
-                table_args=[sa.schema.UniqueConstraint(related_attr_id, 'year')
-                           ],
+                table_args=[
+                    sa.schema.UniqueConstraint(related_attr_id, 'year')
+                ],
                 attributes=attributes,
                 fields=[])
 
@@ -432,8 +434,10 @@ class Yearly(Field):
         """Implements total_ordering methods.
         """
         rel_attr_id = self.yearly_data['related_attr_id']
-        column_attributes = [attr for attr, definition in attributes.iteritems()
-                             if isinstance(definition, sa.Column)]
+        column_attributes = [
+            attr for attr, definition in attributes.iteritems()
+            if isinstance(definition, sa.Column)
+        ]
 
         def _eq(self, other):
             return (isinstance(other, self.__class__) and all(
@@ -484,8 +488,9 @@ class YearlyFormField(FormFieldGeneratorBase):
         generator = CodeGenerator(data=self.data['type_args'])
         year_field = IntegerField(label=_l(u'Year'))
         FormBase = generator.gen_form(self.generator.module)
-        ModelField = type(self.name + 'Form', (FormBase,
-                                               Form,), {'year': year_field,})
+        ModelField = type(self.name + 'Form', (
+            FormBase,
+            Form,), {'year': year_field,})
 
         extra_args = super(YearlyFormField, self).get_extra_args(*args,
                                                                  **kwargs)

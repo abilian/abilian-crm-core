@@ -434,12 +434,14 @@ class ExcelModuleComponent(ModuleComponent):
             pass
 
         if len(excel_actions) > 1:
-            excel_actions = [ModuleActionDropDown(
-                self.module,
-                'excel',
-                'actions',
-                title=_l(u'Excel'),
-                button='default',
-                items=excel_actions)]
+            excel_actions = [
+                ModuleActionDropDown(
+                    self.module,
+                    'excel',
+                    'actions',
+                    title=_l(u'Excel'),
+                    button='default',
+                    items=excel_actions)
+            ]
 
         return excel_actions

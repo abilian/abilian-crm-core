@@ -111,7 +111,8 @@ class File(Field):
         extra_args['info'] = info = {}
         info['label'] = self.label
 
-        attr = sa.schema.Column(col_name, self.sa_type(**self.sa_type_options),
+        attr = sa.schema.Column(col_name,
+                                self.sa_type(**self.sa_type_options),
                                 sa.ForeignKey(Blob.id), **extra_args)
 
         yield col_name, attr

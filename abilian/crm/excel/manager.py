@@ -275,14 +275,17 @@ class ExcelManager(object):
             # objects
             columns = iter(self.columns)
 
-            head_data = [import_val
-                         for col in islice(columns, self.MANY_SPLIT_COLUMN)
-                         for import_val, value in col.data(obj)]
+            head_data = [
+                import_val
+                for col in islice(columns, self.MANY_SPLIT_COLUMN)
+                for import_val, value in col.data(obj)
+            ]
 
             # islice has started to consume 'columns' iterator, iter remaining columns
-            tail_data = [import_val
-                         for col in columns
-                         for import_val, value in col.data(obj)]
+            tail_data = [
+                import_val
+                for col in columns for import_val, value in col.data(obj)
+            ]
 
             # generate rows for each related object
             is_empty = True
@@ -651,9 +654,11 @@ class ExcelManager(object):
         """
         attr_to_main = self.attr_to_main_column
         attr_to_col = self.attr_to_column
-        single_value_attrs = {k
-                              for k, column in attr_to_main.items()
-                              if not isinstance(column, RelatedColumnSet)}
+        single_value_attrs = {
+            k
+            for k, column in attr_to_main.items()
+            if not isinstance(column, RelatedColumnSet)
+        }
         invalid_lines = []
         data_rows = []
 
@@ -662,10 +667,12 @@ class ExcelManager(object):
             data = defaultdict(dict)
             orig_md5 = cell(0)
             is_new = False if orig_md5 else True
-            data['__metadata__'] = {'row': row + 1,
-                                    'is_new': is_new,
-                                    'is_update': False,
-                                    'unique_id_cols': dict()}
+            data['__metadata__'] = {
+                'row': row + 1,
+                'is_new': is_new,
+                'is_update': False,
+                'unique_id_cols': dict()
+            }
 
             if not is_new:
                 try:
@@ -730,9 +737,11 @@ class ExcelManager(object):
         related_attr_to_main = self.get_attr_to_column(related_cs, True)
         related_attr_to_col = self.get_attr_to_column(related_cs)
 
-        single_value_attrs = {k
-                              for k, column in related_attr_to_main.items()
-                              if not isinstance(column, RelatedColumnSet)}
+        single_value_attrs = {
+            k
+            for k, column in related_attr_to_main.items()
+            if not isinstance(column, RelatedColumnSet)
+        }
         invalid_lines = []
 
         for row in range(2, ws.nrows):
@@ -756,8 +765,8 @@ class ExcelManager(object):
             attrs = iter(self.attrs)
             md5 = hashlib.md5()
             # main item: head data
-            for idx, attr in enumerate(islice(attrs, self.MANY_SPLIT_COLUMN),
-                                       1):
+            for idx, attr in enumerate(
+                    islice(attrs, self.MANY_SPLIT_COLUMN), 1):
                 if is_new and attr == 'id':
                     continue
                 value = cell(idx)
@@ -895,8 +904,8 @@ class ExcelManager(object):
                              '\n'
                              'item_attrs="%s"'
                              '\n'
-                             'attr_sig="%s"', item_id, repr(item_update.attrs),
-                             repr(item_update.sig))
+                             'attr_sig="%s"', item_id,
+                             repr(item_update.attrs), repr(item_update.sig))
                 skipped_items += 1
                 continue
 
@@ -926,8 +935,10 @@ class ExcelManager(object):
 
                     # import "many relateds" values
                     many_relateds = item_update.data.get('__many_related__', {})
-                    many_relateds_map = {cs.related_attr: cs
-                                         for cs in self.MANY_RELATED_CS}
+                    many_relateds_map = {
+                        cs.related_attr: cs
+                        for cs in self.MANY_RELATED_CS
+                    }
 
                     for rel_attr, updates in many_relateds.items():
                         cs = many_relateds_map.get(rel_attr)
@@ -1028,8 +1039,8 @@ class ExcelManager(object):
         if signer is None:
             signer = self.signer
         signature = signer.sep.join(signed.rsplit(signer.sep, 2)[-2:])
-        logger.debug('extract_signature: "%s" from "%s"', repr(signature),
-                     signed)
+        logger.debug('extract_signature: "%s" from "%s"',
+                     repr(signature), signed)
         return signature
 
     def columns_for(self, field, form):
@@ -1177,8 +1188,10 @@ class ExcelManager(object):
         else:
             if 'choices' in col.info:
                 # unicode(v) will make translatable values... translated
-                rev_choices = {unicode(v): k
-                               for k, v in col.info.get('choices').items()}
+                rev_choices = {
+                    unicode(v): k
+                    for k, v in col.info.get('choices').items()
+                }
                 if value not in rev_choices:
                     valid = u', '.join((u'"{}"'.format(v)
                                         for v in rev_choices.keys() if v))

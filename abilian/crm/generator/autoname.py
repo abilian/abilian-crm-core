@@ -39,7 +39,10 @@ def setup(cls, spec):
     # install listener on attributes
     for attr in attributes.iterkeys():
         attr_impl = getattr(cls, attr)
-        sa.event.listen(attr_impl, "set", auto_name,
-                        propagate=True,  # set listener on subclasses
-                        active_history=True,
-                        retval=False)
+        sa.event.listen(
+            attr_impl,
+            "set",
+            auto_name,
+            propagate=True,  # set listener on subclasses
+            active_history=True,
+            retval=False)
