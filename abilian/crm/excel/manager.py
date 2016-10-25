@@ -325,7 +325,11 @@ class ExcelManager(object):
                     cols_width[c] = max(width, cols_width[c])
 
                 for c, val in enumerate(tail_data, col_offset):
-                    cell = WriteOnlyCell(ws, value=val)
+                    try:
+                        cell = WriteOnlyCell(ws, value=val)
+                    except IllegalCharacterError:
+                        cell = WriteOnlyCell(ws, value="[ERROR - illegal characters]")
+
                     self.style_for(cell)
                     cells.append(cell)
                     #ws.write(r+row_offset, c, value, style)
