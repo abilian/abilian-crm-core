@@ -328,7 +328,8 @@ class ExcelManager(object):
                     try:
                         cell = WriteOnlyCell(ws, value=val)
                     except IllegalCharacterError:
-                        cell = WriteOnlyCell(ws, value="[ERROR - illegal characters]")
+                        cell = WriteOnlyCell(
+                            ws, value="[ERROR - illegal characters]")
 
                     self.style_for(cell)
                     cells.append(cell)
