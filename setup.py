@@ -6,7 +6,7 @@ from distutils.command.build import build as _build
 from setuptools.command.sdist import sdist as _sdist
 from setuptools.command.develop import develop as _develop
 
-REQUIREMENTS = ['abilian-core', 'phonenumbers>=7.1.0', 'openpyxl>=2.3.3',]
+requirements = [l.strip() for l in open("requirements.txt") if l.strip()]
 
 
 class build(_build):
@@ -36,7 +36,7 @@ setuptools.setup(
     zip_safe=False,
     platforms='any',
     setup_requires=['babel', 'setuptools-git', 'setuptools_scm'],
-    install_requires=REQUIREMENTS,
+    install_requires=requirements,
     extras_require={},
     include_package_data=True,
     classifiers=[

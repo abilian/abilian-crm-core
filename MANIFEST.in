@@ -1,0 +1,4 @@
+include *.rst *.txt *.ini *.py *.cfg *.yml
+recursive-include docs *
+prune instance
+prune .git

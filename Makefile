@@ -91,6 +91,11 @@ tidy: clean
 update-pot:
 	python setup.py extract_messages update_catalog compile_catalog
 
+update-deps:
+	pip-compile -U > /dev/null
+	pip-compile > /dev/null
+	git --no-pager diff requirements.txt
+
 release:
 	rm -rf /tmp/abilian-crm-core
 	git clone . /tmp/abilian-crm-core
