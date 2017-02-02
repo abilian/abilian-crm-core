@@ -461,8 +461,8 @@ class ExcelManager(object):
         main_cols = list(self.columns)
         head_cols = main_cols[:SPLIT_COLUMN]
         tail_cols = main_cols[SPLIT_COLUMN:]
-        all_columns = ColumnSet(
-            *list(chain(head_cols, (related_cs,), tail_cols)))
+        all_columns = ColumnSet(*list(
+            chain(head_cols, (related_cs,), tail_cols)))
         return all_columns
 
     def style_for(self, cell):
@@ -597,8 +597,7 @@ class ExcelManager(object):
 
                     if rel_modified:
                         rel_items.append(
-                            dict(
-                                modified=rel_modified, metadata=rel_metadata))
+                            dict(modified=rel_modified, metadata=rel_metadata))
 
                 if rel_items:
                     modified_relateds[cs.related_attr] = rel_items

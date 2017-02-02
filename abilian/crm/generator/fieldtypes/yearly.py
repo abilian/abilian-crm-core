@@ -254,8 +254,8 @@ class YearlyCollectionProxy(dict):
                 raise ValueError(
                     'Some keys are invalid for this collection proxy: {!r} (valid: {!r})'
                     ''.format(
-                        sorted(set(value) - self.__attrs), sorted(
-                            self.__attrs)))
+                        sorted(set(value) - self.__attrs),
+                        sorted(self.__attrs)))
             if key not in self.__collection:
                 self.__collection[key] = {}
 

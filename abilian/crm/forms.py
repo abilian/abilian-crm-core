@@ -81,8 +81,7 @@ class PostalAddressForm(ModelForm):
         description=_l(u'postal_address_street_lines_help'),
         validators=[required()],
         filters=(strip,),
-        widget=TextArea(
-            rows=4, resizeable=None),)
+        widget=TextArea(rows=4, resizeable=None),)
 
     administrative_area = StringField(
         _l(u'postal_address_administrative_area'),

@@ -32,8 +32,7 @@ class Vocabulary(Field):
                 def gen_column(cls):
                     return sa.schema.Column(
                         col_name,
-                        sa.ForeignKey(
-                            target_col, ondelete='SET NULL'),)
+                        sa.ForeignKey(target_col, ondelete='SET NULL'),)
 
                 gen_column.func_name = func_name
                 return gen_column
