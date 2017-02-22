@@ -1,4 +1,4 @@
-.PHONY: test full-test pep8 clean setup default
+.PHONY: test full-test flake8 clean setup default
 
 SRC=abilian/crm
 PKG=$(SRC)
@@ -55,7 +55,7 @@ lint: lint-python lint-js
 
 lint-python:
 	@echo "--> Linting Python files"
-	flake8 --config=setup.cfg abilian *.py
+	flake8 abilian *.py
 
 lint-js:
 	@echo "--> Linting JavaScript files"

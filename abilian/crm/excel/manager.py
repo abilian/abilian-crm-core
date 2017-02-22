@@ -315,7 +315,7 @@ class ExcelManager(object):
                     cell = WriteOnlyCell(ws, value=import_val)
                     self.style_for(cell)
                     cells.append(cell)
-                    #ws.write(r+row_offset, c, import_val, self.style_for(import_val))
+                    # ws.write(r+row_offset, c, import_val, self.style_for(import_val))
                     self.update_md5(md5, import_val)
                     col_offset += 1
 
@@ -333,7 +333,7 @@ class ExcelManager(object):
 
                     self.style_for(cell)
                     cells.append(cell)
-                    #ws.write(r+row_offset, c, value, style)
+                    # ws.write(r+row_offset, c, value, style)
                     self.update_md5(md5, value)
 
                     # estimate width
@@ -393,7 +393,7 @@ class ExcelManager(object):
 
     def _new_export_sheet(self, wb, name, columns):
         ws = wb.create_sheet(title=name)
-        #ws.protect = True
+        # ws.protect = True
 
         # attributes row
         row = 0
@@ -831,11 +831,12 @@ class ExcelManager(object):
                 continue
 
             has_data_for_new = (is_new and (attr in data) and value)
-            has_data_update = (
-                not is_new and (value != import_val) and
-                (value or import_val))  # last test ensures (None, u'', 0,
-            #False, ...) are treated as equal
-            #
+
+            # Note: last test ensures (None, u'', 0, False, ...)
+            # are treated as equal
+            has_data_update = (not is_new and (value != import_val) and
+                               (value or import_val))
+
             # FIXME: exception for bool columns to
             # check None != False?
 
@@ -950,7 +951,7 @@ class ExcelManager(object):
                             logger.error(
                                 'Many relateds: columns set for "%s" not found',
                                 rel_attr,
-                                extra={'stack': True,})
+                                extra={'stack': True})
                             continue
 
                         manager = cs.create_manager()
@@ -1015,9 +1016,9 @@ class ExcelManager(object):
                     changed_items += 1
 
         if error_happened:
-            #FIXME: include data for showing failed signatures, error during attr
-            #conversion, etc
-            logger.error('Excel import error', extra={'stack': True,})
+            # FIXME: include data for showing failed signatures, error during
+            # attr conversion, etc
+            logger.error('Excel import error', extra={'stack': True})
 
         db.session.commit()
         return dict(
@@ -1027,7 +1028,7 @@ class ExcelManager(object):
             error_happened=error_happened)
 
     def update_md5(self, md5, value):
-        """ Compute consistent md5 for exported and imported value.
+        """Compute consistent md5 for exported and imported value.
 
         For example if model value is None, exported value may be u''.
         All values are also converted to utf-8 encoded string before hashing.
@@ -1097,7 +1098,7 @@ class ExcelManager(object):
             try:
                 type_ = db_col.type.python_type
                 if type_ is bool:
-                    type_ = lambda v: v in (True, 'True', '1', 1)
+                    type_ = lambda v: v in (True, 'True', '1', 1)  # noqa
                 elif type_ in (datetime.date, datetime.datetime):
                     # native excel type, no need to set cast function
                     column_cls = (DateColumn

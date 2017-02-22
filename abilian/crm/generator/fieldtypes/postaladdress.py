@@ -82,8 +82,8 @@ class PostalAddressFormField(FormField):
         return awbff.ModelFieldList if self.multiple else self.ff_type
 
     def get_extra_args(self, *args, **kwargs):
-        extra_args = super(PostalAddressFormField, self)\
-                        .get_extra_args(*args, **kwargs)
+        extra_args = super(PostalAddressFormField, self) \
+            .get_extra_args(*args, **kwargs)
         if self.multiple:
             extra_args['unbound_field'] = awbff.ModelFormField(
                 PostalAddressForm)

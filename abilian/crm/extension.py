@@ -18,9 +18,7 @@ JS = ('js/async_export.js',)
 
 
 class AbilianCRM(object):
-    """
-    Base extension required by abilian.crm.apps
-    """
+    """Base extension required by abilian.crm.apps."""
 
     def __init__(self, app=None):
         if app is not None:

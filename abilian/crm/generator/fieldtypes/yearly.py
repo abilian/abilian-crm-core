@@ -488,9 +488,8 @@ class YearlyFormField(FormFieldGeneratorBase):
         generator = CodeGenerator(data=self.data['type_args'])
         year_field = IntegerField(label=_l(u'Year'))
         FormBase = generator.gen_form(self.generator.module)
-        ModelField = type(self.name + 'Form', (
-            FormBase,
-            Form,), {'year': year_field,})
+        ModelField = type(self.name + 'Form', (FormBase, Form),
+                          {'year': year_field})
 
         extra_args = super(YearlyFormField, self).get_extra_args(*args,
                                                                  **kwargs)

@@ -79,9 +79,8 @@ class BaseExcelView(ModuleView, views.View):
     def excel_export_actions(self):
         actions = []
         for column_set in self.EXCEL_EXPORT_RELATED:
-            actions.append((url_for(
-                '.export_to_xls', related=column_set.related_attr),
-                            column_set.export_label))
+            url = url_for('.export_to_xls', related=column_set.related_attr)
+            actions.append((url, column_set.export_label))
 
         return actions
 
@@ -194,7 +193,7 @@ class TaskStatusView(views.JSONView):
             return result
 
         # unattended state, return data anyway
-        #FIXME: log at error level for sentry?
+        # FIXME: log at error level for sentry?
         return result
 
 
@@ -324,15 +323,15 @@ class ExcelImportValidate(BaseExcelView):
                 data.append(_ItemUpdate(item_id, attrs, sig, item_modified))
 
             result = self.manager.save_data(data)
-            flash(_(u'Import from {filename}: {changed} items changed, '
+            # FIXME: i18n won't work here
+            msg = _(u'Import from {filename}: {changed} items changed, '
                     '{created} items created, '
                     '{skipped} ignored due to errors').format(
-                      filename=filename,
-                      changed=result['changed_items'],
-                      created=result['created_items'],
-                      skipped=result['skipped_items']),
-                  'error' if result['error_happened'] else 'info'
-              )
+                filename=filename, changed=result['changed_items'],
+                created=result['created_items'],
+                skipped=result['skipped_items'])
+            category = 'error' if result['error_happened'] else 'info'
+            flash(msg, category)
 
             yield render_template(
                 'crm/xls_data_saved.html', redirect_to=redirect_to)

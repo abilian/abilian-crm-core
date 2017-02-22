@@ -37,6 +37,6 @@ def test_format_phonenumber():
 
         # we want to avoid NumberParseException
         with patch('abilian.crm.jinja_filters.logger.exception') as logger:
-            assert fmt(u'garbage long unparsable text &"é(§è!çà)-)'
-                      ) == u'garbage long unparsable text &"é(§è!çà)-)'
+            unparsable_text = u'garbage long unparsable text &"é(§è!çà)-)'
+            assert fmt(unparsable_text) == unparsable_text
             assert not logger.called
