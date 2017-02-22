@@ -59,19 +59,20 @@ class ExcelManager(object):
     XF_DATE_NUMBER_FORMAT = "DD/MM/YYYY"
 
     #: column to identify item by (unique) name (if no database id is
-    # available). This is used by importer to import a many related sheet
+    #: available). This is used by importer to import a many related sheet
     ID_BY_NAME_COL = None
 
-    #: list of columns that identify a unique object. If an import sheet has no id
-    # one of this columns may identify an object. In this case the object is
-    # updated with values from non-empty cells (like a dict.update())
+    #: list of columns that identify a unique object.
+    #: If an import sheet has no id,
+    #: one of this columns may identify an object. In this case the object is
+    #: updated with values from non-empty cells (like a dict.update())
     UNIQUE_ID_COLS = ()
 
     #: sheet name where data should be, at import or export
     MAIN_SHEET_NAME = u'Sheet 1'
 
     #: For many related export/import, set column at which object's columns is
-    # splitted to insert related object columns
+    #: splitted to insert related object columns
     MANY_SPLIT_COLUMN = 2
 
     #: list of field to skip
