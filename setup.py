@@ -6,7 +6,7 @@ from distutils.command.build import build as _build
 from setuptools.command.sdist import sdist as _sdist
 from setuptools.command.develop import develop as _develop
 
-requirements = [l.strip() for l in open("requirements.txt") if l.strip()]
+requirements = [l.strip() for l in open("requirements.in") if l.strip()]
 
 
 class build(_build):
