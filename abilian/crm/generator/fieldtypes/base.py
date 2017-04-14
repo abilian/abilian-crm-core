@@ -13,9 +13,10 @@ from six import string_types
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.validators as aw_validators
 import abilian.web.forms.widgets as aw_widgets
+from abilian.web.forms.validators import VALIDATORS
 
 from ..definitions import FORM_FILTERS, LIST_GENERATORS, \
-    MAX_IDENTIFIER_LENGTH, VALIDATORS, WIDGETS
+    MAX_IDENTIFIER_LENGTH, WIDGETS
 from .registry import Registrable, get_formfield
 
 _VALID_IDENTIFIER_RE = re.compile(r'[A-Za-z_][A-Za-z0-9_]*', re.UNICODE)
