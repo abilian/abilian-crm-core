@@ -96,6 +96,11 @@ update-deps:
 	pip-compile > /dev/null
 	git --no-pager diff requirements.txt
 
+sync-deps:
+	pip install -r requirements.txt
+	pip install -r etc/dev-requirements.txt
+	pip install -e .
+
 release:
 	rm -rf /tmp/abilian-crm-core
 	git clone . /tmp/abilian-crm-core
