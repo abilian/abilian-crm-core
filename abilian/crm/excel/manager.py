@@ -16,6 +16,7 @@ from operator import attrgetter
 import itsdangerous
 import openpyxl
 import sqlalchemy as sa
+from abilian.crm.excel.util import sanitize
 from flask import current_app
 from openpyxl import Workbook, styles
 from openpyxl.cell.cell import STRING_TYPES
@@ -370,7 +371,7 @@ class ExcelManager(object):
                 col_offset += related_columns_len
 
                 for c, val in enumerate(tail_data, col_offset):
-                    cell = WriteOnlyCell(ws, value=val)
+                    cell = WriteOnlyCell(ws, value=sanitize(val))
                     self.style_for(cell)
                     cells.append(cell)
                     self.update_md5(md5, value)
