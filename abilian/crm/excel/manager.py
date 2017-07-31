@@ -16,7 +16,6 @@ from operator import attrgetter
 import itsdangerous
 import openpyxl
 import sqlalchemy as sa
-from abilian.crm.excel.util import sanitize
 from flask import current_app
 from openpyxl import Workbook, styles
 from openpyxl.cell.cell import STRING_TYPES
@@ -26,6 +25,7 @@ from openpyxl.writer.write_only import WriteOnlyCell
 
 from abilian.core.extensions import db
 from abilian.core.sqlalchemy import JSON as JSONType
+from abilian.crm.excel.util import sanitize
 from abilian.i18n import _
 from abilian.services.vocabularies.models import BaseVocabulary
 from abilian.web.forms.fields import ModelFieldList
