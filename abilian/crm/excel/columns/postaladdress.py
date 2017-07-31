@@ -11,8 +11,8 @@ from .related import RelatedColumnSet
 
 class PostalAddressColumn(RelatedColumnSet):
     """
-  Columns for :class:`abilian.crm.models.PostalAddress` items
-  """
+    Columns for :class:`abilian.crm.models.PostalAddress` items
+    """
 
     def __init__(self, attr, label=None, type_=None, required=False):
         from .. import ExcelManager

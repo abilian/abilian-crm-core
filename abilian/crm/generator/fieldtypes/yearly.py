@@ -270,7 +270,8 @@ class YearlyCollectionProxy(dict):
         super(YearlyCollectionProxy, self).__delitem__(key)
 
     def setdefault(self, key, default=None):
-        'D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D'
+        """D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
+        """
         if key not in self.__collection:
             self.__setitem__(key, default)
 

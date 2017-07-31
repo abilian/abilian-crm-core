@@ -63,7 +63,7 @@ def export(self,
     uploads = current_app.extensions['uploads']
 
     with rq_ctx:
-        login_user(user, remember=False, force=False)
+        login_user(user)
         objects = module.ordered_query(request)
         related_cs = None
         if manager is not None:

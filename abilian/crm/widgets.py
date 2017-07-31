@@ -17,4 +17,4 @@ class PhoneNumberWidget(TextInput):
         if not data:
             return u''
 
-        return format_phonenumber(data, international=True)
+        return format_phonenumber(data)

@@ -247,7 +247,7 @@ class ExcelManager(object):
 
     def export_many(self, objects, related_columns_set, progress_callback=None):
         """
-        :param related_columns_set: a :class:`ManyRelatedColumnSet` instance
+        :type related_columns_set: ManyRelatedColumnSet
         """
         assert isinstance(related_columns_set, ManyRelatedColumnSet)
 
@@ -523,7 +523,6 @@ class ExcelManager(object):
         modified_items = []
 
         for data in data_rows:
-            item = None
             metadata = data.pop('__metadata__')
             is_new = metadata.get('is_new')
             is_update = metadata.get('is_update')
@@ -611,14 +610,14 @@ class ExcelManager(object):
                 attr_sig = self.signer.sign(u';'.join(sorted(valid_keys)))
                 attr_sig = self.extract_signature(attr_sig)
 
-                modified_items.append(
-                    dict(
-                        item=item,
-                        metadata=metadata,
-                        required_missing=required_missing,
-                        modified=modified,
-                        many_relateds=modified_relateds,
-                        attr_signature=attr_sig))
+                modified_items.append({
+                    'item': item,
+                    'metadata': metadata,
+                    'required_missing': required_missing,
+                    'modified': modified,
+                    'many_relateds': modified_relateds,
+                    'attr_signature': attr_sig
+                })
 
         # FIXME: also return list of invalid_rows?
         return modified_items
@@ -848,7 +847,6 @@ class ExcelManager(object):
                 has_data_update = False
 
             if has_data_for_new or has_data_update:
-                update = None
                 try:
                     update = self._import_value(obj, col, current, value)
                 except ExcelImportError as e:
@@ -1161,7 +1159,6 @@ class ExcelManager(object):
         For example given a string, update value could be en Entity
         """
         is_related = False
-        attr_name = None
 
         if isinstance(data, Invalid):
             raise ExcelImportError(
@@ -1248,7 +1245,7 @@ class ExcelManager(object):
         """
         column = attr_map[attr]
 
-        if (value is not None and column.expected_cell_types is not None):
+        if value is not None and column.expected_cell_types is not None:
             if type(value) not in column.expected_cell_types:
                 try:
                     value = column.adapt_from_cell(value, wb)

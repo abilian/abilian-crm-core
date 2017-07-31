@@ -35,7 +35,7 @@ class AbilianCRM(object):
         app.extensions['babel'].add_translations('abilian.crm')
 
         jinja_filters.init_filters(app)
-        app.register_jinja_loaders(jinja2.PackageLoader(__name__, 'templates'))
+        app.register_jinja_loaders(jinja2.PackageLoader(__name__))
 
         # crm static assets
         app.add_static_url(
