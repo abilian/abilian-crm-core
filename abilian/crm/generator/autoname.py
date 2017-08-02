@@ -2,7 +2,7 @@
 """
 Set up listener to automatically set 'name' from various attributes.
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 import string
 from operator import attrgetter

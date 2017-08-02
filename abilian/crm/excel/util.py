@@ -1,7 +1,7 @@
 # coding=utf-8
 """
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
 from six import text_type

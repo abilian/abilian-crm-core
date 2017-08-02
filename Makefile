@@ -62,9 +62,13 @@ lint-js:
 	eslint abilian
 
 format:
-	isort -rc abilian
-	-yapf --style google -r -i abilian
-	isort -rc abilian
+	#isort -a  "from __future__ import absolute_import, print_function, unicode_literals" \
+        #        -rc abilian *.py
+	isort -a  "from __future__ import absolute_import, print_function" \
+                -rc abilian *.py
+	-yapf --style google -r -i abilian *.py
+	# -add-trailing-comma `find abilian -name '*.py'`
+	isort -rc abilian *.py
 
 clean:
 	find . -name "*.pyc" | xargs rm -f

@@ -17,7 +17,7 @@ In yml they are specified like this:
           - name: ...
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 from functools import total_ordering
 from operator import attrgetter

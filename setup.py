@@ -1,10 +1,11 @@
 # coding=utf-8
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function, unicode_literals
+
+from distutils.command.build import build as _build
 
 import setuptools
-from distutils.command.build import build as _build
-from setuptools.command.sdist import sdist as _sdist
 from setuptools.command.develop import develop as _develop
+from setuptools.command.sdist import sdist as _sdist
 
 requirements = [l.strip() for l in open("requirements.in") if l.strip()]
 

@@ -2,7 +2,7 @@
 """
 Celery task for async export
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 from cStringIO import StringIO
 from itertools import ifilter
