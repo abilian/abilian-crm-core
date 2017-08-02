@@ -4,6 +4,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 from openpyxl.cell.cell import STRING_TYPES
+from six import text_type
 
 from .base import Column
 
@@ -18,7 +19,7 @@ class VocabularyColumn(Column):
 
     def data(self, item):
         value = getattr(item, self.attr, None)
-        import_value = unicode(value) if value is not None else u''
+        import_value = text_type(value) if value is not None else u''
         yield import_value, value
 
     def deserialize(self, value):

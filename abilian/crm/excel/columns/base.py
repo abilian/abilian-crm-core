@@ -6,6 +6,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 from operator import attrgetter
 
 from markupsafe import Markup
+from six import text_type
 from wtforms.fields import FieldList
 
 from abilian.core.entities import Entity
@@ -31,7 +32,7 @@ class Invalid(object):
         return u'Invalid: {}'.format(repr(self.value))
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        return text_type(self).encode('utf-8')
 
 
 class Update(object):
@@ -133,7 +134,7 @@ class Column(object):
             elif isinstance(item, Entity):
                 return item.name
             else:
-                return unicode(item)
+                return text_type(item)
 
         value = attrgetter(self.attr)(item)
         import_value = item.display_value(self.attr, value=value)

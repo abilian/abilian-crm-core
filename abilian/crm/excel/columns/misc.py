@@ -4,6 +4,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 from openpyxl.cell.cell import NUMERIC_TYPES, STRING_TYPES
+from six import text_type
 
 from .base import Column
 
@@ -32,5 +33,5 @@ class TextIntegerColumn(Column):
 
     def _adapt_from_cell(self, value, cell_type, workbook):
         if isinstance(value, float):
-            value = unicode(int(value))
+            value = text_type(int(value))
         return value, value

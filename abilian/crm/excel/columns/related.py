@@ -5,6 +5,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from operator import attrgetter
 
+from six import text_type
+
 from .base import ColumnSet
 
 
@@ -23,7 +25,7 @@ class RelatedColumnSet(ColumnSet):
         self.get_related = attrgetter(self.related_attr)
 
         if label is None:
-            label = unicode(related_attr) \
+            label = text_type(related_attr) \
                 .replace(u'_', u' ') \
                 .replace(u'.', u' ')
 

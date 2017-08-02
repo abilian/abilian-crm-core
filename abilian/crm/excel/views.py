@@ -234,7 +234,7 @@ class ExcelImport(BaseExcelView):
             #             filename=filename),
             #           'error')
             #     logger.error(e, exc_info=True)
-            except Exception, e:
+            except Exception as e:
                 error = True
                 flash(e.message, 'error')
 

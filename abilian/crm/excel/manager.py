@@ -16,12 +16,15 @@ from operator import attrgetter
 import itsdangerous
 import openpyxl
 import sqlalchemy as sa
+import sqlalchemy.exc
+import sqlalchemy.orm
 from flask import current_app
 from openpyxl import Workbook, styles
 from openpyxl.cell.cell import STRING_TYPES
 from openpyxl.utils import get_column_letter, units
 from openpyxl.utils.exceptions import IllegalCharacterError
 from openpyxl.writer.write_only import WriteOnlyCell
+from six import text_type
 
 from abilian.core.extensions import db
 from abilian.core.sqlalchemy import JSON as JSONType
@@ -226,7 +229,7 @@ class ExcelManager(object):
                     self.update_md5(md5, import_val)
 
                     # estimate width
-                    value = unicode(cell.value)
+                    value = text_type(cell.value)
                     width = max(len(l) for l in value.split(u'\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -308,7 +311,7 @@ class ExcelManager(object):
                     col_offset += 1
 
                     # estimate width
-                    value = unicode(cell.value)
+                    value = text_type(cell.value)
                     width = max(len(l) for l in value.split(u'\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -322,7 +325,7 @@ class ExcelManager(object):
                     col_offset += 1
 
                     # estimate width
-                    value = unicode(cell.value)
+                    value = text_type(cell.value)
                     width = max(len(l) for l in value.split(u'\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -339,7 +342,7 @@ class ExcelManager(object):
                     self.update_md5(md5, value)
 
                     # estimate width
-                    value = unicode(cell.value)
+                    value = text_type(cell.value)
                     width = max(len(l) for l in value.split(u'\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -361,7 +364,7 @@ class ExcelManager(object):
                     self.update_md5(md5, value)
                     col_offset += 1
                     # estimate width
-                    value = unicode(cell.value)
+                    value = text_type(cell.value)
                     width = max(len(l) for l in value.split(u'\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -376,7 +379,7 @@ class ExcelManager(object):
                     cells.append(cell)
                     self.update_md5(md5, value)
                     # estimate width
-                    value = unicode(cell.value)
+                    value = text_type(cell.value)
                     width = max(len(l) for l in value.split(u'\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -413,7 +416,7 @@ class ExcelManager(object):
         md5 = hashlib.md5()
         cells = [WriteOnlyCell(ws)]
         for c, label in enumerate(columns.labels, 1):
-            cell = WriteOnlyCell(ws, value=unicode(label))
+            cell = WriteOnlyCell(ws, value=text_type(label))
             cell.font = self.XF_HEADER['font']
             cell.alignment = self.XF_HEADER['alignment']
             cells.append(cell)
@@ -505,7 +508,7 @@ class ExcelManager(object):
                 by_name[name] = d
             uid_cols = d['__metadata__'].get('unique_id_cols')
             if uid_cols is not None:
-                for key, val in uid_cols.iteritems():
+                for key, val in uid_cols.items():
                     unique_id_cols.setdefault(key, {})[val] = d
 
         # collect data from the 'many related' sets
@@ -554,7 +557,7 @@ class ExcelManager(object):
                                 'Multiple items match %s[%s] == ""%s"',
                                 self.model_cls.__name__,
                                 col_name,
-                                unicode(val).encode('utf-8'),
+                                text_type(val).encode('utf-8'),
                                 extra={'stack': True})
                         else:
                             is_new = metadata['is_new'] = False
@@ -1002,7 +1005,7 @@ class ExcelManager(object):
                 else:
                     logger.error(
                         'Import error: %s',
-                        unicode(e).encode('utf-8'),
+                        text_type(e).encode('utf-8'),
                         exc_info=True)
                     raise
                 error_happened = True
@@ -1036,7 +1039,7 @@ class ExcelManager(object):
         if value is None or isinstance(value, list):
             value = u''
 
-        value = unicode(value).encode('utf-8')
+        value = text_type(value).encode('utf-8')
         md5.update(value)
 
     def extract_signature(self, signed, signer=None):
@@ -1193,7 +1196,7 @@ class ExcelManager(object):
             if 'choices' in col.info:
                 # unicode(v) will make translatable values... translated
                 rev_choices = {
-                    unicode(v): k
+                    text_type(v): k
                     for k, v in col.info.get('choices').items()
                 }
                 if value not in rev_choices:

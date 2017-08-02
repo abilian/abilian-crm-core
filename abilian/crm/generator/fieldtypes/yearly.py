@@ -131,7 +131,7 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
             yield v
 
     def items(self):
-        return [(obj.year, obj) for obj in self.itervalues()]
+        return [(obj.year, obj) for obj in self.values()]
 
     def iteritems(self):
         for item in self.items():
@@ -222,7 +222,7 @@ class YearlyCollectionProxy(dict):
         self.__collection = collection
         self.__attrs = frozenset(attrs)
 
-        for year, year_data in collection.iteritems():
+        for year, year_data in collection.items():
             value = YearlyAttrProxy(year_data, self.__attrs)
             if value:
                 self.__setitem__(year, value)
@@ -298,9 +298,9 @@ class YearlyCollectionProxy(dict):
             yield v
 
     def items(self):
-        return [(obj.year, obj)
-                for obj in sorted(
-                    self.itervalues(), key=YearlyCollectionProxy._keyfunc)]
+        return [(
+            obj.year, obj
+        ) for obj in sorted(self.values(), key=YearlyCollectionProxy._keyfunc)]
 
     def iteritems(self):
         for item in self.items():
@@ -326,12 +326,12 @@ class YearlyAttribute(object):
 
     def __set__(self, instance, value):
         yearly_data = instance.__yearly_data__
-        for year, year_data in yearly_data.iteritems():
+        for year, year_data in yearly_data.items():
             if year not in value:
                 for attr in self._attrs:
                     setattr(year_data, attr, None)
 
-        for year, values in value.iteritems():
+        for year, values in value.items():
             year_data = yearly_data.setdefault(year, {})
             for attr in self._attrs:
                 val = values.get(attr, _MARK)
@@ -339,7 +339,7 @@ class YearlyAttribute(object):
                     setattr(year_data, attr, val)
 
     def __delete__(self, instance):
-        for year, year_data in instance.__yearly_data__.iteritems():
+        for year, year_data in instance.__yearly_data__.items():
             for attr in self._attrs:
                 setattr(year_data, attr, None)
 
@@ -436,7 +436,7 @@ class Yearly(Field):
         """
         rel_attr_id = self.yearly_data['related_attr_id']
         column_attributes = [
-            attr for attr, definition in attributes.iteritems()
+            attr for attr, definition in attributes.items()
             if isinstance(definition, sa.Column)
         ]
 

@@ -5,6 +5,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from flask import current_app
 from openpyxl.cell.cell import STRING_TYPES
+from six import text_type
 
 from .base import Column
 
@@ -13,8 +14,8 @@ __all__ = ('TagsColumn',)
 
 class TagsColumn(Column):
     """
-  Columns for :class:`abilian.core.models.tags.Tag` items
-  """
+    Columns for :class:`abilian.core.models.tags.Tag` items
+    """
     expected_cell_types = STRING_TYPES
 
     def data(self, item):
@@ -23,7 +24,7 @@ class TagsColumn(Column):
             yield None, None
 
         value = sorted(ext.entity_tags(item))
-        import_value = u'; '.join(unicode(t) for t in value) if value else u''
+        import_value = u'; '.join(text_type(t) for t in value) if value else u''
         yield import_value, value
 
     def deserialize(self, value):

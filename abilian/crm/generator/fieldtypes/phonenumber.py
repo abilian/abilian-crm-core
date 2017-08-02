@@ -4,6 +4,8 @@
 from __future__ import absolute_import, print_function
 
 import sqlalchemy as sa
+import sqlalchemy.ext
+import sqlalchemy.orm
 
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets

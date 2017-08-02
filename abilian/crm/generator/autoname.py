@@ -8,6 +8,7 @@ import string
 from operator import attrgetter
 
 import sqlalchemy as sa
+import sqlalchemy.event
 
 
 def setup(cls, spec):
@@ -27,7 +28,7 @@ def setup(cls, spec):
         if new_val != old_val:
             key = initiator.key
             vals = {key: new_val}
-            for attr, getter in attributes.iteritems():
+            for attr, getter in attributes.items():
                 if attr != key:
                     val = getter(obj)
                     if val is None:
@@ -37,7 +38,7 @@ def setup(cls, spec):
             obj.name = spec.format(**vals).strip()
 
     # install listener on attributes
-    for attr in attributes.iterkeys():
+    for attr in attributes.keys():
         attr_impl = getattr(cls, attr)
         sa.event.listen(
             attr_impl,

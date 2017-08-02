@@ -8,7 +8,9 @@ import re
 from collections import OrderedDict
 
 import sqlalchemy as sa
+import sqlalchemy.exc
 import yaml
+from six import text_type
 
 from abilian.core.entities import Entity
 from abilian.core.models import attachment, comment, tag
@@ -87,11 +89,11 @@ class CodeGenerator(object):
                     k, v = item
                     if isinstance(k, str):
                         k = k.decode('utf-8')
-                    v = unicode(v)
+                    v = text_type(v)
                 else:
                     if not isinstance(item, unicode):
                         item = item.decode('utf-8')
-                    k = unicode(slugify(item, u'_'))
+                    k = text_type(slugify(item, u'_'))
 
                 k = re.sub(u'[^\w\s-]', '', k).strip().upper()
                 k = re.sub(u'[-\s]+', '_', k)
@@ -214,7 +216,7 @@ class CodeGenerator(object):
         setattr(module, type_name, cls)
 
         # automatic name from other fields
-        auto_name = unicode(self.data.get('auto_name') or u'').strip()
+        auto_name = text_type(self.data.get('auto_name') or u'').strip()
 
         if auto_name:
             autoname.setup(cls, auto_name)

@@ -6,6 +6,7 @@ from __future__ import absolute_import, print_function
 import hashlib
 
 import sqlalchemy as sa
+import sqlalchemy.orm
 
 from abilian.core.models.blob import Blob
 from abilian.core.sqlalchemy import JSON, JSONDict, JSONList
