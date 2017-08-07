@@ -18,5 +18,7 @@ class PostalAddressColumn(RelatedColumnSet):
         from .. import ExcelManager
         manager = ExcelManager(PostalAddress, PostalAddressForm)
         columns = manager.columns.columns
-        super(PostalAddressColumn, self).__init__(attr, columns, label,
-                                                  required)
+        super(PostalAddressColumn, self).__init__(
+            attr, columns, label,
+            required,
+        )

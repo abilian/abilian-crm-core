@@ -34,7 +34,8 @@ class Vocabulary(Field):
                 def gen_column(cls):
                     return sa.schema.Column(
                         col_name,
-                        sa.ForeignKey(target_col, ondelete='SET NULL'),)
+                        sa.ForeignKey(target_col, ondelete='SET NULL'),
+                    )
 
                 gen_column.func_name = func_name
                 return gen_column
@@ -48,9 +49,11 @@ class Vocabulary(Field):
                 def gen_relationship(cls):
                     primary_join = '{} == {}'.format(
                         cls.__name__ + '.' + attr_name,
-                        target_cls.__name__ + '.id')
+                        target_cls.__name__ + '.id',
+                    )
                     return sa.orm.relationship(
-                        target_cls, primaryjoin=primary_join)
+                        target_cls, primaryjoin=primary_join,
+                    )
 
                 gen_relationship.func_name = func_name
                 return gen_relationship
@@ -74,9 +77,11 @@ class Vocabulary(Field):
                         cls.metadata,
                         sa.Column(src_col, sa.ForeignKey(src_name + '.id')),
                         sa.Column('voc_id', sa.ForeignKey(target_name + '.id')),
-                        sa.schema.UniqueConstraint(src_col, 'voc_id'),)
+                        sa.schema.UniqueConstraint(src_col, 'voc_id'),
+                    )
                     return sa.orm.relationship(
-                        target_cls, secondary=secondary_table)
+                        target_cls, secondary=secondary_table,
+                    )
 
                 gen_m2m_relationship.func_name = func_name
                 return gen_m2m_relationship
@@ -84,8 +89,10 @@ class Vocabulary(Field):
             relation_secondary_tbl_name = \
                 '{}_{}'.format(self.model.lower(), self.name.lower())
 
-            rel_attr = get_m2m_attr(relation_name, self.voc_cls,
-                                    relation_secondary_tbl_name)
+            rel_attr = get_m2m_attr(
+                relation_name, self.voc_cls,
+                relation_secondary_tbl_name,
+            )
             yield relation_name, sa.ext.declarative.declared_attr(rel_attr)
 
 
@@ -105,7 +112,8 @@ class VocabularyFormField(FormField):
                 return voc_cls.query.active().all()
 
             query_voc.func_name = 'query_vocabulary_{}'.format(
-                voc_cls.Meta.name)
+                voc_cls.Meta.name,
+            )
             return query_voc
 
         voc_cls = self.data['vocabulary']['cls']
@@ -114,5 +122,6 @@ class VocabularyFormField(FormField):
 
     def setup_widgets(self, extra_args):
         extra_args['widget'] = aw_widgets.Select2(
-            multiple=self.multiple, unescape_html=True)
+            multiple=self.multiple, unescape_html=True,
+        )
         extra_args['view_widget'] = aw_widgets.ListWidget()

@@ -36,7 +36,8 @@ class _PhoneNumberField(Field):
             fk_kw = dict(
                 name=u'{}_{}_fkey'.format(cls.__name__.lower(), col_name),
                 use_alter=True,
-                ondelete='SET NULL',)
+                ondelete='SET NULL',
+            )
             target_col = str(PhoneNumber.id.parent.c.id)
             fk = sa.ForeignKey(target_col, **fk_kw)
             return sa.Column(col_name, sa.types.Integer(), fk)
@@ -68,7 +69,8 @@ class _PhoneNumberField(Field):
                 cls.metadata,
                 sa.Column(local_src_col, sa.ForeignKey(cls.id)),
                 sa.Column(local_target_col, sa.ForeignKey(PhoneNumber.id)),
-                sa.schema.UniqueConstraint(local_src_col, local_target_col),)
+                sa.schema.UniqueConstraint(local_src_col, local_target_col),
+            )
 
             rel_kw = dict(secondary=secondary_table)
             return sa.orm.relationship(PhoneNumber, **rel_kw)
@@ -92,8 +94,10 @@ class PhoneNumberFormField(FormField):
             extra_args['min_entries'] = 1
             extra_args['population_strategy'] = 'update'
             extra_args['widget'] = aw_widgets.TabularFieldListWidget(
-                template='crm/widgets/phonenumber_fieldlist.html',)
+                template='crm/widgets/phonenumber_fieldlist.html',
+            )
             extra_args['view_widget'] = aw_widgets.FieldListWidget(
-                view_template='crm/widgets/phonenumber_fieldlist_view.html',)
+                view_template='crm/widgets/phonenumber_fieldlist_view.html',
+            )
 
         return extra_args

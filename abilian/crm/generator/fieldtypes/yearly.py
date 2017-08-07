@@ -74,8 +74,10 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
         if not isinstance(key, int):
             raise ValueError('Key must be an integer, key={!r}'.format(key))
         value = self._value_fromdict(key, value)
-        return super(YearlyCollection, self).__setitem__(key, value,
-                                                         _sa_initiator)
+        return super(YearlyCollection, self).__setitem__(
+            key, value,
+            _sa_initiator,
+        )
 
     @collection.internally_instrumented
     def setdefault(self, key, default=None):
@@ -98,7 +100,8 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
         if not isinstance(value, YearlyBase):
             if not isinstance(value, dict):
                 raise ValueError(
-                    'Value must be a YearlyBase based class or a dict')
+                    'Value must be a YearlyBase based class or a dict',
+                )
 
             value['year'] = key
             value = self.yearly_cls(**value)
@@ -108,7 +111,8 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
                 raise TypeError(
                     "Found incompatible key {!r} for value {!r}; this collection's "
                     "keying function requires a key of {!r} for this value."
-                    "".format(key, value, value_key))
+                    "".format(key, value, value_key),
+                )
 
         return value
 
@@ -124,7 +128,8 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
     def values(self):
         return sorted(
             super(YearlyCollection, self).values(),
-            key=YearlyCollection._keyfunc)
+            key=YearlyCollection._keyfunc,
+        )
 
     def itervalues(self):
         for v in self.values():
@@ -181,7 +186,8 @@ class YearlyAttrProxy(object):
         else:
             raise TypeError(
                 'Except a YearlyAttrProxy or dict instance, got: {!r}'
-                ''.format(type(value).__name__))
+                ''.format(type(value).__name__),
+            )
 
     def __getattr__(self, name):
         if name != 'attrs' and (name == 'year' or name in self.attrs):
@@ -198,17 +204,20 @@ class YearlyAttrProxy(object):
     def __nonzero__(self):
         return any(
             getattr(self.yearly_data, attr, None) is not None
-            for attr in self.attrs)
+            for attr in self.attrs
+        )
 
     def __repr__(self):
         return '<{} for {}: {!r}) at 0x{:x}>'.format(
             self.__class__.__name__, self.yearly_data.__class__.__name__,
-            tuple(sorted(self.attrs)), id(self))
+            tuple(sorted(self.attrs)), id(self),
+        )
 
 
 # proxy sa.inspect()
 sa.inspection._inspects(YearlyAttrProxy)(
-    lambda target: sa.inspect(target.yearly_data))
+    lambda target: sa.inspect(target.yearly_data),
+)
 
 
 class YearlyCollectionProxy(dict):
@@ -236,7 +245,8 @@ class YearlyCollectionProxy(dict):
         year_data = self.__collection[key]
         if key not in self:
             super(YearlyCollectionProxy, self).__setitem__(
-                key, YearlyAttrProxy(year_data, self.__attrs))
+                key, YearlyAttrProxy(year_data, self.__attrs),
+            )
 
         return super(YearlyCollectionProxy, self).__getitem__(key)
 
@@ -255,7 +265,9 @@ class YearlyCollectionProxy(dict):
                     'Some keys are invalid for this collection proxy: {!r} (valid: {!r})'
                     ''.format(
                         sorted(set(value) - self.__attrs),
-                        sorted(self.__attrs)))
+                        sorted(self.__attrs),
+                    ),
+                )
             if key not in self.__collection:
                 self.__collection[key] = {}
 
@@ -291,7 +303,8 @@ class YearlyCollectionProxy(dict):
     def values(self):
         return sorted(
             super(YearlyCollectionProxy, self).values(),
-            key=YearlyCollection._keyfunc)
+            key=YearlyCollection._keyfunc,
+        )
 
     def itervalues(self):
         for v in self.values():
@@ -299,7 +312,7 @@ class YearlyCollectionProxy(dict):
 
     def items(self):
         return [(
-            obj.year, obj
+            obj.year, obj,
         ) for obj in sorted(self.values(), key=YearlyCollectionProxy._keyfunc)]
 
     def iteritems(self):
@@ -344,8 +357,10 @@ class YearlyAttribute(object):
                 setattr(year_data, attr, None)
 
     def __repr__(self):
-        return '<{}{!r} at 0x{:x}>'.format(self.__class__.__name__, self._attrs,
-                                           id(self))
+        return '<{}{!r} at 0x{:x}>'.format(
+            self.__class__.__name__, self._attrs,
+            id(self),
+        )
 
 
 @model_field
@@ -363,8 +378,10 @@ class Yearly(Field):
             related_attr_id = '{}_id'.format(model_lower)
             tablename = '{}_yearly'.format(model_lower)
             type_name = '{}YearlyData'.format(model)
-            fk_col = sa.Column(sa.Integer(),
-                               sa.ForeignKey(self.model.lower() + '.id'))
+            fk_col = sa.Column(
+                sa.Integer(),
+                sa.ForeignKey(self.model.lower() + '.id'),
+            )
             attributes = dict()
             attributes[related_attr_id] = fk_col
             attributes['_' + model_lower] = sa.orm.relationship(
@@ -373,9 +390,13 @@ class Yearly(Field):
                 format(
                     tablename=tablename,
                     related_attr_id=related_attr_id,
-                    remote=self.model.lower()))
-            attributes['__auditable_entity__'] = ('_' + model_lower,
-                                                  '__yearly_data__', ('year',))
+                    remote=self.model.lower(),
+                ),
+            )
+            attributes['__auditable_entity__'] = (
+                '_' + model_lower,
+                '__yearly_data__', ('year',),
+            )
 
             generator.data['yearly'] = dict(
                 name=type_name,
@@ -386,10 +407,11 @@ class Yearly(Field):
                 related_attr=model_lower,
                 cls=None,
                 table_args=[
-                    sa.schema.UniqueConstraint(related_attr_id, 'year')
+                    sa.schema.UniqueConstraint(related_attr_id, 'year'),
                 ],
                 attributes=attributes,
-                fields=[])
+                fields=[],
+            )
 
         self.yearly_data = generator.data['yearly']
 
@@ -398,7 +420,8 @@ class Yearly(Field):
         fields = self.data['type_args']['fields']
         if any(f['name'] in forbidden_attrs for f in fields):
             raise ValueError('{} are forbidden field names'.format(','.join(
-                sorted(forbidden_attrs))))
+                sorted(forbidden_attrs),
+            )))
 
         self.yearly_data['fields'].extend(fields)
         yield self.name, YearlyAttribute(f['name'] for f in fields)
@@ -413,12 +436,15 @@ class Yearly(Field):
         primaryjoin = u'{local} == {remote}'.format(
             local=u'{__tablename__}.c.id'.format(**attributes),
             remote=u'{tablename}.c.{related_attr_id}'.format(
-                **self.yearly_data),)
+                **self.yearly_data
+            ),
+        )
         attributes['__yearly_data__'] = sa.orm.relationship(
             yearly_cls,
             primaryjoin=primaryjoin,
             collection_class=lambda: YearlyCollection(yearly_cls),
-            cascade='all, delete-orphan',)
+            cascade='all, delete-orphan',
+        )
 
     def create_related_model(self, module):
         # cannot import at top of the file
@@ -443,7 +469,8 @@ class Yearly(Field):
         def _eq(self, other):
             return (isinstance(other, self.__class__) and all(
                 getattr(self, attr) == getattr(other, attr)
-                for attr in column_attributes))
+                for attr in column_attributes
+            ))
 
         def _lt(self, other):
             if getattr(self, rel_attr_id, -1) < getattr(other, rel_attr_id, -1):
@@ -464,7 +491,8 @@ class YearlyFieldList(awbff.ModelFieldList):
 
     def _add_entry(self, formdata=None, data=unset_value, index=None):
         return FieldList._add_entry(
-            self, formdata=formdata, data=data, index=index)
+            self, formdata=formdata, data=data, index=index,
+        )
 
     def populate_obj(self, obj, name):
         entities = {}
@@ -489,11 +517,15 @@ class YearlyFormField(FormFieldGeneratorBase):
         generator = CodeGenerator(data=self.data['type_args'])
         year_field = IntegerField(label=_l(u'Year'))
         FormBase = generator.gen_form(self.generator.module)
-        ModelField = type(self.name + 'Form', (FormBase, Form),
-                          {'year': year_field})
+        ModelField = type(
+            self.name + 'Form', (FormBase, Form),
+            {'year': year_field},
+        )
 
-        extra_args = super(YearlyFormField, self).get_extra_args(*args,
-                                                                 **kwargs)
+        extra_args = super(YearlyFormField, self).get_extra_args(
+            *args,
+            **kwargs
+        )
         extra_args['unbound_field'] = awbff.FormField(ModelField, default=dict)
         extra_args['population_strategy'] = 'update'
         extra_args['min_entries'] = 1

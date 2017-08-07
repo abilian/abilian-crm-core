@@ -15,8 +15,10 @@ class Registrable(object):
         """
         :return: identifier name for this field type
         """
-        return (cls.__fieldname__
-                if cls.__fieldname__ is not None else cls.__name__)
+        return (
+            cls.__fieldname__
+            if cls.__fieldname__ is not None else cls.__name__
+        )
 
 
 _SA_FIELD_REGISTRY = dict()
@@ -35,7 +37,8 @@ def _register(registry, cls):
 
     assert name not in registry, (
         '{!r} cannot be registered as {!r}: already used by {!r}'
-        ''.format(cls, name, registry[name]))
+        ''.format(cls, name, registry[name])
+    )
     registry[name] = cls
     setattr(cls, reg_attr, True)
     return cls

@@ -55,10 +55,12 @@ class PositiveInteger(Integer):
             exceed = len(name) - MAX_IDENTIFIER_LENGTH
             name = self.name[:MAX_IDENTIFIER_LENGTH - exceed - 7]
             name = 'check_{name}_{digest}_positive'.format(
-                name=name, digest=digest[:6])
+                name=name, digest=digest[:6],
+            )
 
         yield sa.schema.CheckConstraint(
-            sa.sql.text(col_name + ' >= 0'), name=name)
+            sa.sql.text(col_name + ' >= 0'), name=name,
+        )
 
 
 @model_field
@@ -112,16 +114,20 @@ class File(Field):
         extra_args['info'] = info = {}
         info['label'] = self.label
 
-        attr = sa.schema.Column(col_name,
-                                self.sa_type(**self.sa_type_options),
-                                sa.ForeignKey(Blob.id), **extra_args)
+        attr = sa.schema.Column(
+            col_name,
+            self.sa_type(**self.sa_type_options),
+            sa.ForeignKey(Blob.id), **extra_args
+        )
 
         yield col_name, attr
 
         relationship = sa.orm.relationship(
             Blob,
             primaryjoin='{tablename}.c.{local} == Blob.id'.format(
-                tablename=self.model.lower(), local=col_name),)
+                tablename=self.model.lower(), local=col_name,
+            ),
+        )
         yield self.name, relationship
 
 

@@ -28,7 +28,8 @@ class PostalAddress(IdMixin, Model):
 
     __table_args__ = (
         # we DO require a country
-        sa.schema.CheckConstraint(sa.sql.func.length(country) > 0),)
+        sa.schema.CheckConstraint(sa.sql.func.length(country) > 0),
+    )
 
 
 class PhoneNumber(IdMixin, Model):
@@ -36,7 +37,8 @@ class PhoneNumber(IdMixin, Model):
 
     #: number type: mobile, pro... left as free text
     type = sa.Column(
-        sa.UnicodeText, default=u'', server_default=sa.sql.text(u"''"))
+        sa.UnicodeText, default=u'', server_default=sa.sql.text(u"''"),
+    )
     #: phone number
     number = sa.Column(sa.UnicodeText, nullable=False)
 

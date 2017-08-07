@@ -46,4 +46,5 @@ def setup(cls, spec):
             auto_name,
             propagate=True,  # set listener on subclasses
             active_history=True,
-            retval=False)
+            retval=False,
+        )

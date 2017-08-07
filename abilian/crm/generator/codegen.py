@@ -87,11 +87,11 @@ class CodeGenerator(object):
                 k = v = item
                 if isinstance(item, (list, tuple)):
                     k, v = item
-                    if isinstance(k, str):
+                    if isinstance(k, bytes):
                         k = k.decode('utf-8')
                     v = text_type(v)
                 else:
-                    if not isinstance(item, unicode):
+                    if isinstance(item, bytes):
                         item = item.decode('utf-8')
                     k = text_type(slugify(item, u'_'))
 
@@ -138,8 +138,10 @@ class CodeGenerator(object):
 
         attributes = OrderedDict(self.data.get('attributes', {}))
         attributes['__module__'] = module.__name__
-        attributes['__tablename__'] = self.data.get('tablename',
-                                                    model_name.lower())
+        attributes['__tablename__'] = self.data.get(
+            'tablename',
+            model_name.lower(),
+        )
 
         # default permissions
         permissions = self.data.get('permissions')
@@ -162,8 +164,10 @@ class CodeGenerator(object):
         if default_permissions:
             for p in (WRITE, CREATE, DELETE):
                 if p in default_permissions:
-                    read_permissions = default_permissions.setdefault(READ,
-                                                                      set())
+                    read_permissions = default_permissions.setdefault(
+                        READ,
+                        set(),
+                    )
                     read_permissions |= default_permissions[p]
 
             if WRITE in default_permissions:
@@ -278,9 +282,12 @@ class CodeGenerator(object):
 
         attributes['_permissions'] = FormPermissions(
             fields_read=read_permissions,
-            fields_write=write_permissions,)
-        attributes['_groups'] = OrderedDict((name, groups[name])
-                                            for name in group_names)
+            fields_write=write_permissions,
+        )
+        attributes['_groups'] = OrderedDict(
+            (name, groups[name])
+            for name in group_names
+        )
         attributes['__module__'] = module.__name__
         cls = type(type_name, type_bases, attributes)
         setattr(module, type_name, cls)

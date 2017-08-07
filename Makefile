@@ -67,7 +67,7 @@ format:
 	isort -a  "from __future__ import absolute_import, print_function" \
                 -rc abilian *.py
 	-yapf --style google -r -i abilian *.py
-	# -add-trailing-comma `find abilian -name '*.py'`
+	-add-trailing-comma `find abilian -name '*.py'`
 	isort -rc abilian *.py
 
 clean:

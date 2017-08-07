@@ -3,14 +3,15 @@
 """
 from __future__ import absolute_import, print_function, unicode_literals
 
-import cStringIO as StringIO
 import logging
+from io import BytesIO
 from itertools import ifilter
 from time import gmtime, strftime
 
 import celery
 from flask import current_app, flash, render_template, request
 from flask_login import current_user
+from six import text_type
 
 from abilian.core.util import fqcn
 from abilian.i18n import _, _l
@@ -52,13 +53,15 @@ class BaseExcelView(ModuleView, views.View):
     excel_manager = None
     Form = None
 
-    def __init__(self,
-                 view_endpoint,
-                 component='excel',
-                 Form=None,
-                 excel_manager=None,
-                 *args,
-                 **kwargs):
+    def __init__(
+        self,
+        view_endpoint,
+        component='excel',
+        Form=None,
+        excel_manager=None,
+        *args,
+        **kwargs
+    ):
         super(BaseExcelView, self).__init__(*args, **kwargs)
         self.component = self.module.get_component(component)
         self.Form = Form if Form is not None else self.component.export_form
@@ -88,7 +91,8 @@ class BaseExcelView(ModuleView, views.View):
     def manager(self):
         if self.__manager is None:
             self.__manager = self.excel_manager(
-                self.module.managed_class, self.Form, self.EXCEL_EXPORT_RELATED)
+                self.module.managed_class, self.Form, self.EXCEL_EXPORT_RELATED,
+            )
         return self.__manager
 
 
@@ -108,7 +112,8 @@ class ExcelExport(BaseExcelView):
             module=self.module.id,
             from_url=request.url,
             user_id=current_user.id,
-            component=self.component.name,)
+            component=self.component.name,
+        )
 
         if self.excel_manager != self.component.excel_manager:
             task_kwargs['manager'] = fqcn(self.excel_manager)
@@ -125,8 +130,10 @@ class ExcelExport(BaseExcelView):
 
         if 'related' in request.args:
             related = request.args['related']
-            related_cs = ifilter(lambda cs: cs.related_attr == related,
-                                 self.EXCEL_EXPORT_RELATED)
+            related_cs = ifilter(
+                lambda cs: cs.related_attr == related,
+                self.EXCEL_EXPORT_RELATED,
+            )
             try:
                 related_cs = next(related_cs)
             except StopIteration:
@@ -144,7 +151,7 @@ class ExcelExport(BaseExcelView):
             # error to client. Unfortunatly xlwt doesn't allow writing by
             # chunks
             workbook = manager.export(objects, related_cs)
-            fd = StringIO.StringIO()
+            fd = BytesIO()
             workbook.save(fd)
             yield fd.getvalue()
 
@@ -155,9 +162,12 @@ class ExcelExport(BaseExcelView):
 
         response = current_app.response_class(
             response_generator(),
-            mimetype=XLSX_MIME,)
-        filename = u"{}-{}.xlsx".format(self.module.managed_class.__name__,
-                                        strftime("%d:%m:%Y-%H:%M:%S", gmtime()))
+            mimetype=XLSX_MIME,
+        )
+        filename = u"{}-{}.xlsx".format(
+            self.module.managed_class.__name__,
+            strftime("%d:%m:%Y-%H:%M:%S", gmtime()),
+        )
         response.headers['content-disposition'] = \
             'attachment;filename="{}"'.format(filename)
 
@@ -189,7 +199,8 @@ class TaskStatusView(views.JSONView):
             filemeta = uploads.get_metadata(current_user, handle)
             result['filename'] = filemeta.get('filename', 'export.xlsx')
             result['downloadUrl'] = url_for(
-                'uploads.handle', handle=handle, _external=True)
+                'uploads.handle', handle=handle, _external=True,
+            )
             return result
 
         # unattended state, return data anyway
@@ -227,7 +238,8 @@ class ExcelImport(BaseExcelView):
 
             try:
                 modified_items = manager.import_data(
-                    xls, self.module.EXCEL_EXPORT_RELATED)
+                    xls, self.module.EXCEL_EXPORT_RELATED,
+                )
             # except xlrd.XLRDError as e:
             #     error = True
             #     flash(_(u'Cannot read file {filename} as Excel file').format(
@@ -236,12 +248,15 @@ class ExcelImport(BaseExcelView):
             #     logger.error(e, exc_info=True)
             except Exception as e:
                 error = True
-                flash(e.message, 'error')
+                flash(text_type(e), 'error')
 
             if modified_items is not None and len(modified_items) == 0:
-                flash(_(u'No change detected in file {filename}'.format(
-                    filename=filename)),
-                    u'info')
+                flash(
+                    _(u'No change detected in file {filename}'.format(
+                    filename=filename,
+                    )),
+                    u'info',
+                )
 
             yield render_template(
                 'crm/import_xls.html',
@@ -249,7 +264,8 @@ class ExcelImport(BaseExcelView):
                 redirect_to=redirect_to,
                 modified_items=modified_items,
                 excel=manager,
-                filename=filename)
+                filename=filename,
+            )
 
         response = current_app.response_class(generate())
         return response
@@ -297,14 +313,17 @@ class ExcelImportValidate(BaseExcelView):
 
                 # fetch 'many relateds' values'
                 many_relateds_attrs = f.getlist(
-                    key.format('many_relateds_attrs'))
+                    key.format('many_relateds_attrs'),
+                )
                 many_relateds = {}
 
                 for rel_attr in many_relateds_attrs:
                     rkey = key.format(rel_attr) + '_{}'
                     objs = []
-                    for ridx in range(1,
-                                      int(f.get(rkey.format('count'), 0)) + 1):
+                    for ridx in range(
+                        1,
+                        int(f.get(rkey.format('count'), 0)) + 1,
+                    ):
                         modified = {}
                         robjkey = rkey.format(ridx) + '_{}'
                         r_attrs = f.getlist(robjkey.format('attrs'))
@@ -324,17 +343,21 @@ class ExcelImportValidate(BaseExcelView):
 
             result = self.manager.save_data(data)
             # FIXME: i18n won't work here
-            msg = _(u'Import from {filename}: {changed} items changed, '
-                    '{created} items created, '
-                    '{skipped} ignored due to errors').format(
+            msg = _(
+                u'Import from {filename}: {changed} items changed, '
+                '{created} items created, '
+                '{skipped} ignored due to errors',
+            ).format(
                 filename=filename, changed=result['changed_items'],
                 created=result['created_items'],
-                skipped=result['skipped_items'])
+                skipped=result['skipped_items'],
+            )
             category = 'error' if result['error_happened'] else 'info'
             flash(msg, category)
 
             yield render_template(
-                'crm/xls_data_saved.html', redirect_to=redirect_to)
+                'crm/xls_data_saved.html', redirect_to=redirect_to,
+            )
 
         response = current_app.response_class(generate())
         return response
@@ -378,7 +401,8 @@ class ExcelModuleComponent(ModuleComponent):
             component=self.name,
             excel_manager=self.excel_manager,
             Form=self.export_form,
-            view_endpoint=endpoint + '.list_view')
+            view_endpoint=endpoint + '.list_view',
+        )
 
         if not self.EXCEL_SUPPORT_IMPORT:
             return
@@ -390,7 +414,8 @@ class ExcelModuleComponent(ModuleComponent):
             methods=['POST'],
             component=self.name,
             module=module,
-            view_endpoint=endpoint + '.list_view')
+            view_endpoint=endpoint + '.list_view',
+        )
 
         module._setup_view(
             '/import_xls',
@@ -399,7 +424,8 @@ class ExcelModuleComponent(ModuleComponent):
             methods=['POST'],
             component=self.name,
             module=module,
-            view_endpoint=endpoint + '.list_view')
+            view_endpoint=endpoint + '.list_view',
+        )
 
     def get_actions(self):
         excel_actions = []
@@ -414,7 +440,9 @@ class ExcelModuleComponent(ModuleComponent):
                 icon=FAIcon('align-justify'),
                 endpoint=Endpoint(endpoint + '.export_xls'),
                 button=button,
-                css='datatable-export'))
+                css='datatable-export',
+            ),
+        )
 
         for column_set in self.EXCEL_EXPORT_RELATED:
             excel_actions.append(
@@ -427,7 +455,10 @@ class ExcelModuleComponent(ModuleComponent):
                     css='datatable-export',
                     endpoint=Endpoint(
                         endpoint + '.export_xls',
-                        related=column_set.related_attr)))
+                        related=column_set.related_attr,
+                    ),
+                ),
+            )
 
         if self.EXCEL_SUPPORT_IMPORT:
             pass
@@ -440,7 +471,8 @@ class ExcelModuleComponent(ModuleComponent):
                     'actions',
                     title=_l(u'Excel'),
                     button='default',
-                    items=excel_actions)
+                    items=excel_actions,
+                ),
             ]
 
         return excel_actions

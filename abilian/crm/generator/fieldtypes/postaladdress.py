@@ -35,7 +35,8 @@ class _PostalAddressField(Field):
             fk_kw = dict(
                 name=u'{}_{}_fkey'.format(cls.__name__.lower(), col_name),
                 use_alter=True,
-                ondelete='SET NULL',)
+                ondelete='SET NULL',
+            )
             target_col = str(PostalAddress.id.parent.c.id)
             fk = sa.ForeignKey(target_col, **fk_kw)
             return sa.Column(col_name, sa.types.Integer(), fk)
@@ -67,7 +68,8 @@ class _PostalAddressField(Field):
                 cls.metadata,
                 sa.Column(local_src_col, sa.ForeignKey(cls.id)),
                 sa.Column(local_target_col, sa.ForeignKey(PostalAddress.id)),
-                sa.schema.UniqueConstraint(local_src_col, local_target_col),)
+                sa.schema.UniqueConstraint(local_src_col, local_target_col),
+            )
 
             rel_kw = dict(secondary=secondary_table)
             return sa.orm.relationship(PostalAddress, **rel_kw)
@@ -88,10 +90,12 @@ class PostalAddressFormField(FormField):
             .get_extra_args(*args, **kwargs)
         if self.multiple:
             extra_args['unbound_field'] = awbff.ModelFormField(
-                PostalAddressForm)
+                PostalAddressForm,
+            )
             extra_args['min_entries'] = 1
             extra_args['population_strategy'] = 'update'
             extra_args['widget'] = aw_widgets.TabularFieldListWidget(
-                template='widgets/model_fieldlist.html',)
+                template='widgets/model_fieldlist.html',
+            )
 
         return extra_args

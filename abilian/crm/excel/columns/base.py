@@ -26,7 +26,8 @@ class Invalid(object):
         return u'{module}.{cls}(value={value})'.format(
             module=self.__class__.__module__,
             cls=self.__class__.__name__,
-            value=repr(self.value),).encode('utf-8')
+            value=repr(self.value),
+        ).encode('utf-8')
 
     def __unicode__(self):
         return u'Invalid: {}'.format(repr(self.value))
@@ -104,7 +105,9 @@ class Column(object):
                 label=self.label,
                 type_=self.type_,
                 required=self.required,
-                id=id(self)))
+                id=id(self),
+            )
+        )
 
     def __iter__(self):
         yield self
@@ -143,16 +146,16 @@ class Column(object):
         elif isinstance(import_value, list):
             import_value = u"; ".join((to_str(i) for i in import_value))
 
-        if isinstance(import_value, str):
+        if isinstance(import_value, bytes):
             import_value = import_value.decode('utf-8')
-        if isinstance(import_value, unicode):
+        if isinstance(import_value, text_type):
             import_value = import_value.strip().replace(u'\r\n', u'\n')
 
         yield import_value, value
 
     def data_for_import(self, item):
-        # data() returns an iterator of "length" 1, data_for_import must return a
-        # value directly
+        # data() returns an iterator of "length" 1,
+        # data_for_import must return a value directly
         for data in self.data(item):
             return data
 

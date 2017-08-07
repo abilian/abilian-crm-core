@@ -45,7 +45,8 @@ class EntityField(Field):
                 # CircularDependencyError:
                 fk_kw = dict(
                     use_alter=True,
-                    name='{}_{}_fkey'.format(cls.__name__.lower(), col_name),)
+                    name='{}_{}_fkey'.format(cls.__name__.lower(), col_name),
+                )
 
                 fk_kw['ondelete'] = 'SET NULL'
                 fk = sa.ForeignKey(target_col, **fk_kw)
@@ -116,10 +117,13 @@ class EntityField(Field):
                 rel_kw = dict(secondary=secondary_table)
                 if is_self_referential:
                     tmpl = '{} == {}.c.{}'
-                    rel_kw['primaryjoin'] = tmpl.format(src_col, tbl_name,
-                                                        local_src_col)
+                    rel_kw['primaryjoin'] = tmpl.format(
+                        src_col, tbl_name,
+                        local_src_col,
+                    )
                     rel_kw['secondaryjoin'] = tmpl.format(
-                        target_cls + '.id', tbl_name, local_target_col)
+                        target_cls + '.id', tbl_name, local_target_col,
+                    )
 
                 if 'backref' in type_args:
                     backref_name = type_args['backref']
@@ -128,8 +132,10 @@ class EntityField(Field):
                         backref_kw.update(backref_name)
                         backref_name = backref_kw.pop('name')
 
-                    rel_kw['backref'] = sa.orm.backref(backref_name,
-                                                       **backref_kw)
+                    rel_kw['backref'] = sa.orm.backref(
+                        backref_name,
+                        **backref_kw
+                    )
 
                 return sa.orm.relationship(target_cls, **rel_kw)
 
@@ -149,15 +155,21 @@ class EntityFormField(FormField):
         self.module_endpoint = data.get('endpoint', self.name.lower())
 
     def get_type(self, *args, **kwargs):
-        return (awbff.JsonSelect2MultipleField
-                if self.multiple else awbff.JsonSelect2Field)
+        return (
+            awbff.JsonSelect2MultipleField
+            if self.multiple else awbff.JsonSelect2Field
+        )
 
     def get_extra_args(self, *args, **kwargs):
-        extra_args = super(EntityFormField, self).get_extra_args(*args,
-                                                                 **kwargs)
+        extra_args = super(EntityFormField, self).get_extra_args(
+            *args,
+            **kwargs
+        )
         target = extra_args['model_class'] = self.data['target']
-        ajax_endpoint = self.data.get('ajax_endpoint',
-                                      target.lower() + '.json_search')
+        ajax_endpoint = self.data.get(
+            'ajax_endpoint',
+            target.lower() + '.json_search',
+        )
         extra_args['ajax_source'] = Endpoint(ajax_endpoint)
         extra_args['multiple'] = self.multiple
         return extra_args
@@ -170,4 +182,5 @@ class EntityFormField(FormField):
 
         if 'widget' not in extra_args:
             extra_args['widget'] = aw_widgets.Select2Ajax(
-                multiple=self.multiple)
+                multiple=self.multiple,
+            )

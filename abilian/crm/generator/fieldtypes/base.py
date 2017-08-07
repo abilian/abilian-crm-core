@@ -93,9 +93,11 @@ class Field(Registrable):
         if 'from_list' in self.data:
             info['choices'] = OrderedDict(self.data['from_list'])
 
-        attr = sa.schema.Column(col_name,
-                                self.sa_type(**self.sa_type_options),
-                                **extra_args)
+        attr = sa.schema.Column(
+            col_name,
+            self.sa_type(**self.sa_type_options),
+            **extra_args
+        )
 
         return ((self.name, attr),)
 
@@ -167,8 +169,10 @@ class FormField(Registrable):
             field_type = wtforms.fields.TextAreaField
 
         if 'from_list' in self.data or 'from_function' in self.data:
-            field_type = (awbff.Select2Field
-                          if not self.multiple else awbff.Select2MultipleField)
+            field_type = (
+                awbff.Select2Field
+                if not self.multiple else awbff.Select2MultipleField
+            )
         return field_type
 
     def get_extra_args(self, *args, **kwargs):
@@ -225,7 +229,9 @@ class FormField(Registrable):
             validators.append(
                 aw_validators.Length(
                     min=self.validator_length_min,
-                    max=self.validator_length_max))
+                    max=self.validator_length_max,
+                ),
+            )
         return validators
 
     def setup_widgets(self, extra_args):
@@ -257,7 +263,8 @@ class FormField(Registrable):
 
         if 'lines' in d:
             extra_args['widget'] = aw_widgets.TextArea(
-                resizeable='vertical', rows=d['lines'])
+                resizeable='vertical', rows=d['lines'],
+            )
 
         self.setup_widgets_from_data(extra_args)
 
@@ -272,10 +279,11 @@ class FormField(Registrable):
 
             widget = d[widget_arg]
 
-            if isinstance(widget, (str, unicode)):
+            if isinstance(widget, string_types):
                 if widget not in WIDGETS:
                     raise ValueError('Invalid {}: {}'.format(
-                        widget_arg, widget.encode('utf-8')))
+                        widget_arg, widget.encode('utf-8'),
+                    ))
                 widget = WIDGETS[widget]
                 kw = d.get(widget_arg + '_args', dict())
                 widget = widget(**kw)
