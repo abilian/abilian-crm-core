@@ -75,7 +75,8 @@ class PhoneNumberField(StringField):
 class PostalAddressForm(ModelForm):
 
     id = IntegerField(
-        widget=HiddenInput(), validators=[optional(), flaghidden()],
+        widget=HiddenInput(),
+        validators=[optional(), flaghidden()],
     )
     street_lines = TextAreaField(
         _l(u'postal_address_street_lines'),
@@ -134,7 +135,8 @@ class PostalAddressField(RequireableFormField, ModelFormField):
 
 class PhoneNumberForm(ModelForm):
     id = IntegerField(
-        widget=HiddenInput(), validators=[optional(), flaghidden()],
+        widget=HiddenInput(),
+        validators=[optional(), flaghidden()],
     )
     type = StringField(
         _l(u'phonenumber_type'),

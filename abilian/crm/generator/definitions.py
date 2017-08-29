@@ -15,7 +15,10 @@ from abilian.web.forms.filters import lowercase, strip, uppercase
 from abilian.web.forms.validators import VALIDATORS
 
 __all__ = (
-    'FORM_FIELDS', 'FORM_FILTERS', 'LIST_GENERATORS', 'WIDGETS',
+    'FORM_FIELDS',
+    'FORM_FILTERS',
+    'LIST_GENERATORS',
+    'WIDGETS',
     'VALIDATORS',
 )
 

@@ -30,8 +30,9 @@ class EntityField(Field):
         type_args = self.data.get('type_args', {})
 
         res_iter = (self._m2m_relationship(target_col, col_name, type_args)
-                    if self.multiple else
-                    self._single_relationship(target_col, col_name, type_args))
+                    if self.multiple else self._single_relationship(
+                        target_col, col_name, type_args,
+                    ))
 
         for result in res_iter:
             yield result
@@ -118,11 +119,14 @@ class EntityField(Field):
                 if is_self_referential:
                     tmpl = '{} == {}.c.{}'
                     rel_kw['primaryjoin'] = tmpl.format(
-                        src_col, tbl_name,
+                        src_col,
+                        tbl_name,
                         local_src_col,
                     )
                     rel_kw['secondaryjoin'] = tmpl.format(
-                        target_cls + '.id', tbl_name, local_target_col,
+                        target_cls + '.id',
+                        tbl_name,
+                        local_target_col,
                     )
 
                 if 'backref' in type_args:
@@ -162,8 +166,7 @@ class EntityFormField(FormField):
 
     def get_extra_args(self, *args, **kwargs):
         extra_args = super(EntityFormField, self).get_extra_args(
-            *args,
-            **kwargs
+            *args, **kwargs
         )
         target = extra_args['model_class'] = self.data['target']
         ajax_endpoint = self.data.get(

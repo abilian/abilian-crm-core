@@ -91,7 +91,9 @@ class BaseExcelView(ModuleView, views.View):
     def manager(self):
         if self.__manager is None:
             self.__manager = self.excel_manager(
-                self.module.managed_class, self.Form, self.EXCEL_EXPORT_RELATED,
+                self.module.managed_class,
+                self.Form,
+                self.EXCEL_EXPORT_RELATED,
             )
         return self.__manager
 
@@ -199,7 +201,9 @@ class TaskStatusView(views.JSONView):
             filemeta = uploads.get_metadata(current_user, handle)
             result['filename'] = filemeta.get('filename', 'export.xlsx')
             result['downloadUrl'] = url_for(
-                'uploads.handle', handle=handle, _external=True,
+                'uploads.handle',
+                handle=handle,
+                _external=True,
             )
             return result
 
@@ -238,7 +242,8 @@ class ExcelImport(BaseExcelView):
 
             try:
                 modified_items = manager.import_data(
-                    xls, self.module.EXCEL_EXPORT_RELATED,
+                    xls,
+                    self.module.EXCEL_EXPORT_RELATED,
                 )
             # except xlrd.XLRDError as e:
             #     error = True
@@ -321,8 +326,8 @@ class ExcelImportValidate(BaseExcelView):
                     rkey = key.format(rel_attr) + '_{}'
                     objs = []
                     for ridx in range(
-                        1,
-                        int(f.get(rkey.format('count'), 0)) + 1,
+                            1,
+                            int(f.get(rkey.format('count'), 0)) + 1,
                     ):
                         modified = {}
                         robjkey = rkey.format(ridx) + '_{}'
@@ -356,7 +361,8 @@ class ExcelImportValidate(BaseExcelView):
             flash(msg, category)
 
             yield render_template(
-                'crm/xls_data_saved.html', redirect_to=redirect_to,
+                'crm/xls_data_saved.html',
+                redirect_to=redirect_to,
             )
 
         response = current_app.response_class(generate())

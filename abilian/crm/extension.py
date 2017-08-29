@@ -39,10 +39,13 @@ class AbilianCRM(object):
 
         # crm static assets
         app.add_static_url(
-            'abilian/crm', STATIC_DIR, endpoint='abilian_crm_static',
+            'abilian/crm',
+            STATIC_DIR,
+            endpoint='abilian_crm_static',
         )
         app.extensions['webassets'].append_path(
-            STATIC_DIR, app.static_url_path + '/abilian/crm',
+            STATIC_DIR,
+            app.static_url_path + '/abilian/crm',
         )
 
         app.register_asset('js', *JS)

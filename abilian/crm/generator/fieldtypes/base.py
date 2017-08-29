@@ -263,7 +263,8 @@ class FormField(Registrable):
 
         if 'lines' in d:
             extra_args['widget'] = aw_widgets.TextArea(
-                resizeable='vertical', rows=d['lines'],
+                resizeable='vertical',
+                rows=d['lines'],
             )
 
         self.setup_widgets_from_data(extra_args)
@@ -282,7 +283,8 @@ class FormField(Registrable):
             if isinstance(widget, string_types):
                 if widget not in WIDGETS:
                     raise ValueError('Invalid {}: {}'.format(
-                        widget_arg, widget.encode('utf-8'),
+                        widget_arg,
+                        widget.encode('utf-8'),
                     ))
                 widget = WIDGETS[widget]
                 kw = d.get(widget_arg + '_args', dict())

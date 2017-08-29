@@ -29,13 +29,13 @@ DEFAULT_EXPIRES = 1800  # generally user will not wait 1/2h. No need to process
     expires=DEFAULT_EXPIRES,
 )
 def export(
-    self,
-    app,
-    module,
-    from_url,
-    user_id,
-    component='excel',
-    manager=None,
+        self,
+        app,
+        module,
+        from_url,
+        user_id,
+        component='excel',
+        manager=None,
 ):
     """
     Async export xls task.
@@ -61,7 +61,8 @@ def export(
 
     def progress_callback(exported=0, total=0, **kw):
         self.update_state(
-            state='PROGRESS', meta={
+            state='PROGRESS',
+            meta={
                 'exported': exported,
                 'total': total,
             },
@@ -79,7 +80,8 @@ def export(
             manager = component.excel_manager
 
         manager = manager(
-            module.managed_class, component.export_form,
+            module.managed_class,
+            component.export_form,
             component.EXCEL_EXPORT_RELATED,
         )
 
@@ -95,7 +97,9 @@ def export(
                 related_cs = None
 
         workbook = manager.export(
-            objects, related_cs, progress_callback=progress_callback,
+            objects,
+            related_cs,
+            progress_callback=progress_callback,
         )
         fd = BytesIO()
         workbook.save(fd)
@@ -106,6 +110,9 @@ def export(
             strftime("%d:%m:%Y-%H:%M:%S", gmtime()),
         )
         handle = uploads.add_file(
-            user, fd, filename=filename, mimetype=XLSX_MIME,
+            user,
+            fd,
+            filename=filename,
+            mimetype=XLSX_MIME,
         )
         return dict(handle=handle)

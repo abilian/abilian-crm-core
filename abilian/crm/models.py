@@ -37,7 +37,9 @@ class PhoneNumber(IdMixin, Model):
 
     #: number type: mobile, pro... left as free text
     type = sa.Column(
-        sa.UnicodeText, default=u'', server_default=sa.sql.text(u"''"),
+        sa.UnicodeText,
+        default=u'',
+        server_default=sa.sql.text(u"''"),
     )
     #: phone number
     number = sa.Column(sa.UnicodeText, nullable=False)

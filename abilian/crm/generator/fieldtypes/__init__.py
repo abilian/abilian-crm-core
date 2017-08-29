@@ -12,7 +12,15 @@ from . import (
 )
 
 __all__ = (
-    "model_field", "form_field", "get_field", "get_formfield", "simple",
-    "formfields", "vocabulary", "entity", "yearly", "postaladdress",
+    "model_field",
+    "form_field",
+    "get_field",
+    "get_formfield",
+    "simple",
+    "formfields",
+    "vocabulary",
+    "entity",
+    "yearly",
+    "postaladdress",
     "phonenumber",
 )

@@ -14,8 +14,17 @@ from .related import RelatedColumnSet, ManyRelatedColumnSet
 from .yearly import ManyYearlyColumnSet
 
 __all__ = (
-    "Column", "ColumnSet", "Invalid", "EmptyColumn", "DateTimeColumn",
-    "DateColumn", "VocabularyColumn", "TagsColumn",
-    "PostalAddressColumn", "TextIntegerColumn", "RelatedColumnSet",
-    "ManyRelatedColumnSet", "ManyYearlyColumnSet",
+    "Column",
+    "ColumnSet",
+    "Invalid",
+    "EmptyColumn",
+    "DateTimeColumn",
+    "DateColumn",
+    "VocabularyColumn",
+    "TagsColumn",
+    "PostalAddressColumn",
+    "TextIntegerColumn",
+    "RelatedColumnSet",
+    "ManyRelatedColumnSet",
+    "ManyYearlyColumnSet",
 )

@@ -52,7 +52,8 @@ class Vocabulary(Field):
                         target_cls.__name__ + '.id',
                     )
                     return sa.orm.relationship(
-                        target_cls, primaryjoin=primary_join,
+                        target_cls,
+                        primaryjoin=primary_join,
                     )
 
                 gen_relationship.func_name = func_name
@@ -80,7 +81,8 @@ class Vocabulary(Field):
                         sa.schema.UniqueConstraint(src_col, 'voc_id'),
                     )
                     return sa.orm.relationship(
-                        target_cls, secondary=secondary_table,
+                        target_cls,
+                        secondary=secondary_table,
                     )
 
                 gen_m2m_relationship.func_name = func_name
@@ -90,7 +92,8 @@ class Vocabulary(Field):
                 '{}_{}'.format(self.model.lower(), self.name.lower())
 
             rel_attr = get_m2m_attr(
-                relation_name, self.voc_cls,
+                relation_name,
+                self.voc_cls,
                 relation_secondary_tbl_name,
             )
             yield relation_name, sa.ext.declarative.declared_attr(rel_attr)
@@ -122,6 +125,7 @@ class VocabularyFormField(FormField):
 
     def setup_widgets(self, extra_args):
         extra_args['widget'] = aw_widgets.Select2(
-            multiple=self.multiple, unescape_html=True,
+            multiple=self.multiple,
+            unescape_html=True,
         )
         extra_args['view_widget'] = aw_widgets.ListWidget()
