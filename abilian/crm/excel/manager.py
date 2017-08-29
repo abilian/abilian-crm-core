@@ -560,7 +560,7 @@ class ExcelManager(object):
             if not is_new:
                 try:
                     item = q.get(data['id'])
-                except:
+                except BaseException:
                     # this may be a deleted line from an exported file, but excel has
                     # preserved hidden cell
                     continue
@@ -1212,7 +1212,9 @@ class ExcelManager(object):
             try:
                 type_ = db_col.type.python_type
                 if type_ is bool:
-                    type_ = lambda v: v in (True, 'True', '1', 1)  # noqa
+
+                    def type_(v):
+                        return v in (True, 'True', '1', 1)  # noqa
                 elif type_ in (datetime.date, datetime.datetime):
                     # native excel type, no need to set cast function
                     column_cls = (
@@ -1384,7 +1386,7 @@ class ExcelManager(object):
             if type(value) not in column.expected_cell_types:
                 try:
                     value = column.adapt_from_cell(value, wb)
-                except:
+                except BaseException:
                     value = Invalid(value)
 
         if (
@@ -1393,13 +1395,14 @@ class ExcelManager(object):
         ):
             try:
                 value = column.type_(value)
-            except:
+            except BaseException:
                 value = Invalid(value)
 
         main_col = attr_to_main[attr]
         main_col_name = (
             main_col.related_attr if isinstance(
-            main_col, RelatedColumnSet,
+                main_col,
+                RelatedColumnSet,
             ) else column.attr
         )
         data[main_col_name][attr] = value

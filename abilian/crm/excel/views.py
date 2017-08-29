@@ -225,7 +225,7 @@ class ExcelImport(BaseExcelView):
             xls.stream.seek(0, 2)
             size = xls.stream.tell()
             xls.stream.seek(0)
-        except:
+        except BaseException:
             size = 0
 
         if size == 0:
@@ -258,7 +258,7 @@ class ExcelImport(BaseExcelView):
             if modified_items is not None and len(modified_items) == 0:
                 flash(
                     _(u'No change detected in file {filename}'.format(
-                    filename=filename,
+                        filename=filename,
                     )),
                     u'info',
                 )

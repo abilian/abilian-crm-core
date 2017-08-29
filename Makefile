@@ -68,6 +68,7 @@ format:
                 -rc abilian *.py
 	-yapf --style google -r -i abilian *.py
 	-add-trailing-comma `find abilian -name '*.py'`
+	autopep8 --in-place -r -a -a -a abilian
 	isort -rc abilian *.py
 
 clean:

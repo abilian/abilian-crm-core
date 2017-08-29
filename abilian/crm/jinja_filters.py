@@ -25,7 +25,7 @@ def format_phonenumber(n, international=True):
         pn = phonenumbers.parse(n, country)
     except phonenumbers.NumberParseException:
         return n
-    except:
+    except BaseException:
         logger.exception(
             'error while applying jinja filter "phonenumber" '
             '- filter ignored',

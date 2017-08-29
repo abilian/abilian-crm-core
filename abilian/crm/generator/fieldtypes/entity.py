@@ -31,8 +31,10 @@ class EntityField(Field):
 
         res_iter = (self._m2m_relationship(target_col, col_name, type_args)
                     if self.multiple else self._single_relationship(
-                        target_col, col_name, type_args,
-                    ))
+                        target_col,
+                        col_name,
+                        type_args,
+        ))
 
         for result in res_iter:
             yield result
