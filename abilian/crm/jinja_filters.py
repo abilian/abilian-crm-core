@@ -1,7 +1,7 @@
 # coding=utf-8
 """
 """
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
@@ -20,7 +20,7 @@ def format_phonenumber(n, international=True):
     :param international: always use international format, unless number is in
     national format OR country is the same as app's default country.
     """
-    country = default_country() or u'FR'
+    country = default_country() or 'FR'
     try:
         pn = phonenumbers.parse(n, country)
     except phonenumbers.NumberParseException:
