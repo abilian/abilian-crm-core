@@ -19,6 +19,7 @@ yaka.db
 tmp
 cache
 dist
+node_modules
 tests/cache
 tests/tmp
 tests/extra_files

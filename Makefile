@@ -8,8 +8,7 @@ INSTANCE_FOLDER=$(shell 												\
 	 -c 'from flask import Flask; print Flask("myapp").instance_path')
 
 
-default: test lint
-
+all: test lint
 
 #
 # Environment
@@ -59,9 +58,11 @@ lint-python:
 
 lint-js:
 	@echo "--> Linting JavaScript files"
-	eslint abilian
+	node_modules/.bin/eslint abilian
 
-format:
+format: format-py format-js
+
+format-py:
 	#isort -a  "from __future__ import absolute_import, print_function, unicode_literals" \
         #        -rc abilian *.py
 	isort -a  "from __future__ import absolute_import, print_function" \
@@ -70,6 +71,10 @@ format:
 	-add-trailing-comma `find abilian -name '*.py'`
 	autopep8 --in-place -r -a -a -a abilian
 	isort -rc abilian *.py
+
+format-js:
+	./node_modules/.bin/prettier --trailing-comma es5 --write \
+                'abilian/**/*.js'
 
 clean:
 	find . -name "*.pyc" | xargs rm -f
