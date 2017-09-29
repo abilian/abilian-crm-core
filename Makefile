@@ -16,9 +16,10 @@ all: test lint
 develop: setup-git update-env
 
 setup-git:
-	@echo "--> Configuring git and installing hooks"
+	@echo "--> Configuring git"
 	git config branch.autosetuprebase always
-	cd .git/hooks && ln -sf ../../tools/hooks/* ./
+	@echo "--> Activating pre-commit hook"
+	pre-commit install
 	@echo ""
 
 update-env:
