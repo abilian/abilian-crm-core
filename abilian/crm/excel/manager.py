@@ -79,7 +79,7 @@ class ExcelManager(object):
     UNIQUE_ID_COLS = ()
 
     #: sheet name where data should be, at import or export
-    MAIN_SHEET_NAME = u'Sheet 1'
+    MAIN_SHEET_NAME = 'Sheet 1'
 
     #: For many related export/import, set column at which object's columns is
     #: splitted to insert related object columns
@@ -246,7 +246,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split(u'\n')) + 1
+                    width = max(len(l) for l in value.split('\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 offset += rel_idx
@@ -331,7 +331,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split(u'\n')) + 1
+                    width = max(len(l) for l in value.split('\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 data = related_columns_set.data(item)
@@ -345,7 +345,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split(u'\n')) + 1
+                    width = max(len(l) for l in value.split('\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 for c, val in enumerate(tail_data, col_offset):
@@ -364,7 +364,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split(u'\n')) + 1
+                    width = max(len(l) for l in value.split('\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 cells[0].value = self.signer.sign(md5.hexdigest())
@@ -386,7 +386,7 @@ class ExcelManager(object):
                     col_offset += 1
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split(u'\n')) + 1
+                    width = max(len(l) for l in value.split('\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 for ignored in range(related_columns_len):
@@ -401,7 +401,7 @@ class ExcelManager(object):
                     self.update_md5(md5, value)
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split(u'\n')) + 1
+                    width = max(len(l) for l in value.split('\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 cells[0].value = self.signer.sign(md5.hexdigest())
@@ -454,7 +454,7 @@ class ExcelManager(object):
 
         for idx, cell in enumerate(cells, 1):
             letter = get_column_letter(idx)
-            width = max(len(l) for l in cell.value.split(u'\n')) + 1
+            width = max(len(l) for l in cell.value.split('\n')) + 1
             if width > MAX_WIDTH:
                 overflow = max(overflow, width)
                 width = MAX_WIDTH
@@ -657,7 +657,7 @@ class ExcelManager(object):
                 # FIXME: use itsdangerous.TimedSerializer instead of joining a list
                 valid_keys = (k for k in modified
                               if not (required_missing or modified[k].error))
-                attr_sig = self.signer.sign(u';'.join(sorted(valid_keys)))
+                attr_sig = self.signer.sign(';'.join(sorted(valid_keys)))
                 attr_sig = self.extract_signature(attr_sig)
 
                 modified_items.append({
@@ -682,7 +682,7 @@ class ExcelManager(object):
             orig_md5 = self.signer.unsign(orig_md5)
         except itsdangerous.BadSignature:
             raise ExcelError(
-                u'La signature de la 1ere ligne est incorrecte, '
+                'La signature de la 1ere ligne est incorrecte, '
                 'impossible de valider le fichier',
             )
 
@@ -696,14 +696,14 @@ class ExcelManager(object):
 
         if orig_md5 != md5.hexdigest():
             raise ExcelError(
-                u'L\'ordre des colonnes a changé ou leurs étiquettes ont'
-                u' été modifiées: le fichier n\'est pas valide.',
+                'L\'ordre des colonnes a changé ou leurs étiquettes ont'
+                ' été modifiées: le fichier n\'est pas valide.',
             )
 
         if orig_md5 != self.attrs_signature(columns):
             raise ExcelError(
-                u'La feuille "{}" utilise une version du format d\'export qui'
-                u' n\'est plus à jour'.format(ws.name),
+                'La feuille "{}" utilise une version du format d\'export qui'
+                ' n\'est plus à jour'.format(ws.name),
             )
 
     def _collect_changed_rows(self, ws, wb):
@@ -967,7 +967,7 @@ class ExcelManager(object):
                         if not update.error:
                             # don't mask import error with 'required' message
                             update.error = True
-                            update.error_msg = _(u'This field is required')
+                            update.error_msg = _('This field is required')
 
                 if update:
                     modified[attr] = update
@@ -995,7 +995,7 @@ class ExcelManager(object):
             is_new = item_update.id is None
             item = q.get(item_update.id) if not is_new else self.model_cls()
             signed_attrs = '{}.{}'.format(
-                u';'.join(item_update.attrs),
+                ';'.join(item_update.attrs),
                 item_update.sig,
             )
             if not self.signer.validate(signed_attrs):
@@ -1030,7 +1030,7 @@ class ExcelManager(object):
 
                         if col.required and not update.value:
                             # FIXME: missing param
-                            raise ExcelImportError(u'missing required')
+                            raise ExcelImportError('missing required')
 
                         if update:
                             self._set_obj_value(item, attr, update)
@@ -1092,7 +1092,7 @@ class ExcelManager(object):
 
                                 if col.required and not imported.value:
                                     # FIXME: missing param
-                                    raise ExcelImportError(u'missing required')
+                                    raise ExcelImportError('missing required')
 
                                 if imported:
                                     manager._set_obj_value(obj, attr, imported)
@@ -1145,7 +1145,7 @@ class ExcelManager(object):
         All values are also converted to utf-8 encoded string before hashing.
         """
         if value is None or isinstance(value, list):
-            value = u''
+            value = ''
 
         value = text_type(value).encode('utf-8')
         md5.update(value)
@@ -1178,7 +1178,7 @@ class ExcelManager(object):
             label = field.label.text
             db_col = self.db_columns.get(field.name)
             column_cls, type_ = self.column_type(attr, db_col)
-            required = u'required' in field.flags
+            required = 'required' in field.flags
             return column_cls(attr, label, type_, required)
 
         return None
@@ -1282,7 +1282,7 @@ class ExcelManager(object):
 
         if isinstance(data, Invalid):
             raise ExcelImportError(
-                _(u'Invalid cell format, value: {value}').format(
+                _('Invalid cell format, value: {value}').format(
                     value=data.value,
                 ),
                 imported_value=data,
@@ -1304,7 +1304,7 @@ class ExcelManager(object):
         if is_related:
             raise ExcelImportError(
                 _(
-                    u'Cannot import related entity for attribute "{}" '
+                    'Cannot import related entity for attribute "{}" '
                     'without a custom importer method',
                 ).format(attr_name),
                 imported_value=value,
@@ -1322,13 +1322,13 @@ class ExcelManager(object):
                     for k, v in col.info.get('choices').items()
                 }
                 if value not in rev_choices:
-                    valid = u', '.join((
-                        u'"{}"'.format(v)
+                    valid = ', '.join((
+                        '"{}"'.format(v)
                         for v in rev_choices.keys() if v
                     ))
                     raise ExcelImportError(
                         _(
-                            u'"{value}" is invalid. Valid choices are: {valid}',
+                            '"{value}" is invalid. Valid choices are: {valid}',
                         ).format(value=value, valid=valid),
                         imported_value=value,
                     )
@@ -1353,13 +1353,13 @@ class ExcelManager(object):
         value = cell.value
 
         if isinstance(value, STRING_TYPES):
-            value = cell.value.strip().replace(u'\r\n', u'\n')
-            if u'\222' in value or u'\225' in value:
+            value = cell.value.strip().replace('\r\n', '\n')
+            if '\222' in value or '\225' in value:
                 # handle weird copy paste that may happen in excel: value is not actual
                 # unicode but a cp1252 one that must be converted to unicode
                 value = value.encode('raw_unicode_escape').decode('cp1252')
             elif value == '-':
-                value = u""
+                value = ""
 
         return value
 

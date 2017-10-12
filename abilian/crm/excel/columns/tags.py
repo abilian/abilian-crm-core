@@ -24,7 +24,7 @@ class TagsColumn(Column):
             yield None, None
 
         value = sorted(ext.entity_tags(item))
-        import_value = u'; '.join(text_type(t) for t in value) if value else u''
+        import_value = '; '.join(text_type(t) for t in value) if value else ''
         yield import_value, value
 
     def deserialize(self, value):

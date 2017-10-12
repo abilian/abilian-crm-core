@@ -166,7 +166,7 @@ class ExcelExport(BaseExcelView):
             response_generator(),
             mimetype=XLSX_MIME,
         )
-        filename = u"{}-{}.xlsx".format(
+        filename = "{}-{}.xlsx".format(
             self.module.managed_class.__name__,
             strftime("%d:%m:%Y-%H:%M:%S", gmtime()),
         )
@@ -191,7 +191,7 @@ class TaskStatusView(views.JSONView):
             return result
 
         if task.state == 'FAILURE':
-            result['message'] = _(u'An error happened during generation of file.')
+            result['message'] = _('An error happened during generation of file.')
             return result
 
         if task.state == 'SUCCESS':
@@ -257,10 +257,10 @@ class ExcelImport(BaseExcelView):
 
             if modified_items is not None and len(modified_items) == 0:
                 flash(
-                    _(u'No change detected in file {filename}'.format(
+                    _('No change detected in file {filename}'.format(
                         filename=filename,
                     )),
-                    u'info',
+                    'info',
                 )
 
             yield render_template(
@@ -283,8 +283,8 @@ class ExcelImportValidate(BaseExcelView):
     def post(self):
         action = request.form.get('_action')
 
-        if action != u'validate':
-            flash(u'Annulé', 'info')
+        if action != 'validate':
+            flash('Annulé', 'info')
             return self.redirect_to_index()
 
         filename = request.form.get('filename')
@@ -349,7 +349,7 @@ class ExcelImportValidate(BaseExcelView):
             result = self.manager.save_data(data)
             # FIXME: i18n won't work here
             msg = _(
-                u'Import from {filename}: {changed} items changed, '
+                'Import from {filename}: {changed} items changed, '
                 '{created} items created, '
                 '{skipped} ignored due to errors',
             ).format(
@@ -442,7 +442,7 @@ class ExcelModuleComponent(ModuleComponent):
                 self.module,
                 'excel',
                 'export_xls',
-                title=_l(u'Export to Excel'),
+                title=_l('Export to Excel'),
                 icon=FAIcon('align-justify'),
                 endpoint=Endpoint(endpoint + '.export_xls'),
                 button=button,
@@ -475,7 +475,7 @@ class ExcelModuleComponent(ModuleComponent):
                     self.module,
                     'excel',
                     'actions',
-                    title=_l(u'Excel'),
+                    title=_l('Excel'),
                     button='default',
                     items=excel_actions,
                 ),

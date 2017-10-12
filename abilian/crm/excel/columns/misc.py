@@ -17,7 +17,7 @@ class EmptyColumn(Column):
     """
     importable = False
 
-    def __init__(self, label=u''):
+    def __init__(self, label=''):
         super(EmptyColumn, self).__init__('', label=label, type_=None)
 
     def data(self, item):

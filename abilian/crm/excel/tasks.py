@@ -54,7 +54,7 @@ def export(
     component = module.get_component(component)
     url = urlparse(from_url)
     rq_ctx = current_app.test_request_context(
-        base_url=u'{url.scheme}://{url.netloc}/{url.path}'.format(url=url),
+        base_url='{url.scheme}://{url.netloc}/{url.path}'.format(url=url),
         path=url.path,
         query_string=url.query,
     )
@@ -105,7 +105,7 @@ def export(
         workbook.save(fd)
         fd.seek(0)
         # save in uploads dir, return handle needed for download
-        filename = u"{}-{}.xlsx".format(
+        filename = "{}-{}.xlsx".format(
             module.managed_class.__name__,
             strftime("%d:%m:%Y-%H:%M:%S", gmtime()),
         )

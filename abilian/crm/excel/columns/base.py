@@ -23,14 +23,14 @@ class Invalid(object):
         self.value = value
 
     def __repr__(self):
-        return u'{module}.{cls}(value={value})'.format(
+        return '{module}.{cls}(value={value})'.format(
             module=self.__class__.__module__,
             cls=self.__class__.__name__,
             value=repr(self.value),
         ).encode('utf-8')
 
     def __unicode__(self):
-        return u'Invalid: {}'.format(repr(self.value))
+        return 'Invalid: {}'.format(repr(self.value))
 
     def __str__(self):
         return text_type(self).encode('utf-8')
@@ -144,12 +144,12 @@ class Column(object):
         if isinstance(import_value, Entity):
             import_value = import_value.name
         elif isinstance(import_value, list):
-            import_value = u"; ".join((to_str(i) for i in import_value))
+            import_value = "; ".join((to_str(i) for i in import_value))
 
         if isinstance(import_value, bytes):
             import_value = import_value.decode('utf-8')
         if isinstance(import_value, text_type):
-            import_value = import_value.strip().replace(u'\r\n', u'\n')
+            import_value = import_value.strip().replace('\r\n', '\n')
 
         yield import_value, value
 
