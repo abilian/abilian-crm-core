@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function, unicode_literals
 
 from abilian.crm.forms import PostalAddressForm
@@ -10,9 +9,7 @@ from .related import RelatedColumnSet
 
 
 class PostalAddressColumn(RelatedColumnSet):
-    """
-    Columns for :class:`abilian.crm.models.PostalAddress` items
-    """
+    """Columns for :class:`abilian.crm.models.PostalAddress` items."""
 
     def __init__(self, attr, label=None, type_=None, required=False):
         from .. import ExcelManager

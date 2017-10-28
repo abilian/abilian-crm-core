@@ -68,6 +68,7 @@ format-py:
         #        -rc abilian *.py
 	isort -a  "from __future__ import absolute_import, print_function" \
                 -rc abilian *.py
+	docformatter -i --no-blank -r abilian
 	-yapf --style google -r -i abilian *.py
 	-add-trailing-comma `find abilian -name '*.py'`
 	autopep8 --in-place -r -a -a -a abilian

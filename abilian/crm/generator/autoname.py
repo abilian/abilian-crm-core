@@ -1,7 +1,5 @@
 # coding=utf-8
-"""
-Set up listener to automatically set 'name' from various attributes.
-"""
+"""Set up listener to automatically set 'name' from various attributes."""
 from __future__ import absolute_import, print_function
 
 import string
@@ -24,7 +22,7 @@ def setup(cls, spec):
 
     # event handler
     def auto_name(obj, new_val, old_val, initiator):
-        """ Auto set name. """
+        """Auto set name."""
         if new_val != old_val:
             key = initiator.key
             vals = {key: new_val}

@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function
 
 import hashlib
@@ -18,26 +17,20 @@ from .registry import model_field
 
 @model_field
 class Integer(Field):
-    """
-    4 bytes: -2147483648 to +2147483647
-    """
+    """4 bytes: -2147483648 to +2147483647."""
     sa_type = sa.types.Integer
     default_ff_type = 'IntegerField'
 
 
 @model_field
 class SmallInteger(Integer):
-    """
-    2 bytes: -32768 to +32767
-    """
+    """2 bytes: -32768 to +32767."""
     sa_type = sa.types.SmallInteger
 
 
 @model_field
 class BigInteger(Integer):
-    """
-    8 bytes: -9223372036854775808 to 9223372036854775807
-    """
+    """8 bytes: -9223372036854775808 to 9223372036854775807."""
     sa_type = sa.types.BigInteger
 
 

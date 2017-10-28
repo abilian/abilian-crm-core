@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function, unicode_literals
 
 from operator import attrgetter
@@ -11,7 +10,7 @@ from .base import ColumnSet
 
 
 class RelatedColumnSet(ColumnSet):
-    """ ColumnSet for a related entity. """
+    """ColumnSet for a related entity."""
 
     def __init__(self, related_attr, attrs, label=None, required=False):
         """

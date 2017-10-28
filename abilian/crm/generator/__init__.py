@@ -1,7 +1,5 @@
 # coding=utf-8
-"""
-Generates Entity classes from yml description
-"""
+"""Generates Entity classes from yml description."""
 from __future__ import absolute_import
 
 from .module import install_loader

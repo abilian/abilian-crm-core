@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function
 
 import imp
@@ -46,33 +45,25 @@ def generate_module(fullname, **kw):
 
 
 class GeneratedModelsFinder(object):
-    """
-    Module finder for generated models
-    """
+    """Module finder for generated models."""
 
     def __init__(self):
         self.managed_modules = {}
         sys.meta_path.append(self)
 
     def manage_module(self, package, name, **kw):
-        """
-        Install module loader for 'package.name'
-        """
+        """Install module loader for 'package.name'."""
         fullname = package + '.' + name
         self.managed_modules[fullname] = kw
 
     def find_module(self, fullname, path=None):
-        """
-        PEP 302 finder
-        """
+        """PEP 302 finder."""
         if fullname in self.managed_modules:
             return self
         return None
 
     def load_module(self, fullname):
-        """
-        PEP 302 loader
-        """
+        """PEP 302 loader."""
         if fullname not in self.managed_modules:
             raise ImportError
 

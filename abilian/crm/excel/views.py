@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
@@ -370,8 +369,8 @@ class ExcelImportValidate(BaseExcelView):
 
 
 class ExcelModuleComponent(ModuleComponent):
-    """
-    A :class:`ModuleComponent <Component>` for
+    """A :class:`ModuleComponent <Component>` for.
+
     :class:`abilian.web.frontend.Module` objects
     """
     name = 'excel'

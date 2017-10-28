@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
@@ -50,9 +49,7 @@ MAX_WIDTH = units.BASE_COL_WIDTH * 2
 
 
 class ExcelManager(object):
-    """
-    import/export data to excel files, from/to model
-    """
+    """import/export data to excel files, from/to model."""
 
     XF_HEADER = {
         'font':
@@ -89,10 +86,9 @@ class ExcelManager(object):
     SKIP_COLS = ()
 
     def __init__(self, model_cls, form_cls, many_related_cs=()):
-        """
-        model_cls: Model class
-        form_cls: Form class
-        many_related_cs: iterable of ManyRelatedColumnSet instances
+        """model_cls: Model class form_cls: Form class many_related_cs:
+
+        iterable of ManyRelatedColumnSet instances.
         """
         self.MANY_RELATED_CS = many_related_cs
         self.model_cls = model_cls
@@ -120,9 +116,7 @@ class ExcelManager(object):
         # logger.debug('\nColumns:\n %s', pprint.pformat([c for c in self.columns]))
 
     def additional_columns(self):
-        """
-        To be overriden by subclasses that want to add specific columns
-        """
+        """To be overriden by subclasses that want to add specific columns."""
         return []
 
     _signer = None
@@ -146,8 +140,7 @@ class ExcelManager(object):
         return self.columns.attrs
 
     def attrs_signature(self, columns=None):
-        """Return hash for current labels.
-        """
+        """Return hash for current labels."""
         if columns is None:
             columns = self.columns
         md5 = hashlib.md5()
@@ -162,8 +155,8 @@ class ExcelManager(object):
     def get_attr_to_column(self, columnset, map_related_attr=False):
         """Map attribute names to their respective Column instance.
 
-        If map_related_attr is True, also map related's attributes to their
-        RelatedColumnSet instance
+        If map_related_attr is True, also map related's attributes to
+        their RelatedColumnSet instance
         """
         attr_map = dict(izip(columnset.attrs, columnset.iter_flatened()))
         # we also want to collect related
@@ -185,9 +178,9 @@ class ExcelManager(object):
 
     @property
     def attr_to_main_column(self):
-        """Return a mapping of attribute name: column instance, with the exception
-        of attributes of related instances mapped to a RelatedColumnSet() instance.
-        """
+        """Return a mapping of attribute name: column instance, with the
+        exception of attributes of related instances mapped to a
+        RelatedColumnSet() instance."""
         if not hasattr(self, '_attr_to_main_column'):
             self._attr_to_main_column = self.get_attr_to_column(
                 self.columns,
@@ -196,8 +189,7 @@ class ExcelManager(object):
         return self._attr_to_main_column
 
     def export(self, objects, related_column_set=None, progress_callback=None):
-        """Exports objects to a Workbook.
-        """
+        """Exports objects to a Workbook."""
         if related_column_set is not None:
             return self.export_many(
                 objects,
@@ -479,10 +471,8 @@ class ExcelManager(object):
                 ws.column_dimensions[letter].width = width
 
     def _columns_for_many_related(self, related_cs):
-        """
-        Given a ManyRelatedColumnSet instance, returns a columns set with object
-        columns and related columns
-        """
+        """Given a ManyRelatedColumnSet instance, returns a columns set with
+        object columns and related columns."""
         SPLIT_COLUMN = self.MANY_SPLIT_COLUMN
         main_cols = list(self.columns)
         head_cols = main_cols[:SPLIT_COLUMN]
@@ -493,14 +483,14 @@ class ExcelManager(object):
         return all_columns
 
     def style_for(self, cell):
-        """ Return XLWT style to use for value. """
+        """Return XLWT style to use for value."""
         cell.protection = self.XF_EDITABLE
         if isinstance(cell.value, datetime.date):
             cell.protection = self.XF_DATE_EDITABLE
             cell.number_format = self.XF_DATE_NUMBER_FORMAT
 
     def import_data(self, xls_file, many_related_columns_set=()):
-        """ Read xls file, detect changed rows; then for each find changed
+        """Read xls file, detect changed rows; then for each find changed
         attributes of related item.
 
         return a list of rows; each row is a dict with:
@@ -673,10 +663,8 @@ class ExcelManager(object):
         return modified_items
 
     def _validate_import_sheet(self, ws, columns=None):
-        """
-        Validates signatures of column lines: columns ordering and labels should
-        not have been changed
-        """
+        """Validates signatures of column lines: columns ordering and labels
+        should not have been changed."""
         orig_md5 = self.get_cell_value(ws, 0, 0)
         try:
             orig_md5 = self.signer.unsign(orig_md5)
@@ -707,10 +695,8 @@ class ExcelManager(object):
             )
 
     def _collect_changed_rows(self, ws, wb):
-        """
-        Collect modified rows: compare md5@column(0) with md5(row values), and
-        new rows.
-        """
+        """Collect modified rows: compare md5@column(0) with md5(row values),
+        and new rows."""
         attr_to_main = self.attr_to_main_column
         attr_to_col = self.attr_to_column
         single_value_attrs = {
@@ -778,9 +764,9 @@ class ExcelManager(object):
             id_map,
             name_map,
     ):
-        """
-        Collect changes from a many related column set. Data must be in sheet
-        with named after `related_cs.export_label
+        """Collect changes from a many related column set.
+
+        Data must be in sheet with named after `related_cs.export_label
         """
         if not self.ID_BY_NAME_COL:
             # the manager is not configured to be able find model by a name
@@ -909,10 +895,8 @@ class ExcelManager(object):
                 ).append(related_data)
 
     def _get_modified_data(self, obj, data, attr_to_col, is_new, is_update):
-        """
-        After data is read and processed from XLS cells, compare with existing
-        object to get only changed values.
-        """
+        """After data is read and processed from XLS cells, compare with
+        existing object to get only changed values."""
         modified = {}
         for attr, value in data.items():
             col = attr_to_col[attr]
@@ -1142,7 +1126,8 @@ class ExcelManager(object):
         """Compute consistent md5 for exported and imported value.
 
         For example if model value is None, exported value may be u''.
-        All values are also converted to utf-8 encoded string before hashing.
+        All values are also converted to utf-8 encoded string before
+        hashing.
         """
         if value is None or isinstance(value, list):
             value = ''
@@ -1151,7 +1136,7 @@ class ExcelManager(object):
         md5.update(value)
 
     def extract_signature(self, signed, signer=None):
-        """ Return the signature part of a signed string. """
+        """Return the signature part of a signed string."""
         if signer is None:
             signer = self.signer
         signature = signer.sep.join(signed.rsplit(signer.sep, 2)[-2:])
@@ -1265,7 +1250,7 @@ class ExcelManager(object):
         return True
 
     def _import_value(self, obj, column, current, data):
-        """ Return a ::class `Update` instance.
+        """Return a ::class `Update` instance.
 
         Lookup for method import_{attr}(obj, value). Expected returned value
         is (value_key, value). value_key should be data convertible to
@@ -1337,18 +1322,15 @@ class ExcelManager(object):
         return column.UpdateCls(attr_name, current, data, value)
 
     def _set_obj_value(self, obj, attr, update):
-        """
-        During save: set value in `update` on obj.
+        """During save: set value in `update` on obj.
 
         This method is meant to be overriden for special attributes
         """
         setattr(obj, attr, update.value)
 
     def get_cell_value(self, sheet, row, col):
-        """
-        convert a cell value to useful python value returns a tuple of (value,
-        excel cell type)
-        """
+        """convert a cell value to useful python value returns a tuple of
+        (value, excel cell type)"""
         cell = sheet.cell(row=row, column=col)
         value = cell.value
 
@@ -1374,7 +1356,7 @@ class ExcelManager(object):
             UNIQUE_ID_COLS,
             wb,
     ):
-        """ Update data dict of imported value.
+        """Update data dict of imported value.
 
         (value, cell_types) comes from get_cell_value.
 

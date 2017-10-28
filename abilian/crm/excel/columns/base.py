@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function, unicode_literals
 
 from operator import attrgetter
@@ -15,9 +14,7 @@ _NULL_MARK = object()
 
 
 class Invalid(object):
-    """
-    Mark invalid values
-    """
+    """Mark invalid values."""
 
     def __init__(self, value):
         self.value = value
@@ -37,8 +34,9 @@ class Invalid(object):
 
 
 class Update(object):
-    """
-    Holds information about a value update.  Used in import_data()
+    """Holds information about a value update.
+
+    Used in import_data()
     """
     error = False
     error_msg = None
@@ -76,9 +74,7 @@ class Update(object):
 
 
 class Column(object):
-    """
-    A single column
-    """
+    """A single column."""
     # a column may be declared unconditionnaly not importable
     importable = True
     expected_cell_types = None
@@ -86,8 +82,7 @@ class Column(object):
     UpdateCls = Update
 
     def __init__(self, attr, label, type_, required=False, col_attr=None):
-        """ type_: callable to convert an imported value to model one.
-        """
+        """type_: callable to convert an imported value to model one."""
         self.attr = attr
         self.col_attr = col_attr if col_attr is not None else attr
         self.label = label
@@ -177,9 +172,7 @@ class Column(object):
 
 
 class ColumnSet(object):
-    """
-    A set of columns to be added to current export / import
-    """
+    """A set of columns to be added to current export / import."""
     # a columnset may be declared unconditionnaly not importable
     importable = True
     expected_cell_types = None
@@ -227,11 +220,11 @@ class ColumnSet(object):
                 yield result
 
     def data_for_import(self, item):
-        """ Like ::meth `data`, but for import. The difference is that it must
+        """Like ::meth `data`, but for import. The difference is that it must
         return a tuple like Column.data.
 
-        In the generic context of a ColumnSetit has no sense, but
-        a RelatedColumnSet may return the related entity.
+        In the generic context of a ColumnSetit has no sense, but a
+        RelatedColumnSet may return the related entity.
         """
         return _NULL_MARK, _NULL_MARK
 

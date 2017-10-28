@@ -1,7 +1,5 @@
 # coding=utf-8
-"""
-Celery task for async export
-"""
+"""Celery task for async export."""
 from __future__ import absolute_import, print_function, unicode_literals
 
 from io import BytesIO
@@ -37,8 +35,7 @@ def export(
         component='excel',
         manager=None,
 ):
-    """
-    Async export xls task.
+    """Async export xls task.
 
     :param app: `CRUDApp` name
 

@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function, unicode_literals
 
 from openpyxl.cell.cell import STRING_TYPES
@@ -12,9 +11,7 @@ __all__ = ('VocabularyColumn',)
 
 
 class VocabularyColumn(Column):
-    """
-    Columns for :class:`abilian.services.models.BaseVocabulary` items
-    """
+    """Columns for :class:`abilian.services.models.BaseVocabulary` items."""
     expected_cell_types = STRING_TYPES
 
     def data(self, item):

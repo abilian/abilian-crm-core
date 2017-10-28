@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function
 
 import wtforms.fields
@@ -65,7 +64,8 @@ LIST_GENERATORS = {'country': country_choices}
 
 
 def update(module):
-    """Install new column types, form fields, widgets, validators found in `module`."""
+    """Install new column types, form fields, widgets, validators found in
+    `module`."""
     for attr in __all__:
         values = getattr(module, attr, None)
         if values is None:

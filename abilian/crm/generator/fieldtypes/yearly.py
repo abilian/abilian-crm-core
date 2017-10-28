@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-Field for yearly data
+"""Field for yearly data.
 
 Use to add attributes values by year; might be several in a row. If model has
 other yearly attributes, they will be in the same row (from database POV).
@@ -15,7 +14,6 @@ In yml they are specified like this:
           - name: attr_1
             type: Integer
           - name: ...
-
 """
 from __future__ import absolute_import, print_function
 
@@ -43,9 +41,7 @@ _MARK = object()
 
 @total_ordering
 class YearlyBase(db.Model):
-    """
-    Base model for yearly data collections
-    """
+    """Base model for yearly data collections."""
     __abstract__ = True
 
     id = sa.Column(sa.Integer, primary_key=True, info=SYSTEM)
@@ -59,8 +55,7 @@ class YearlyBase(db.Model):
 
 
 class YearlyCollection(sa.orm.collections.MappedCollection):
-    """
-    `sa.orm.relationships` collection class for yearly values.
+    """`sa.orm.relationships` collection class for yearly values.
 
     Years are used as keys.
     """
@@ -82,9 +77,7 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
 
     @collection.internally_instrumented
     def setdefault(self, key, default=None):
-        """
-        D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D.
-        """
+        """D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D."""
         if key not in self:
             self.__setitem__(key, default)
 
@@ -144,9 +137,7 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
             yield item
 
     def latest(self, attr):
-        """
-        Return the most recent tuple `(year, value)` for given :attr:
-        """
+        """Return the most recent tuple `(year, value)` for given :attr:"""
         getter = attrgetter(attr)
         for year, infos in reversed(self.items()):
             val = getter(infos)
@@ -161,10 +152,8 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
 
 
 class YearlyAttrProxy(object):
-    """
-    Proxy model to allow get and update a particular attribute on yearly
-    collections, as if it was directly a model collection.
-    """
+    """Proxy model to allow get and update a particular attribute on yearly
+    collections, as if it was directly a model collection."""
     __slots__ = ('yearly_data', 'attrs')
 
     def __init__(self, yearly_data, attrs):
@@ -224,8 +213,7 @@ sa.inspection._inspects(YearlyAttrProxy)(
 
 
 class YearlyCollectionProxy(dict):
-    """
-    Proxy the collection with :class:`YearlyAttrProxy` instances as values.
+    """Proxy the collection with :class:`YearlyAttrProxy` instances as values.
 
     New keys insert new :class:`YearlyAttrProxy` instances
     """
@@ -286,8 +274,7 @@ class YearlyCollectionProxy(dict):
         super(YearlyCollectionProxy, self).__delitem__(key)
 
     def setdefault(self, key, default=None):
-        """D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D
-        """
+        """D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D."""
         if key not in self.__collection:
             self.__setitem__(key, default)
 
@@ -326,10 +313,8 @@ class YearlyCollectionProxy(dict):
 
 
 class YearlyAttribute(object):
-    """
-    An association proxy that allow multiple attributes grouping
-    Descriptor for single attribute access
-    """
+    """An association proxy that allow multiple attributes grouping Descriptor
+    for single attribute access."""
     __slots__ = ('_attrs', '_collection_proxy')
 
     def __init__(self, attrs):
@@ -434,8 +419,7 @@ class Yearly(Field):
         yield self.name, YearlyAttribute(f['name'] for f in fields)
 
     def finalize(self, attributes, table_args, module, *arg, **kwargs):
-        """Create related model and relationships.
-        """
+        """Create related model and relationships."""
         if self.yearly_data.get('cls') is None:
             self.create_related_model(module)
 
@@ -465,8 +449,7 @@ class Yearly(Field):
         return rel_cls
 
     def yearly_model_finalizer(self, attributes, *args, **kwargs):
-        """Implements total_ordering methods.
-        """
+        """Implements total_ordering methods."""
         rel_attr_id = self.yearly_data['related_attr_id']
         column_attributes = [
             attr for attr, definition in attributes.items()

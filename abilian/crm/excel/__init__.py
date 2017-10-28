@@ -1,7 +1,5 @@
 # coding=utf-8
-"""
-Export / import from excel files
-"""
+"""Export / import from excel files."""
 from __future__ import absolute_import
 
 from .manager import ExcelManager

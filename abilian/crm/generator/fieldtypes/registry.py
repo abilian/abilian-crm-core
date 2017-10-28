@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function
 
 from functools import partial
@@ -26,9 +25,7 @@ _FF_FIELD_REGISTRY = dict()
 
 
 def _register(registry, cls):
-    """
-    class decorator for `Registrable` subclasses
-    """
+    """class decorator for `Registrable` subclasses."""
     assert issubclass(cls, Registrable)
     reg_attr = '_{}_registered'.format(cls.__name__)
     if getattr(cls, reg_attr, False):

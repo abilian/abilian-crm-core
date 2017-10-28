@@ -1,6 +1,5 @@
 # coding=utf-8
-"""
-"""
+""""""
 from __future__ import absolute_import, print_function, unicode_literals
 
 from flask import current_app
@@ -13,9 +12,7 @@ __all__ = ('TagsColumn',)
 
 
 class TagsColumn(Column):
-    """
-    Columns for :class:`abilian.core.models.tags.Tag` items
-    """
+    """Columns for :class:`abilian.core.models.tags.Tag` items."""
     expected_cell_types = STRING_TYPES
 
     def data(self, item):
