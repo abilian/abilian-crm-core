@@ -17,6 +17,7 @@ cffi==1.11.2              # via bcrypt
 clamd==1.0.2              # via abilian-core
 click==6.7                # via flask
 closure==20161201         # via abilian-core
+contextlib2==0.5.5        # via raven
 cssmin==0.2.0             # via abilian-core
 decorator==4.1.2          # via validators
 et-xmlfile==1.0.1         # via openpyxl
@@ -47,7 +48,7 @@ olefile==0.44             # via pillow
 openpyxl==2.4.9
 pandas==0.21.0            # via abilian-core
 pathlib==1.0.1            # via abilian-core
-phonenumbers==8.8.4
+phonenumbers==8.8.5
 pillow==4.3.0             # via abilian-core
 psycopg2==2.7.3.2         # via abilian-core
 pycparser==2.18           # via cffi
@@ -55,7 +56,7 @@ pygeoip==0.3.2            # via abilian-core
 python-dateutil==2.6.1    # via abilian-core, pandas
 python-editor==1.0.3      # via alembic
 python-magic==0.4.13      # via abilian-core
-pytz==2017.2              # via babel, celery, pandas
+pytz==2017.3              # via babel, celery, pandas
 pyyaml==3.12              # via abilian-core
 raven==6.3.0              # via abilian-core
 redis==2.10.6             # via abilian-core
