@@ -317,7 +317,7 @@ class ExcelManager(object):
                     cell = WriteOnlyCell(ws, value=val)
                     self.style_for(cell)
                     cells.append(cell)
-                    self.update_md5(md5, value)
+                    self.update_md5(md5, val)
                     # ws.write(r+row_offset, c, value, style)
                     col_offset += 1
 
