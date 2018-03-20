@@ -325,8 +325,8 @@ class ExcelImportValidate(BaseExcelView):
                     rkey = key.format(rel_attr) + '_{}'
                     objs = []
                     for ridx in range(
-                            1,
-                            int(f.get(rkey.format('count'), 0)) + 1,
+                        1,
+                        int(f.get(rkey.format('count'), 0)) + 1,
                     ):
                         modified = {}
                         robjkey = rkey.format(ridx) + '_{}'

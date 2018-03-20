@@ -477,9 +477,9 @@ class ExcelManager(object):
         main_cols = list(self.columns)
         head_cols = main_cols[:SPLIT_COLUMN]
         tail_cols = main_cols[SPLIT_COLUMN:]
-        all_columns = ColumnSet(*list(
-            chain(head_cols, (related_cs,), tail_cols),
-        ))
+        all_columns = ColumnSet(
+            *list(chain(head_cols, (related_cs,), tail_cols),)
+        )
         return all_columns
 
     def style_for(self, cell):
@@ -645,8 +645,10 @@ class ExcelManager(object):
 
             if modified or modified_relateds:
                 # FIXME: use itsdangerous.TimedSerializer instead of joining a list
-                valid_keys = (k for k in modified
-                              if not (required_missing or modified[k].error))
+                valid_keys = (
+                    k for k in modified
+                    if not (required_missing or modified[k].error)
+                )
                 attr_sig = self.signer.sign(';'.join(sorted(valid_keys)))
                 attr_sig = self.extract_signature(attr_sig)
 
@@ -757,12 +759,12 @@ class ExcelManager(object):
         return data_rows
 
     def _collect_changed_relateds(
-            self,
-            related_cs,
-            wb,
-            data_rows,
-            id_map,
-            name_map,
+        self,
+        related_cs,
+        wb,
+        data_rows,
+        id_map,
+        name_map,
     ):
         """Collect changes from a many related column set.
 
@@ -828,8 +830,8 @@ class ExcelManager(object):
             md5 = hashlib.md5()
             # main item: head data
             for idx, attr in enumerate(
-                    islice(attrs, self.MANY_SPLIT_COLUMN),
-                    1,
+                islice(attrs, self.MANY_SPLIT_COLUMN),
+                1,
             ):
                 if is_new and attr == 'id':
                     continue
@@ -912,8 +914,9 @@ class ExcelManager(object):
 
             # Note: last test ensures (None, u'', 0, False, ...)
             # are treated as equal
-            has_data_update = (not is_new and (value != import_val) and
-                               (value or import_val))
+            has_data_update = (
+                not is_new and (value != import_val) and (value or import_val)
+            )
 
             # FIXME: exception for bool columns to
             # check None != False?
@@ -1058,8 +1061,8 @@ class ExcelManager(object):
                                     continue
                                 col = rel_attr_to_col[attr]
                                 if hasattr(
-                                        col,
-                                        'type_',
+                                    col,
+                                    'type_',
                                 ) and col.type_ is not None:
                                     value = col.type_(value)
 
@@ -1203,8 +1206,7 @@ class ExcelManager(object):
                 elif type_ in (datetime.date, datetime.datetime):
                     # native excel type, no need to set cast function
                     column_cls = (
-                        DateColumn
-                        if type_ is datetime.date else DateTimeColumn
+                        DateColumn if type_ is datetime.date else DateTimeColumn
                     )
                     type_ = None
             except NotImplementedError:
@@ -1307,10 +1309,9 @@ class ExcelManager(object):
                     for k, v in col.info.get('choices').items()
                 }
                 if value not in rev_choices:
-                    valid = ', '.join((
-                        '"{}"'.format(v)
-                        for v in rev_choices.keys() if v
-                    ))
+                    valid = ', '.join(
+                        ('"{}"'.format(v) for v in rev_choices.keys() if v)
+                    )
                     raise ExcelImportError(
                         _(
                             '"{value}" is invalid. Valid choices are: {valid}',
@@ -1346,15 +1347,15 @@ class ExcelManager(object):
         return value
 
     def update_import_data(
-            self,
-            data,
-            attr,
-            value,
-            attr_map,
-            attr_to_main,
-            ID_BY_NAME_COL,
-            UNIQUE_ID_COLS,
-            wb,
+        self,
+        data,
+        attr,
+        value,
+        attr_map,
+        attr_to_main,
+        ID_BY_NAME_COL,
+        UNIQUE_ID_COLS,
+        wb,
     ):
         """Update data dict of imported value.
 

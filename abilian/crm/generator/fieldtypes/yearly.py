@@ -245,8 +245,10 @@ class YearlyCollectionProxy(dict):
     def __setitem__(self, key, value):
         if isinstance(value, YearlyAttrProxy):
             if value.attrs != self.__attrs:
-                raise ValueError('Incompatible attribute proxys: {!r}, {!r}'
-                                 ''.format(self, value))
+                raise ValueError(
+                    'Incompatible attribute proxys: {!r}, {!r}'
+                    ''.format(self, value)
+                )
             if key not in self and value:
                 self[key]  # add key since value is nonzero
                 return  # same proxy: no update needed
@@ -411,9 +413,10 @@ class Yearly(Field):
         forbidden_attrs = {'id', 'year'}
         fields = self.data['type_args']['fields']
         if any(f['name'] in forbidden_attrs for f in fields):
-            raise ValueError('{} are forbidden field names'.format(
-                ','.join(sorted(forbidden_attrs),),
-            ))
+            raise ValueError(
+                '{} are forbidden field names'.
+                format(','.join(sorted(forbidden_attrs),),)
+            )
 
         self.yearly_data['fields'].extend(fields)
         yield self.name, YearlyAttribute(f['name'] for f in fields)
@@ -457,10 +460,12 @@ class Yearly(Field):
         ]
 
         def _eq(self, other):
-            return (isinstance(other, self.__class__) and all(
-                getattr(self, attr) == getattr(other, attr)
-                for attr in column_attributes
-            ))
+            return (
+                isinstance(other, self.__class__) and all(
+                    getattr(self, attr) == getattr(other, attr)
+                    for attr in column_attributes
+                )
+            )
 
         def _lt(self, other):
             if getattr(self, rel_attr_id, -1) < getattr(other, rel_attr_id, -1):
@@ -516,9 +521,8 @@ class YearlyFormField(FormFieldGeneratorBase):
             {'year': year_field},
         )
 
-        extra_args = super(YearlyFormField, self).get_extra_args(
-            *args, **kwargs
-        )
+        extra_args = super(YearlyFormField,
+                           self).get_extra_args(*args, **kwargs)
         extra_args['unbound_field'] = awbff.FormField(ModelField, default=dict)
         extra_args['population_strategy'] = 'update'
         extra_args['min_entries'] = 1

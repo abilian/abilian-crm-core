@@ -28,12 +28,14 @@ class EntityField(Field):
         col_name = self.name + '_id'
         type_args = self.data.get('type_args', {})
 
-        res_iter = (self._m2m_relationship(target_col, col_name, type_args)
-                    if self.multiple else self._single_relationship(
-                        target_col,
-                        col_name,
-                        type_args,
-        ))
+        res_iter = (
+            self._m2m_relationship(target_col, col_name, type_args)
+            if self.multiple else self._single_relationship(
+                target_col,
+                col_name,
+                type_args,
+            )
+        )
 
         for result in res_iter:
             yield result
@@ -138,8 +140,7 @@ class EntityField(Field):
                         backref_name = backref_kw.pop('name')
 
                     rel_kw['backref'] = sa.orm.backref(
-                        backref_name,
-                        **backref_kw
+                        backref_name, **backref_kw
                     )
 
                 return sa.orm.relationship(target_cls, **rel_kw)
@@ -166,9 +167,8 @@ class EntityFormField(FormField):
         )
 
     def get_extra_args(self, *args, **kwargs):
-        extra_args = super(EntityFormField, self).get_extra_args(
-            *args, **kwargs
-        )
+        extra_args = super(EntityFormField,
+                           self).get_extra_args(*args, **kwargs)
         target = extra_args['model_class'] = self.data['target']
         ajax_endpoint = self.data.get(
             'ajax_endpoint',

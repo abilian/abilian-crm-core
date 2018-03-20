@@ -32,8 +32,10 @@ class RequireableFormField(object):
                 if flag == 'required':
                     self.flags.required = True
                 elif flag != 'optional':
-                    raise TypeError('{} accept only "required" validator'
-                                    ''.format(self.__class__.__name__))
+                    raise TypeError(
+                        '{} accept only "required" validator'
+                        ''.format(self.__class__.__name__)
+                    )
 
     def process(self, *args, **kwargs):
         super(RequireableFormField, self).process(*args, **kwargs)
@@ -125,10 +127,8 @@ class PostalAddressField(RequireableFormField, ModelFormField):
     widget = ModelWidget()
 
     def __init__(self, *args, **kwargs):
-        super(PostalAddressField, self).__init__(
-            PostalAddressForm, *args,
-            **kwargs
-        )
+        super(PostalAddressField,
+              self).__init__(PostalAddressForm, *args, **kwargs)
 
 
 class PhoneNumberForm(ModelForm):
@@ -158,7 +158,5 @@ class PhoneNumberFormField(RequireableFormField, ModelFormField):
     )
 
     def __init__(self, *args, **kwargs):
-        super(PhoneNumberFormField, self).__init__(
-            PhoneNumberForm, *args,
-            **kwargs
-        )
+        super(PhoneNumberFormField,
+              self).__init__(PhoneNumberForm, *args, **kwargs)

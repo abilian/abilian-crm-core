@@ -33,16 +33,18 @@ class RelatedColumnSet(ColumnSet):
         ColumnSet.__init__(self, *attrs)
 
     def __repr__(self):
-        return ('{module}.{cls}(related_attr={attr}, label={label}, '
-                'required={required:}) at 0x{id:x}'
-                ''.format(
-                    module=self.__class__.__module__,
-                    cls=self.__class__.__name__,
-                    attr=repr(self.related_attr),
-                    label=repr(self.related_label),
-                    required=repr(self.required),
-                    id=id(self),
-                )).encode('utf-8')
+        return (
+            '{module}.{cls}(related_attr={attr}, label={label}, '
+            'required={required:}) at 0x{id:x}'
+            ''.format(
+                module=self.__class__.__module__,
+                cls=self.__class__.__name__,
+                attr=repr(self.related_attr),
+                label=repr(self.related_label),
+                required=repr(self.required),
+                id=id(self),
+            )
+        ).encode('utf-8')
 
     @property
     def attrs(self):
@@ -83,15 +85,15 @@ class RelatedColumnSet(ColumnSet):
 class ManyRelatedColumnSet(ColumnSet):
 
     def __init__(
-            self,
-            related_attr,
-            attrs=None,
-            label=None,
-            model_cls=None,
-            form_cls=None,
-            export_label=None,
-            id_by_name_col=None,
-            manager_cls=None,
+        self,
+        related_attr,
+        attrs=None,
+        label=None,
+        model_cls=None,
+        form_cls=None,
+        export_label=None,
+        id_by_name_col=None,
+        manager_cls=None,
     ):
         """
         :param related_attr: attribute name on main entity that connects to related

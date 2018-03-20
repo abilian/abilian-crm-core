@@ -53,4 +53,5 @@ setuptools.setup(
         'build': build,
         'sdist': sdist,
         'develop': develop,
-    })
+    }
+)

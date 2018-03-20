@@ -55,8 +55,10 @@ class Field(Registrable):
         self.multiple = data.get('multiple', False)
 
         if self.multiple and not self.allow_multiple:
-            raise ValueError("Field {!r}: {!r} doesn't support multiple values"
-                             "".format(self.name, self.__class__.__fieldname__))
+            raise ValueError(
+                "Field {!r}: {!r} doesn't support multiple values"
+                "".format(self.name, self.__class__.__fieldname__)
+            )
 
         self.nullable = data.get('nullable', not self.required)
         if self.nullable and self.required:
@@ -93,9 +95,7 @@ class Field(Registrable):
             info['choices'] = OrderedDict(self.data['from_list'])
 
         attr = sa.schema.Column(
-            col_name,
-            self.sa_type(**self.sa_type_options),
-            **extra_args
+            col_name, self.sa_type(**self.sa_type_options), **extra_args
         )
 
         return ((self.name, attr),)
@@ -264,10 +264,12 @@ class FormField(Registrable):
 
             if isinstance(widget, string_types):
                 if widget not in WIDGETS:
-                    raise ValueError('Invalid {}: {}'.format(
-                        widget_arg,
-                        widget.encode('utf-8'),
-                    ))
+                    raise ValueError(
+                        'Invalid {}: {}'.format(
+                            widget_arg,
+                            widget.encode('utf-8'),
+                        )
+                    )
                 widget = WIDGETS[widget]
                 kw = d.get(widget_arg + '_args', dict())
                 widget = widget(**kw)

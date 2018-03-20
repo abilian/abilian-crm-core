@@ -76,9 +76,10 @@ class EmailField(TextField):
             data['widget'] = aw_widgets.EmailWidget()
         if 'view_widget' not in data:
             widget = data['widget']
-            data['view_widget'] = (widget
-                                   if isinstance(widget, aw_widgets.EmailWidget)
-                                   else aw_widgets.EmailWidget())
+            data['view_widget'] = (
+                widget if isinstance(widget, aw_widgets.EmailWidget) else
+                aw_widgets.EmailWidget()
+            )
 
 
 @form_field

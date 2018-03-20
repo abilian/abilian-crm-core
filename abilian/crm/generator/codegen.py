@@ -283,10 +283,8 @@ class CodeGenerator(object):
             fields_read=read_permissions,
             fields_write=write_permissions,
         )
-        attributes['_groups'] = OrderedDict(
-            (name, groups[name])
-            for name in group_names
-        )
+        attributes['_groups'] = OrderedDict((name, groups[name])
+                                            for name in group_names)
         attributes['__module__'] = module.__name__
         cls = type(type_name, type_bases, attributes)
         setattr(module, type_name, cls)

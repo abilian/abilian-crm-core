@@ -31,8 +31,10 @@ def format_phonenumber(n, international=True):
         )
         return n
 
-    if not (phonenumbers.is_possible_number(pn) and
-            phonenumbers.is_valid_number(pn)):
+    if not (
+        phonenumbers.is_possible_number(pn) and
+        phonenumbers.is_valid_number(pn)
+    ):
         return n
 
     fmt = phonenumbers.PhoneNumberFormat.INTERNATIONAL

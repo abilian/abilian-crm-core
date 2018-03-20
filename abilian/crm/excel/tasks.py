@@ -27,13 +27,13 @@ DEFAULT_EXPIRES = 1800  # generally user will not wait 1/2h. No need to process
     expires=DEFAULT_EXPIRES,
 )
 def export(
-        self,
-        app,
-        module,
-        from_url,
-        user_id,
-        component='excel',
-        manager=None,
+    self,
+    app,
+    module,
+    from_url,
+    user_id,
+    component='excel',
+    manager=None,
 ):
     """Async export xls task.
 

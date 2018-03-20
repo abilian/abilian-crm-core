@@ -66,12 +66,12 @@ format: format-py format-js
 format-py:
 	#isort -a  "from __future__ import absolute_import, print_function, unicode_literals" \
         #        -rc abilian *.py
-	isort -a  "from __future__ import absolute_import, print_function" \
-                -rc abilian *.py
-	docformatter -i --no-blank -r abilian
-	-yapf --style google -r -i abilian *.py
-	-add-trailing-comma `find abilian -name '*.py'`
-	autopep8 --in-place -r -a -a -a abilian
+	#isort -a  "from __future__ import absolute_import, print_function" \
+        #        -rc abilian *.py
+	# -add-trailing-comma `find abilian -name '*.py'`
+	# autopep8 --in-place -r -a -a -a abilian
+	docformatter -i -r abilian
+	-yapf -r -i abilian *.py
 	isort -rc abilian *.py
 
 format-js:
