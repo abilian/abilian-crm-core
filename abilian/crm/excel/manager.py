@@ -941,14 +941,14 @@ class ExcelManager(object):
 
                 if col.required:
                     if update is None:
-                        # 'if update' may evaluate to False, beware to test existence with
-                        # 'is None'
+                        # 'if update' may evaluate to False, beware to test existence
+                        # with 'is None'
                         update = col.UpdateCls(attr, current, value, None)
 
                     if update.value is None:
                         if is_update:
-                            # update mode: we don't expect full records, and we don't erase
-                            # values with empty ones
+                            # update mode: we don't expect full records,
+                            # and we don't erase # values with empty ones
                             continue
                         modified['__required_missing__'] = True
                         if not update.error:
