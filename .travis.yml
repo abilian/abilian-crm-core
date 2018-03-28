@@ -11,12 +11,12 @@ services:
   - redis-server
 
 addons:
-  postgresql: "9.3"
+  postgresql: "9.6"
 
 
 # Install OS dependencies
 before_install:
- - pip install 'pip==9.0.1' 'setuptools>=27.1.2'
+ - pip install -U 'pip>=9.0.3' 'setuptools>=27.1.2'
 
 # Install Python dependencies
 install:
