@@ -56,6 +56,7 @@ lint: lint-python lint-js
 lint-python:
 	@echo "--> Linting Python files"
 	flake8 abilian *.py
+	pylint --py3k abilian *.py
 
 lint-js:
 	@echo "--> Linting JavaScript files"
