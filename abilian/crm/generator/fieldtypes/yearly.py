@@ -50,6 +50,9 @@ class YearlyBase(db.Model):
     def __eq__(self, other):
         raise NotImplementedError
 
+    def __hash__(self):
+        raise NotImplementedError
+
     def __lt__(self, other):
         raise NotImplementedError
 
@@ -192,7 +195,7 @@ class YearlyAttrProxy(object):
 
         return super(YearlyAttrProxy, self).__setattr__(name, value)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return any(
             getattr(self.yearly_data, attr, None) is not None
             for attr in self.attrs
