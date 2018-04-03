@@ -32,8 +32,8 @@ from abilian.core.models import SYSTEM
 from abilian.i18n import _l
 from abilian.web.forms import Form
 
-from .base import FormField as FormFieldGeneratorBase
 from .base import Field
+from .base import FormField as FormFieldGeneratorBase
 from .registry import form_field, model_field
 
 _MARK = object()
@@ -103,8 +103,9 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
             value_key = self.keyfunc(value)
             if key != value_key:
                 raise TypeError(
-                    "Found incompatible key {!r} for value {!r}; this collection's "
-                    "keying function requires a key of {!r} for this value."
+                    "Found incompatible key {!r} for value {!r}; "
+                    "this collection's keying function requires a key "
+                    "of {!r} for this value."
                     "".format(key, value, value_key),
                 )
 

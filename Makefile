@@ -24,8 +24,8 @@ setup-git:
 
 update-env:
 	@echo "--> Installing/updating dependencies"
-	pip install -U setuptools
-	pip install -U -r requirements.txt
+	pip install -U setuptools pip wheel
+	pip install -U -r requirements.txt -r etc/dev-requirements.txt
 	pip install -e .
 	@echo ""
 
@@ -73,6 +73,9 @@ format-py:
 	# autopep8 --in-place -r -a -a -a abilian
 	docformatter -i -r abilian
 	-yapf -r -i abilian *.py
+	@make format-imports
+
+format-imports:
 	isort -rc abilian *.py
 
 format-js:

@@ -133,7 +133,8 @@ class Image(File):
 
 
 @model_field
-class JSON(Field):
+class JSONField(Field):
+    __fieldname__ = 'JSON'
     sa_type = JSON
 
 
@@ -145,6 +146,7 @@ class JSONListField(Field):
 
 @model_field
 class JSONDict(Field):
+    __fieldname__ = 'JSONDict'
     sa_type = staticmethod(JSONDict)
 
 

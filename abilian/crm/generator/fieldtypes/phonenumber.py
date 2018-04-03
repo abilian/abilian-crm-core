@@ -9,8 +9,8 @@ import sqlalchemy.orm
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets
 
-from ...forms import PhoneNumberFormField as PNFormField
 from ...forms import PhoneNumberForm
+from ...forms import PhoneNumberFormField as PNFormField
 from ...models import PhoneNumber
 from .base import Field, FormField
 from .registry import form_field, model_field

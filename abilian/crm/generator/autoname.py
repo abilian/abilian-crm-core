@@ -4,12 +4,16 @@ from __future__ import absolute_import, print_function
 
 import string
 from operator import attrgetter
+from typing import Text
 
 import sqlalchemy as sa
 import sqlalchemy.event
 
+from abilian.core.entities import Entity
+
 
 def setup(cls, spec):
+    # type: (Entity, Text) -> None
     """
     :param cls: an Entity based class
     :param spec: a valid python format string

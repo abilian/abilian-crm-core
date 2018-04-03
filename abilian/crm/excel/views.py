@@ -4,13 +4,13 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 from io import BytesIO
-from itertools import ifilter
 from time import gmtime, strftime
 
 import celery
 from flask import current_app, flash, render_template, request
 from flask_login import current_user
 from six import text_type
+from six.moves import filter
 
 from abilian.core.util import fqcn
 from abilian.i18n import _, _l
@@ -131,7 +131,7 @@ class ExcelExport(BaseExcelView):
 
         if 'related' in request.args:
             related = request.args['related']
-            related_cs = ifilter(
+            related_cs = filter(
                 lambda cs: cs.related_attr == related,
                 self.EXCEL_EXPORT_RELATED,
             )
@@ -140,9 +140,9 @@ class ExcelExport(BaseExcelView):
             except StopIteration:
                 related_cs = None
 
-        # create manager now: inside 'response_generator' we cannot instantiate the
-        # manager: flask raises "RuntimeError('working outside of application
-        # context')"
+        # create manager now: inside 'response_generator' we cannot instantiate
+        # the manager: flask raises "RuntimeError('working outside
+        # of application context')"
         manager = self.manager
 
         @capture_stream_errors(logger, 'Error during XLS export')

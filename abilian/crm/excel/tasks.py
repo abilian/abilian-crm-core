@@ -3,12 +3,12 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 from io import BytesIO
-from itertools import ifilter
 from time import gmtime, strftime
 
 from celery import shared_task
 from flask import current_app, request
 from flask_login import login_user
+from six.moves import filter
 from six.moves.urllib.parse import urlparse
 from werkzeug.utils import import_string
 
@@ -84,7 +84,7 @@ def export(
 
         if 'related' in request.args:
             related = request.args['related']
-            related_cs = ifilter(
+            related_cs = filter(
                 lambda cs: cs.related_attr == related,
                 component.EXCEL_EXPORT_RELATED,
             )

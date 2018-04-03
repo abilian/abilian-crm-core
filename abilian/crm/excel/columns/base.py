@@ -53,7 +53,7 @@ class Update(object):
         self.update = update
         self.value = value if value is not _NULL_MARK else update
 
-    def __nonzero__(self):
+    def __bool__(self):
         return (self.current != self.value) or self.error
 
     def _render(self, manager, value):

@@ -10,7 +10,7 @@ import math
 import pprint
 from collections import defaultdict
 from functools import partial
-from itertools import chain, islice, izip
+from itertools import chain, islice
 from operator import attrgetter
 
 import itsdangerous
@@ -20,11 +20,11 @@ import sqlalchemy.exc
 import sqlalchemy.orm
 from flask import current_app
 from openpyxl import Workbook, styles
-from openpyxl.cell.cell import STRING_TYPES
+from openpyxl.cell.cell import STRING_TYPES, WriteOnlyCell
 from openpyxl.utils import get_column_letter, units
 from openpyxl.utils.exceptions import IllegalCharacterError
-from openpyxl.writer.write_only import WriteOnlyCell
 from six import text_type
+from six.moves import zip
 
 from abilian.core.extensions import db
 from abilian.core.sqlalchemy import JSON as JSONType
@@ -158,7 +158,7 @@ class ExcelManager(object):
         If map_related_attr is True, also map related's attributes to
         their RelatedColumnSet instance
         """
-        attr_map = dict(izip(columnset.attrs, columnset.iter_flatened()))
+        attr_map = dict(zip(columnset.attrs, columnset.iter_flatened()))
         # we also want to collect related
         # attributes of RelatedColumnSets. self.columns.attrs doesn't show them
         for col in columnset:

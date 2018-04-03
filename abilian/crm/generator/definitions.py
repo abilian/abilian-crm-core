@@ -19,6 +19,7 @@ __all__ = (
     'LIST_GENERATORS',
     'WIDGETS',
     'VALIDATORS',
+    'MAX_IDENTIFIER_LENGTH',
 )
 
 # Postgres crops identifiers names silently. This can be a problem with alembic
