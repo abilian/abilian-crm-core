@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-abilian-core==0.10.8
+abilian-core==0.10.10
 alembic==0.8.10           # via abilian-core, flask-migrate
 amqp==2.2.2               # via kombu
 babel==2.5.3              # via flask-babel
@@ -17,6 +17,7 @@ cffi==1.11.5              # via bcrypt
 clamd==1.0.2              # via abilian-core
 click==6.7                # via flask
 closure==20180204         # via abilian-core
+contextlib2==0.5.5        # via raven
 cssmin==0.2.0             # via abilian-core
 decorator==4.2.1          # via validators
 et-xmlfile==1.0.1         # via openpyxl
@@ -43,10 +44,10 @@ lxml==4.2.1               # via abilian-core
 mako==1.0.7               # via alembic
 markupsafe==1.0           # via abilian-core, jinja2, mako
 numpy==1.14.2             # via pandas
-openpyxl==2.5.1
+openpyxl==2.5.2
 pandas==0.22.0            # via abilian-core
 pathlib==1.0.1            # via abilian-core
-phonenumbers==8.9.2
+phonenumbers==8.9.3
 pillow==5.0.0
 pycparser==2.18           # via cffi
 pygeoip==0.3.2            # via abilian-core
@@ -62,7 +63,7 @@ six==1.11.0               # via abilian-core, bcrypt, bleach, html5lib, python-d
 sqlalchemy-utils==0.33.2  # via wtforms-alchemy
 sqlalchemy==1.2.6         # via abilian-core, alembic, flask-sqlalchemy, sqlalchemy-utils, wtforms-alchemy, wtforms-sqlalchemy
 sqlparse==0.2.4           # via abilian-core
-tqdm==4.20.0              # via abilian-core
+tqdm==4.21.0              # via abilian-core
 typing==3.6.4             # via abilian-core
 validators==0.12.1        # via wtforms-components
 vine==1.1.4               # via amqp
