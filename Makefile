@@ -108,14 +108,18 @@ update-pot:
 	python setup.py extract_messages update_catalog compile_catalog
 
 update-deps:
+	pip install pip==9.0.3
 	pip-compile -U > /dev/null
 	pip-compile > /dev/null
 	git --no-pager diff requirements.txt
+	pip install -U pip
 
 sync-deps:
+	pip install pip==9.0.3
 	pip install -r requirements.txt
 	pip install -r etc/dev-requirements.txt
 	pip install -e .
+	pip install -U pip
 
 release:
 	rm -rf /tmp/abilian-crm-core
