@@ -8,7 +8,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm
 
 from abilian.core.models.blob import Blob
-from abilian.core.sqlalchemy import JSON, JSONDict, JSONList
+from abilian.core.sqlalchemy import JSON, JSONDict as _JSONDict, JSONList as _JSONList
 
 from ..definitions import MAX_IDENTIFIER_LENGTH
 from .base import Field
@@ -141,13 +141,13 @@ class JSONField(Field):
 @model_field
 class JSONListField(Field):
     __fieldname__ = 'JSONList'
-    sa_type = staticmethod(JSONList)
+    sa_type = staticmethod(_JSONList)
 
 
 @model_field
 class JSONDict(Field):
     __fieldname__ = 'JSONDict'
-    sa_type = staticmethod(JSONDict)
+    sa_type = staticmethod(_JSONDict)
 
 
 @model_field

@@ -348,7 +348,7 @@ class YearlyAttribute(object):
                     setattr(year_data, attr, val)
 
     def __delete__(self, instance):
-        for year, year_data in instance.__yearly_data__.items():
+        for year_data in instance.__yearly_data__.values():
             for attr in self._attrs:
                 setattr(year_data, attr, None)
 

@@ -4,6 +4,7 @@ from __future__ import absolute_import, print_function
 
 import re
 from collections import OrderedDict
+from typing import Optional
 
 import sqlalchemy as sa
 import wtforms.fields
@@ -33,7 +34,7 @@ class Field(Registrable):
     label = u''
 
     #: sqlalchemy column type
-    sa_type = None
+    sa_type = None  # type: Optional[staticmethod]
 
     #: default form field type
     default_ff_type = 'TextField'

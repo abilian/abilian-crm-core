@@ -208,7 +208,7 @@ class ExcelManager(object):
         )
 
         cols_width = [MIN_WIDTH]
-        for idx, label in enumerate(self.columns.labels, 2):
+        for idx, _label in enumerate(self.columns.labels, 2):
             letter = get_column_letter(idx)
             cols_width.append(ws.column_dimensions[letter].width)
 
@@ -217,14 +217,16 @@ class ExcelManager(object):
         if progress_callback:
             progress_callback(exported=exported, total=total)
 
-        for r, obj in enumerate(objects, row):
+        for _r, obj in enumerate(objects, row):
             md5 = hashlib.md5()
             offset = 0
             cells = [WriteOnlyCell(ws)]
             for c, col in enumerate(self.columns, 1):
-                # one model column might be exported in multiple excel columns. Example:
+                # one model column might be exported in multiple excel columns.
+                # Example:
                 # a related entity like a contact: fullname, email, etc
-                for rel_idx, (import_val, value) in enumerate(col.data(obj)):
+                col_data = col.data(obj)
+                for (import_val, value) in col_data:
                     try:
                         cell = WriteOnlyCell(ws, value=import_val)
                     except IllegalCharacterError:
@@ -241,7 +243,7 @@ class ExcelManager(object):
                     width = max(len(l) for l in value.split('\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
-                offset += rel_idx
+                offset += len(col_data)
 
             cells[0].value = self.signer.sign(md5.hexdigest())
             ws.append(cells)
@@ -280,15 +282,15 @@ class ExcelManager(object):
         related_columns_len = related_columns_set.colspan
 
         cols_width = [MIN_WIDTH]
-        for idx, label in enumerate(all_columns.labels, 2):
+        for idx, _label in enumerate(all_columns.labels, 2):
             letter = get_column_letter(idx)
             cols_width.append(ws.column_dimensions[letter].width)
 
         row_offset = 0
-        for r, obj in enumerate(objects, start_row):
+        for _r, obj in enumerate(objects, start_row):
             row_offset -= 1
-            # prepare main item data: it will be repeated for each of its related
-            # objects
+            # prepare main item data: it will be repeated for each of its
+            # related objects
             columns = iter(self.columns)
 
             head_data = [
@@ -297,7 +299,8 @@ class ExcelManager(object):
                 for import_val, value in col.data(obj)
             ]
 
-            # islice has started to consume 'columns' iterator, iter remaining columns
+            # islice has started to consume 'columns' iterator, iter remaining
+            # columns
             tail_data = [
                 import_val
                 for col in columns for import_val, value in col.data(obj)
@@ -312,8 +315,8 @@ class ExcelManager(object):
                 row_offset += 1
                 col_offset = 1
                 for c, val in enumerate(head_data, 1):
-                    # FIXME: we could keep HEAD_MD5, and just extends `cells` with
-                    # head_data
+                    # FIXME: we could keep HEAD_MD5, and just extends `cells`
+                    # with head_data
                     cell = WriteOnlyCell(ws, value=val)
                     self.style_for(cell)
                     cells.append(cell)
@@ -381,7 +384,7 @@ class ExcelManager(object):
                     width = max(len(l) for l in value.split('\n')) + 1
                     cols_width[c] = max(width, cols_width[c])
 
-                for ignored in range(related_columns_len):
+                for _ignored in range(related_columns_len):
                     cells.append(WriteOnlyCell(ws))
 
                 col_offset += related_columns_len
@@ -417,7 +420,7 @@ class ExcelManager(object):
         row = 0
         md5 = hashlib.md5()
         cells = [WriteOnlyCell(ws)]
-        for c, attr in enumerate(columns.attrs, 1):
+        for _c, attr in enumerate(columns.attrs, 1):
             cells.append(WriteOnlyCell(ws, value=attr))
             self.update_md5(md5, attr)
 
@@ -428,7 +431,7 @@ class ExcelManager(object):
         #  labels row
         md5 = hashlib.md5()
         cells = [WriteOnlyCell(ws)]
-        for c, label in enumerate(columns.labels, 1):
+        for _c, label in enumerate(columns.labels, 1):
             cell = WriteOnlyCell(ws, value=text_type(label))
             cell.font = self.XF_HEADER['font']
             cell.alignment = self.XF_HEADER['alignment']
