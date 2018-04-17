@@ -2,6 +2,7 @@ language: python
 cache: pip
 python:
   - "2.7"
+  - "3.6"
 
 env:
   - SQLALCHEMY_DATABASE_URI="sqlite://"
@@ -23,7 +24,8 @@ install:
   - pip install -U -r etc/dev-requirements.txt
   - pip install -U -e .
   - pip check
-  - npm install -g less eslint eslint-config-standard eslint-plugin-promise eslint-plugin-standard eslint-plugin-html
+  - npm install -g less
+  - yarn
 
 # Create DB
 before_script:
@@ -31,7 +33,7 @@ before_script:
 
 # Run tests
 script:
-  - py.test --tb=short -q --cov abilian abilian
+  - pytest -q --cov abilian abilian
   - make lint-python
 
 # Report coverage
