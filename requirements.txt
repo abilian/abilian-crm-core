@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-abilian-core==0.10.11
+abilian-core==0.10.12
 alembic==0.8.10           # via abilian-core, flask-migrate
 amqp==2.2.2               # via kombu
 babel==2.5.3              # via flask-babel
@@ -31,7 +31,7 @@ flask-script==2.0.6       # via abilian-core
 flask-sqlalchemy==2.1     # via abilian-core, flask-migrate
 flask-testing==0.7.1      # via abilian-core
 flask-wtf==0.12           # via abilian-core
-flask==0.12.2             # via abilian-core, flask-assets, flask-babel, flask-debugtoolbar, flask-login, flask-mail, flask-migrate, flask-script, flask-sqlalchemy, flask-testing, flask-wtf
+flask==1.0                # via abilian-core, flask-assets, flask-babel, flask-debugtoolbar, flask-login, flask-mail, flask-migrate, flask-script, flask-sqlalchemy, flask-testing, flask-wtf
 html5lib==1.0.1           # via bleach
 infinity==1.4             # via intervals
 intervals==0.8.1          # via wtforms-components
@@ -44,10 +44,10 @@ lxml==4.2.1               # via abilian-core
 mako==1.0.7               # via alembic
 markupsafe==1.0           # via abilian-core, jinja2, mako
 numpy==1.14.2             # via pandas
-openpyxl==2.5.2
+openpyxl==2.5.3
 pandas==0.22.0            # via abilian-core
 pathlib==1.0.1            # via abilian-core
-phonenumbers==8.9.3
+phonenumbers==8.9.4
 pillow==5.0.0
 pycparser==2.18           # via cffi
 pygeoip==0.3.2            # via abilian-core
@@ -57,13 +57,13 @@ python-editor==1.0.3      # via alembic
 python-magic==0.4.15      # via abilian-core
 pytz==2018.4              # via babel, celery, pandas
 pyyaml==3.12              # via abilian-core
-raven==6.6.0              # via abilian-core
+raven==6.7.0              # via abilian-core
 redis==2.10.6             # via abilian-core
 six==1.11.0               # via abilian-core, bcrypt, bleach, html5lib, python-dateutil, sqlalchemy-utils, validators, wtforms-alchemy, wtforms-components
 sqlalchemy-utils==0.33.2  # via wtforms-alchemy
-sqlalchemy==1.2.6         # via abilian-core, alembic, flask-sqlalchemy, sqlalchemy-utils, wtforms-alchemy, wtforms-sqlalchemy
+sqlalchemy==1.2.7         # via abilian-core, alembic, flask-sqlalchemy, sqlalchemy-utils, wtforms-alchemy, wtforms-sqlalchemy
 sqlparse==0.2.4           # via abilian-core
-tqdm==4.23.0              # via abilian-core
+tqdm==4.23.1              # via abilian-core
 typing==3.6.4             # via abilian-core
 validators==0.12.1        # via wtforms-components
 vine==1.1.4               # via amqp
