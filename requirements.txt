@@ -47,7 +47,7 @@ numpy==1.14.3             # via pandas
 openpyxl==2.5.3
 pandas==0.22.0            # via abilian-core
 pathlib==1.0.1            # via abilian-core
-phonenumbers==8.9.4
+phonenumbers==8.9.5
 pillow==5.0.0
 pycparser==2.18           # via cffi
 pygeoip==0.3.2            # via abilian-core
