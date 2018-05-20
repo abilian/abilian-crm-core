@@ -15,9 +15,7 @@ class Registrable(object):
         """
         :return: identifier name for this field type
         """
-        return (
-            cls.__fieldname__ if cls.__fieldname__ is not None else cls.__name__
-        )
+        return cls.__fieldname__ if cls.__fieldname__ is not None else cls.__name__
 
 
 _SA_FIELD_REGISTRY = dict()  # type: Dict[Text, Registrable]
@@ -28,14 +26,14 @@ def _register(registry, cls):
     """class decorator for `Registrable` subclasses."""
     assert issubclass(cls, Registrable)
 
-    reg_attr = '_{}_registered'.format(cls.__name__)
+    reg_attr = "_{}_registered".format(cls.__name__)
     if getattr(cls, reg_attr, False):
         return cls
 
     name = cls.__fieldtype__()
     assert name not in registry, (
-        '{!r} cannot be registered as {!r}: already used by {!r}'
-        ''.format(cls, name, registry[name])
+        "{!r} cannot be registered as {!r}: already used by {!r}"
+        "".format(cls, name, registry[name])
     )
 
     registry[name] = cls

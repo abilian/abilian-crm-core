@@ -21,20 +21,9 @@ DEFAULT_EXPIRES = 1800  # generally user will not wait 1/2h. No need to process
 
 
 @shared_task(
-    bind=True,
-    track_started=True,
-    ignore_result=False,
-    expires=DEFAULT_EXPIRES,
+    bind=True, track_started=True, ignore_result=False, expires=DEFAULT_EXPIRES
 )
-def export(
-    self,
-    app,
-    module,
-    from_url,
-    user_id,
-    component='excel',
-    manager=None,
-):
+def export(self, app, module, from_url, user_id, component="excel", manager=None):
     """Async export xls task.
 
     :param app: `CRUDApp` name
@@ -51,21 +40,15 @@ def export(
     component = module.get_component(component)
     url = urlparse(from_url)
     rq_ctx = current_app.test_request_context(
-        base_url='{url.scheme}://{url.netloc}/{url.path}'.format(url=url),
+        base_url="{url.scheme}://{url.netloc}/{url.path}".format(url=url),
         path=url.path,
         query_string=url.query,
     )
 
     def progress_callback(exported=0, total=0, **kw):
-        self.update_state(
-            state='PROGRESS',
-            meta={
-                'exported': exported,
-                'total': total,
-            },
-        )
+        self.update_state(state="PROGRESS", meta={"exported": exported, "total": total})
 
-    uploads = current_app.extensions['uploads']
+    uploads = current_app.extensions["uploads"]
 
     with rq_ctx:
         login_user(user)
@@ -77,16 +60,13 @@ def export(
             manager = component.excel_manager
 
         manager = manager(
-            module.managed_class,
-            component.export_form,
-            component.EXCEL_EXPORT_RELATED,
+            module.managed_class, component.export_form, component.EXCEL_EXPORT_RELATED
         )
 
-        if 'related' in request.args:
-            related = request.args['related']
+        if "related" in request.args:
+            related = request.args["related"]
             related_cs = filter(
-                lambda cs: cs.related_attr == related,
-                component.EXCEL_EXPORT_RELATED,
+                lambda cs: cs.related_attr == related, component.EXCEL_EXPORT_RELATED
             )
             try:
                 related_cs = next(related_cs)
@@ -94,22 +74,14 @@ def export(
                 related_cs = None
 
         workbook = manager.export(
-            objects,
-            related_cs,
-            progress_callback=progress_callback,
+            objects, related_cs, progress_callback=progress_callback
         )
         fd = BytesIO()
         workbook.save(fd)
         fd.seek(0)
         # save in uploads dir, return handle needed for download
         filename = "{}-{}.xlsx".format(
-            module.managed_class.__name__,
-            strftime("%d:%m:%Y-%H:%M:%S", gmtime()),
+            module.managed_class.__name__, strftime("%d:%m:%Y-%H:%M:%S", gmtime())
         )
-        handle = uploads.add_file(
-            user,
-            fd,
-            filename=filename,
-            mimetype=XLSX_MIME,
-        )
+        handle = uploads.add_file(user, fd, filename=filename, mimetype=XLSX_MIME)
         return dict(handle=handle)

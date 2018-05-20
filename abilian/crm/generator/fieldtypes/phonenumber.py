@@ -18,14 +18,14 @@ from .registry import form_field, model_field
 
 @model_field
 class _PhoneNumberField(Field):
-    __fieldname__ = 'PhoneNumber'
+    __fieldname__ = "PhoneNumber"
     sa_type = sa.Integer
-    default_ff_type = 'PhoneNumberFormField'
+    default_ff_type = "PhoneNumberFormField"
     allow_multiple = True
 
     def get_model_attributes(self, *args, **kwargs):
         # column declared_attr
-        col_name = self.name + '_id'
+        col_name = self.name + "_id"
 
         if self.multiple:
             yield self.gen_m2m(*args, **kwargs)
@@ -33,9 +33,9 @@ class _PhoneNumberField(Field):
 
         def gen_column(cls):
             fk_kw = dict(
-                name=u'{}_{}_fkey'.format(cls.__name__.lower(), col_name),
+                name=u"{}_{}_fkey".format(cls.__name__.lower(), col_name),
                 use_alter=True,
-                ondelete='SET NULL',
+                ondelete="SET NULL",
             )
             target_col = str(PhoneNumber.id.parent.c.id)
             fk = sa.ForeignKey(target_col, **fk_kw)
@@ -47,9 +47,9 @@ class _PhoneNumberField(Field):
         # relationship declared_attr
         def gen_relationship(cls):
             kw = dict(uselist=False)
-            local = cls.__name__ + '.' + col_name
+            local = cls.__name__ + "." + col_name
             remote = str(PhoneNumber.id)
-            kw['primaryjoin'] = '{} == {}'.format(local, remote)
+            kw["primaryjoin"] = "{} == {}".format(local, remote)
             return sa.orm.relationship(PhoneNumber, **kw)
 
         gen_relationship.func_name = self.name
@@ -60,9 +60,9 @@ class _PhoneNumberField(Field):
 
         def gen_relationship(cls):
             src_name = cls.__tablename__
-            local_src_col = model_name.lower() + '_id'
-            local_target_col = 'phonenumber_id'
-            tbl_name = src_name + '_' + self.name
+            local_src_col = model_name.lower() + "_id"
+            local_target_col = "phonenumber_id"
+            tbl_name = src_name + "_" + self.name
             secondary_table = sa.Table(
                 tbl_name,
                 cls.metadata,
@@ -83,20 +83,19 @@ class PhoneNumberFormField(FormField):
     ff_type = PNFormField
 
     def get_type(self, *args, **kwargs):
-        return (awbff.ModelFieldList if self.multiple else self.ff_type)
+        return awbff.ModelFieldList if self.multiple else self.ff_type
 
     def get_extra_args(self, *args, **kwargs):
-        extra_args = super(PhoneNumberFormField, self)\
-            .get_extra_args(*args, **kwargs)
+        extra_args = super(PhoneNumberFormField, self).get_extra_args(*args, **kwargs)
         if self.multiple:
-            extra_args['unbound_field'] = awbff.ModelFormField(PhoneNumberForm)
-            extra_args['min_entries'] = 1
-            extra_args['population_strategy'] = 'update'
-            extra_args['widget'] = aw_widgets.TabularFieldListWidget(
-                template='crm/widgets/phonenumber_fieldlist.html',
+            extra_args["unbound_field"] = awbff.ModelFormField(PhoneNumberForm)
+            extra_args["min_entries"] = 1
+            extra_args["population_strategy"] = "update"
+            extra_args["widget"] = aw_widgets.TabularFieldListWidget(
+                template="crm/widgets/phonenumber_fieldlist.html"
             )
-            extra_args['view_widget'] = aw_widgets.FieldListWidget(
-                view_template='crm/widgets/phonenumber_fieldlist_view.html',
+            extra_args["view_widget"] = aw_widgets.FieldListWidget(
+                view_template="crm/widgets/phonenumber_fieldlist_view.html"
             )
 
         return extra_args

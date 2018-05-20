@@ -20,17 +20,17 @@ class Invalid(object):
         self.value = value
 
     def __repr__(self):
-        return '{module}.{cls}(value={value})'.format(
+        return "{module}.{cls}(value={value})".format(
             module=self.__class__.__module__,
             cls=self.__class__.__name__,
             value=repr(self.value),
-        ).encode('utf-8')
+        ).encode("utf-8")
 
     def __unicode__(self):
-        return 'Invalid: {}'.format(repr(self.value))
+        return "Invalid: {}".format(repr(self.value))
 
     def __str__(self):
-        return text_type(self).encode('utf-8')
+        return text_type(self).encode("utf-8")
 
 
 class Update(object):
@@ -91,9 +91,9 @@ class Column(object):
 
     def __repr__(self):
         return (
-            '{module}.{cls}(attr={attr!r}, label={label!r}, type_={type_!r}, '
-            'required={required!r}) at 0x{id:x}'
-            ''.format(
+            "{module}.{cls}(attr={attr!r}, label={label!r}, type_={type_!r}, "
+            "required={required!r}) at 0x{id:x}"
+            "".format(
                 module=self.__class__.__module__,
                 cls=self.__class__.__name__,
                 attr=self.attr,
@@ -128,7 +128,7 @@ class Column(object):
 
         def to_str(item):
             if isinstance(item, str):
-                return item.decode('utf-8')
+                return item.decode("utf-8")
             elif isinstance(item, Entity):
                 return item.name
             else:
@@ -142,9 +142,9 @@ class Column(object):
             import_value = "; ".join((to_str(i) for i in import_value))
 
         if isinstance(import_value, bytes):
-            import_value = import_value.decode('utf-8')
+            import_value = import_value.decode("utf-8")
         if isinstance(import_value, text_type):
-            import_value = import_value.strip().replace('\r\n', '\n')
+            import_value = import_value.strip().replace("\r\n", "\n")
 
         yield import_value, value
 
@@ -156,7 +156,7 @@ class Column(object):
 
     def adapt_from_cell(self, value, cell_type, workbook):
         if cell_type not in self.adapt_cell_types:
-            raise ValueError('Cannot adapt {}'.format(cell_type))
+            raise ValueError("Cannot adapt {}".format(cell_type))
         return self._adapt_from_cell(value, cell_type, workbook)
 
     def _adapt_from_cell(self, value, cell_type, workbook):

@@ -7,15 +7,15 @@ from six import text_type
 
 from .base import Column
 
-__all__ = ('EmptyColumn', 'TextIntegerColumn')
+__all__ = ("EmptyColumn", "TextIntegerColumn")
 
 
 class EmptyColumn(Column):
     """Useful when an export needs a blank column."""
     importable = False
 
-    def __init__(self, label=''):
-        super(EmptyColumn, self).__init__('', label=label, type_=None)
+    def __init__(self, label=""):
+        super(EmptyColumn, self).__init__("", label=label, type_=None)
 
     def data(self, item):
         yield None, None

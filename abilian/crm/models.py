@@ -10,7 +10,7 @@ from .jinja_filters import format_phonenumber
 
 
 class PostalAddress(IdMixin, Model):
-    __tablename__ = 'crm_postal_address'
+    __tablename__ = "crm_postal_address"
 
     #: Multi-lines field
     street_lines = sa.Column(sa.UnicodeText)
@@ -32,20 +32,16 @@ class PostalAddress(IdMixin, Model):
 
 
 class PhoneNumber(IdMixin, Model):
-    __tablename__ = 'crm_phonenumbers'
+    __tablename__ = "crm_phonenumbers"
 
     #: number type: mobile, pro... left as free text
-    type = sa.Column(
-        sa.UnicodeText,
-        default=u'',
-        server_default=sa.sql.text(u"''"),
-    )
+    type = sa.Column(sa.UnicodeText, default=u"", server_default=sa.sql.text(u"''"))
     #: phone number
     number = sa.Column(sa.UnicodeText, nullable=False)
 
     def __unicode__(self):
         if not self.number:
-            self.number = u''
+            self.number = u""
         if not self.type:
-            self.type = u''
-        return u'%s: %s' % (self.type, format_phonenumber(self.number))
+            self.type = u""
+        return u"%s: %s" % (self.type, format_phonenumber(self.number))

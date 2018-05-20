@@ -8,7 +8,7 @@ from six import text_type
 
 from .base import Column
 
-__all__ = ('TagsColumn',)
+__all__ = ("TagsColumn",)
 
 
 class TagsColumn(Column):
@@ -16,12 +16,12 @@ class TagsColumn(Column):
     expected_cell_types = STRING_TYPES
 
     def data(self, item):
-        ext = current_app.extensions.get('tags')
+        ext = current_app.extensions.get("tags")
         if not ext or not ext.is_support_tagging(item):
             yield None, None
 
         value = sorted(ext.entity_tags(item))
-        import_value = '; '.join(text_type(t) for t in value) if value else ''
+        import_value = "; ".join(text_type(t) for t in value) if value else ""
         yield import_value, value
 
     def deserialize(self, value):

@@ -72,7 +72,8 @@ format-py:
 	# -add-trailing-comma `find abilian -name '*.py'`
 	# autopep8 --in-place -r -a -a -a abilian
 	docformatter -i -r abilian
-	-yapf -r -i abilian *.py
+	# -yapf -r -i abilian *.py
+	black abilian *.py
 	@make format-imports
 
 format-imports:

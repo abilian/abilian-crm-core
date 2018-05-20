@@ -22,7 +22,7 @@ def generate_module(fullname, **kw):
     """
     module = imp.new_module(fullname)
 
-    parent_module_name, name = fullname.rsplit('.', 1)
+    parent_module_name, name = fullname.rsplit(".", 1)
     parent_module = import_module(parent_module_name)
     directory = Path(parent_module.__file__).parent
     directory = directory / name
@@ -30,9 +30,9 @@ def generate_module(fullname, **kw):
     assert directory.exists() and directory.is_dir()
     module.__path__ = [str(directory)]  # noqa
 
-    for yml in directory.glob(u'*.yml'):
-        logger.info('Loading: %s', yml)
-        with yml.open('rt', encoding='utf-8') as f:
+    for yml in directory.glob(u"*.yml"):
+        logger.info("Loading: %s", yml)
+        with yml.open("rt", encoding="utf-8") as f:
             gen = CodeGenerator(yaml_file=f, **kw)
 
         gen.init_vocabularies(module)
@@ -51,7 +51,7 @@ class GeneratedModelsFinder(object):
 
     def manage_module(self, package, name, **kw):
         """Install module loader for 'package.name'."""
-        fullname = package + '.' + name
+        fullname = package + "." + name
         self.managed_modules[fullname] = kw
 
     def find_module(self, fullname, path=None):

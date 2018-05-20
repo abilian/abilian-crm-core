@@ -7,7 +7,7 @@ from six import text_type
 
 from .base import Column
 
-__all__ = ('VocabularyColumn',)
+__all__ = ("VocabularyColumn",)
 
 
 class VocabularyColumn(Column):
@@ -16,7 +16,7 @@ class VocabularyColumn(Column):
 
     def data(self, item):
         value = getattr(item, self.attr, None)
-        import_value = text_type(value) if value is not None else ''
+        import_value = text_type(value) if value is not None else ""
         yield import_value, value
 
     def deserialize(self, value):

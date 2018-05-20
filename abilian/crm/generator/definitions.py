@@ -14,12 +14,12 @@ from abilian.web.forms.filters import lowercase, strip, uppercase
 from abilian.web.forms.validators import VALIDATORS
 
 __all__ = (
-    'FORM_FIELDS',
-    'FORM_FILTERS',
-    'LIST_GENERATORS',
-    'WIDGETS',
-    'VALIDATORS',
-    'MAX_IDENTIFIER_LENGTH',
+    "FORM_FIELDS",
+    "FORM_FILTERS",
+    "LIST_GENERATORS",
+    "WIDGETS",
+    "VALIDATORS",
+    "MAX_IDENTIFIER_LENGTH",
 )
 
 # Postgres crops identifiers names silently. This can be a problem with alembic
@@ -46,11 +46,7 @@ FORM_FIELDS = (
 )
 FORM_FIELDS = {t.__name__: t for t in FORM_FIELDS}
 
-FORM_FILTERS = {
-    'strip': strip,
-    'uppercase': uppercase,
-    'lowercase': lowercase,
-}
+FORM_FILTERS = {"strip": strip, "uppercase": uppercase, "lowercase": lowercase}
 
 WIDGETS = (
     abilian_widgets.BooleanWidget,
@@ -61,7 +57,7 @@ WIDGETS = (
 )
 WIDGETS = {t.__name__: t for t in WIDGETS}
 
-LIST_GENERATORS = {'country': country_choices}
+LIST_GENERATORS = {"country": country_choices}
 
 
 def update(module):

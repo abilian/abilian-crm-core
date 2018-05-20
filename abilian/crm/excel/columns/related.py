@@ -24,9 +24,7 @@ class RelatedColumnSet(ColumnSet):
         self.get_related = attrgetter(self.related_attr)
 
         if label is None:
-            label = text_type(related_attr) \
-                .replace('_', ' ') \
-                .replace('.', ' ')
+            label = text_type(related_attr).replace("_", " ").replace(".", " ")
 
         self.label = self.related_label = label
         self.required = required
@@ -34,9 +32,9 @@ class RelatedColumnSet(ColumnSet):
 
     def __repr__(self):
         return (
-            '{module}.{cls}(related_attr={attr}, label={label}, '
-            'required={required:}) at 0x{id:x}'
-            ''.format(
+            "{module}.{cls}(related_attr={attr}, label={label}, "
+            "required={required:}) at 0x{id:x}"
+            "".format(
                 module=self.__class__.__module__,
                 cls=self.__class__.__name__,
                 attr=repr(self.related_attr),
@@ -44,12 +42,12 @@ class RelatedColumnSet(ColumnSet):
                 required=repr(self.required),
                 id=id(self),
             )
-        ).encode('utf-8')
+        ).encode("utf-8")
 
     @property
     def attrs(self):
         for attr in ColumnSet.attrs.fget(self):
-            yield '{}.{}'.format(self.related_attr, attr)
+            yield "{}.{}".format(self.related_attr, attr)
 
     @property
     def labels(self):
@@ -57,7 +55,7 @@ class RelatedColumnSet(ColumnSet):
             if not self.related_label:
                 yield label
             else:
-                yield '{}:\n {}'.format(self.related_label, label)
+                yield "{}:\n {}".format(self.related_label, label)
 
     def data(self, item):
         # if item is None we must nonetheless call data() for all columns and
@@ -107,7 +105,7 @@ class ManyRelatedColumnSet(ColumnSet):
         self.ID_BY_NAME_COL = id_by_name_col
         self.related_attr = related_attr
         if label is None:
-            label = related_attr.replace('_', ' ')
+            label = related_attr.replace("_", " ")
         self.related_label = label
         self.model_cls = model_cls
         self.form_cls = form_cls
@@ -127,7 +125,7 @@ class ManyRelatedColumnSet(ColumnSet):
         return self.manager_cls(self.model_cls, self.form_cls, ())
 
     def iter_items(self, obj):
-        path = self.related_attr.split('.')
+        path = self.related_attr.split(".")
 
         def iter_obj(obj, attrs):
             if not attrs:
@@ -153,4 +151,4 @@ class ManyRelatedColumnSet(ColumnSet):
             if not self.related_label:
                 yield label
             else:
-                yield '{}:\n {}'.format(self.related_label, label)
+                yield "{}:\n {}".format(self.related_label, label)

@@ -19,25 +19,25 @@ from ..definitions import FORM_FILTERS, LIST_GENERATORS, \
     MAX_IDENTIFIER_LENGTH, WIDGETS
 from .registry import Registrable, get_formfield
 
-_VALID_IDENTIFIER_RE = re.compile(r'[A-Za-z_][A-Za-z0-9_]*', re.UNICODE)
+_VALID_IDENTIFIER_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*", re.UNICODE)
 
 
 def assert_valid_identifier(s):
     match = _VALID_IDENTIFIER_RE.match(s)
     if match is None or match.end() != match.endpos:
-        raise ValueError('{} is not a valid python identifier'.format(repr(s)))
+        raise ValueError("{} is not a valid python identifier".format(repr(s)))
 
 
 class Field(Registrable):
 
     name = None
-    label = u''
+    label = u""
 
     #: sqlalchemy column type
     sa_type = None  # type: Optional[staticmethod]
 
     #: default form field type
-    default_ff_type = 'TextField'
+    default_ff_type = "TextField"
 
     #: set to False is field supports only single values
     allow_multiple = True
@@ -46,14 +46,14 @@ class Field(Registrable):
         self.model = model
         self.data = data
         self.generator = generator
-        self.name = data['name']
+        self.name = data["name"]
         assert_valid_identifier(self.name)
-        self.label = data.get('description', u'')
-        self.sa_type_options = data.get('type_options', dict())
-        self.required = data.get('required', False)
-        self.unique = data.get('unique', False)
-        self.indexed = data.get('indexed', False)
-        self.multiple = data.get('multiple', False)
+        self.label = data.get("description", u"")
+        self.sa_type_options = data.get("type_options", dict())
+        self.required = data.get("required", False)
+        self.unique = data.get("unique", False)
+        self.indexed = data.get("indexed", False)
+        self.multiple = data.get("multiple", False)
 
         if self.multiple and not self.allow_multiple:
             raise ValueError(
@@ -61,13 +61,13 @@ class Field(Registrable):
                 "".format(self.name, self.__class__.__fieldname__)
             )
 
-        self.nullable = data.get('nullable', not self.required)
+        self.nullable = data.get("nullable", not self.required)
         if self.nullable and self.required:
             # if required, then it cannot be null
             self.nullable = False
 
         ff_type = self.get_ff_type()
-        data['formfield'] = ff_type(model=model, data=data, generator=generator)
+        data["formfield"] = ff_type(model=model, data=data, generator=generator)
 
     def get_ff_type(self, *args, **kwargs):
         ff_type = self.default_ff_type
@@ -81,19 +81,19 @@ class Field(Registrable):
         :return: iterable of `(name, type)`
         """
         col_name = self.name[:MAX_IDENTIFIER_LENGTH]
-        extra_args = {'nullable': self.nullable}
-        extra_args['info'] = info = {}
-        info['label'] = self.label
+        extra_args = {"nullable": self.nullable}
+        extra_args["info"] = info = {}
+        info["label"] = self.label
 
-        if 'default' in self.data:
-            extra_args['default'] = self.data.get('default')
+        if "default" in self.data:
+            extra_args["default"] = self.data.get("default")
 
         if self.indexed:
-            info['searchable'] = True
-            info['index_to'] = ('text',)
+            info["searchable"] = True
+            info["index_to"] = ("text",)
 
-        if 'from_list' in self.data:
-            info['choices'] = OrderedDict(self.data['from_list'])
+        if "from_list" in self.data:
+            info["choices"] = OrderedDict(self.data["from_list"])
 
         attr = sa.schema.Column(
             col_name, self.sa_type(**self.sa_type_options), **extra_args
@@ -134,14 +134,14 @@ class FormField(Registrable):
         self.model = model
         self.data = data
         self.generator = generator
-        self.name = data['name']
+        self.name = data["name"]
         assert_valid_identifier(self.name)
-        self.label = data.get('description', u'')
-        self.sa_type_options = data.get('type_options', dict())
-        self.required = data.get('required', False)
-        self.multiple = data.get('multiple', False)
-        self.validator_length_max = data.get('validator_length_max', -1)
-        self.validator_length_min = data.get('validator_length_min', -1)
+        self.label = data.get("description", u"")
+        self.sa_type_options = data.get("type_options", dict())
+        self.required = data.get("required", False)
+        self.multiple = data.get("multiple", False)
+        self.validator_length_max = data.get("validator_length_max", -1)
+        self.validator_length_min = data.get("validator_length_min", -1)
         if self.validator_length_max < -1:
             self.validator_length_max = -1
         if self.validator_length_min < -1:
@@ -155,44 +155,43 @@ class FormField(Registrable):
     def get_type(self, *args, **kwargs):
         field_type = self.ff_type
 
-        if 'lines' in self.data:
+        if "lines" in self.data:
             field_type = wtforms.fields.TextAreaField
 
-        if 'from_list' in self.data or 'from_function' in self.data:
+        if "from_list" in self.data or "from_function" in self.data:
             field_type = (
-                awbff.Select2Field
-                if not self.multiple else awbff.Select2MultipleField
+                awbff.Select2Field if not self.multiple else awbff.Select2MultipleField
             )
         return field_type
 
     def get_extra_args(self, *args, **kwargs):
         extra_args = {
-            'filters': list(self.get_filters()),
-            'validators': self.get_validators(),
+            "filters": list(self.get_filters()),
+            "validators": self.get_validators(),
         }
 
         # extra validators & filters specified in data
         d = self.data
 
-        description = d.get('help', u'').strip()
+        description = d.get("help", u"").strip()
         if description:
-            extra_args['description'] = description
+            extra_args["description"] = description
 
-        if 'validators' in d:
-            validators = d['validators']
+        if "validators" in d:
+            validators = d["validators"]
             if isinstance(validators, string_types):
                 validators = [validators]
             validators = [VALIDATORS[v]() for v in validators]
-            extra_args['validators'].extend(validators)
+            extra_args["validators"].extend(validators)
 
-        if 'filters' in d:
-            filters = d['filters']
+        if "filters" in d:
+            filters = d["filters"]
             if isinstance(filters, string_types):
                 filters = [filters]
             filters = [FORM_FILTERS[f] for f in filters]
-            extra_args['filters'].extend(filters)
+            extra_args["filters"].extend(filters)
 
-        for key in ('filters', 'validators'):
+        for key in ("filters", "validators"):
             if not extra_args[key]:
                 del extra_args[key]
 
@@ -214,9 +213,8 @@ class FormField(Registrable):
         if self.validator_length_max != -1 or self.validator_length_min != -1:
             validators.append(
                 aw_validators.Length(
-                    min=self.validator_length_min,
-                    max=self.validator_length_max,
-                ),
+                    min=self.validator_length_min, max=self.validator_length_max
+                )
             )
         return validators
 
@@ -224,31 +222,30 @@ class FormField(Registrable):
         """set 'widget' and 'view_widget' in extra_args."""
         d = self.data
 
-        if 'from_list' in d:
+        if "from_list" in d:
             if self.multiple:
-                extra_args['view_widget'] = aw_widgets.ListWidget()
+                extra_args["view_widget"] = aw_widgets.ListWidget()
 
-            options = list(d['from_list'])
-            if 'required' in d:
-                if options[0][0] == u'':
+            options = list(d["from_list"])
+            if "required" in d:
+                if options[0][0] == u"":
                     options.pop(0)
-            elif options[0] != u'':
-                options.insert(0, (u'', u''))
+            elif options[0] != u"":
+                options.insert(0, (u"", u""))
 
-            extra_args['choices'] = options
+            extra_args["choices"] = options
 
-        if 'from_function' in d:
+        if "from_function" in d:
             if self.multiple:
-                extra_args['view_widget'] = aw_widgets.ListWidget()
-            if 'from_function_nocall' in d and d['from_function_nocall']:
-                extra_args['choices'] = LIST_GENERATORS[d['from_function']]
+                extra_args["view_widget"] = aw_widgets.ListWidget()
+            if "from_function_nocall" in d and d["from_function_nocall"]:
+                extra_args["choices"] = LIST_GENERATORS[d["from_function"]]
             else:
-                extra_args['choices'] = LIST_GENERATORS[d['from_function']]()
+                extra_args["choices"] = LIST_GENERATORS[d["from_function"]]()
 
-        if 'lines' in d:
-            extra_args['widget'] = aw_widgets.TextArea(
-                resizeable='vertical',
-                rows=d['lines'],
+        if "lines" in d:
+            extra_args["widget"] = aw_widgets.TextArea(
+                resizeable="vertical", rows=d["lines"]
             )
 
         self.setup_widgets_from_data(extra_args)
@@ -257,7 +254,7 @@ class FormField(Registrable):
         """Setup widgets from specification in data ('widget' and 'view_widget'
         entries)"""
         d = self.data
-        for widget_arg in ('widget', 'view_widget'):
+        for widget_arg in ("widget", "view_widget"):
             if widget_arg not in d:
                 continue
 
@@ -266,13 +263,10 @@ class FormField(Registrable):
             if isinstance(widget, string_types):
                 if widget not in WIDGETS:
                     raise ValueError(
-                        'Invalid {}: {}'.format(
-                            widget_arg,
-                            widget.encode('utf-8'),
-                        )
+                        "Invalid {}: {}".format(widget_arg, widget.encode("utf-8"))
                     )
                 widget = WIDGETS[widget]
-                kw = d.get(widget_arg + '_args', dict())
+                kw = d.get(widget_arg + "_args", dict())
                 widget = widget(**kw)
 
             extra_args[widget_arg] = widget

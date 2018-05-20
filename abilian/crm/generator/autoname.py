@@ -21,7 +21,8 @@ def setup(cls, spec):
     parser = string.Formatter()
     attributes = {
         field: attrgetter(field)
-        for text, field, format_spec, conversion in parser.parse(spec) if field
+        for text, field, format_spec, conversion in parser.parse(spec)
+        if field
     }
 
     # event handler
@@ -34,7 +35,7 @@ def setup(cls, spec):
                 if attr != key:
                     val = getter(obj)
                     if val is None:
-                        val = u''
+                        val = u""
                     vals[attr] = val
 
             obj.name = spec.format(**vals).strip()

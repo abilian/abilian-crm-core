@@ -52,13 +52,9 @@ class ExcelManager(object):
     """import/export data to excel files, from/to model."""
 
     XF_HEADER = {
-        'font':
-        styles.Font(bold=True),
-        'alignment':
-        styles.Alignment(
-            horizontal='center',
-            vertical='top',
-            wrapText=True,
+        "font": styles.Font(bold=True),
+        "alignment": styles.Alignment(
+            horizontal="center", vertical="top", wrapText=True
         ),
     }
     XF_EDITABLE = styles.Protection(locked=False)
@@ -76,7 +72,7 @@ class ExcelManager(object):
     UNIQUE_ID_COLS = ()
 
     #: sheet name where data should be, at import or export
-    MAIN_SHEET_NAME = 'Sheet 1'
+    MAIN_SHEET_NAME = "Sheet 1"
 
     #: For many related export/import, set column at which object's columns is
     #: splitted to insert related object columns
@@ -103,8 +99,8 @@ class ExcelManager(object):
         # collect exportable attributes
         columns = []
 
-        if 'id' not in self.form and 'id' not in self.SKIP_COLS:
-            columns.append(Column('id', 'id', int))
+        if "id" not in self.form and "id" not in self.SKIP_COLS:
+            columns.append(Column("id", "id", int))
 
         for field in self.form:
             info = self.columns_for(field, self.form)
@@ -127,11 +123,8 @@ class ExcelManager(object):
             # signer is created on 1st access. When it's never accessed, this instance
             # can be used outside a flask application context
             config = current_app.config
-            secret_key = config.get('SECRET_KEY')
-            self._signer = itsdangerous.TimestampSigner(
-                secret_key,
-                salt=__name__,
-            )
+            secret_key = config.get("SECRET_KEY")
+            self._signer = itsdangerous.TimestampSigner(secret_key, salt=__name__)
 
         return self._signer
 
@@ -172,7 +165,7 @@ class ExcelManager(object):
 
     @property
     def attr_to_column(self):
-        if not hasattr(self, '_attr_to_column'):
+        if not hasattr(self, "_attr_to_column"):
             self._attr_to_column = self.get_attr_to_column(self.columns)
         return self._attr_to_column
 
@@ -181,10 +174,9 @@ class ExcelManager(object):
         """Return a mapping of attribute name: column instance, with the
         exception of attributes of related instances mapped to a
         RelatedColumnSet() instance."""
-        if not hasattr(self, '_attr_to_main_column'):
+        if not hasattr(self, "_attr_to_main_column"):
             self._attr_to_main_column = self.get_attr_to_column(
-                self.columns,
-                map_related_attr=True,
+                self.columns, map_related_attr=True
             )
         return self._attr_to_main_column
 
@@ -192,27 +184,21 @@ class ExcelManager(object):
         """Exports objects to a Workbook."""
         if related_column_set is not None:
             return self.export_many(
-                objects,
-                related_column_set,
-                progress_callback=progress_callback,
+                objects, related_column_set, progress_callback=progress_callback
             )
 
         wb = Workbook()
         if wb.worksheets:
             wb.remove_sheet(wb.active)
 
-        ws, row = self._new_export_sheet(
-            wb,
-            self.model_cls.__name__,
-            self.columns,
-        )
+        ws, row = self._new_export_sheet(wb, self.model_cls.__name__, self.columns)
 
         cols_width = [MIN_WIDTH]
         for idx, _label in enumerate(self.columns.labels, 2):
             letter = get_column_letter(idx)
             cols_width.append(ws.column_dimensions[letter].width)
 
-        total = objects.count() if hasattr(objects, 'count') else len(objects)
+        total = objects.count() if hasattr(objects, "count") else len(objects)
         exported = 0
         if progress_callback:
             progress_callback(exported=exported, total=total)
@@ -230,17 +216,14 @@ class ExcelManager(object):
                     try:
                         cell = WriteOnlyCell(ws, value=import_val)
                     except IllegalCharacterError:
-                        cell = WriteOnlyCell(
-                            ws,
-                            value="[ERROR (illegal characters)]",
-                        )
+                        cell = WriteOnlyCell(ws, value="[ERROR (illegal characters)]")
                     self.style_for(cell)
                     cells.append(cell)
                     self.update_md5(md5, import_val)
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split('\n')) + 1
+                    width = max(len(l) for l in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 offset += len(col_data)
@@ -268,16 +251,14 @@ class ExcelManager(object):
         if wb.worksheets:
             wb.remove_sheet(wb.active)
 
-        total = objects.count() if hasattr(objects, 'count') else len(objects)
+        total = objects.count() if hasattr(objects, "count") else len(objects)
         exported = 0
         if progress_callback:
             progress_callback(exported=exported, total=total)
 
         all_columns = self._columns_for_many_related(related_columns_set)
         ws, start_row = self._new_export_sheet(
-            wb,
-            related_columns_set.export_label,
-            all_columns,
+            wb, related_columns_set.export_label, all_columns
         )
         related_columns_len = related_columns_set.colspan
 
@@ -302,8 +283,7 @@ class ExcelManager(object):
             # islice has started to consume 'columns' iterator, iter remaining
             # columns
             tail_data = [
-                import_val
-                for col in columns for import_val, value in col.data(obj)
+                import_val for col in columns for import_val, value in col.data(obj)
             ]
 
             # generate rows for each related object
@@ -326,7 +306,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split('\n')) + 1
+                    width = max(len(l) for l in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 data = related_columns_set.data(item)
@@ -340,17 +320,14 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split('\n')) + 1
+                    width = max(len(l) for l in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 for c, val in enumerate(tail_data, col_offset):
                     try:
                         cell = WriteOnlyCell(ws, value=val)
                     except IllegalCharacterError:
-                        cell = WriteOnlyCell(
-                            ws,
-                            value="[ERROR - illegal characters]",
-                        )
+                        cell = WriteOnlyCell(ws, value="[ERROR - illegal characters]")
 
                     self.style_for(cell)
                     cells.append(cell)
@@ -359,7 +336,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split('\n')) + 1
+                    width = max(len(l) for l in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 cells[0].value = self.signer.sign(md5.hexdigest())
@@ -381,7 +358,7 @@ class ExcelManager(object):
                     col_offset += 1
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split('\n')) + 1
+                    width = max(len(l) for l in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 for _ignored in range(related_columns_len):
@@ -396,7 +373,7 @@ class ExcelManager(object):
                     self.update_md5(md5, value)
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split('\n')) + 1
+                    width = max(len(l) for l in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 cells[0].value = self.signer.sign(md5.hexdigest())
@@ -433,8 +410,8 @@ class ExcelManager(object):
         cells = [WriteOnlyCell(ws)]
         for _c, label in enumerate(columns.labels, 1):
             cell = WriteOnlyCell(ws, value=text_type(label))
-            cell.font = self.XF_HEADER['font']
-            cell.alignment = self.XF_HEADER['alignment']
+            cell.font = self.XF_HEADER["font"]
+            cell.alignment = self.XF_HEADER["alignment"]
             cells.append(cell)
             self.update_md5(md5, label)
 
@@ -444,12 +421,12 @@ class ExcelManager(object):
 
         # row / column properties
         ws.row_dimensions[1].hidden = True  # hide attributes names row
-        ws.column_dimensions['A'].hidden = True  # hide md5 column
+        ws.column_dimensions["A"].hidden = True  # hide md5 column
         overflow = 0
 
         for idx, cell in enumerate(cells, 1):
             letter = get_column_letter(idx)
-            width = max(len(l) for l in cell.value.split('\n')) + 1
+            width = max(len(l) for l in cell.value.split("\n")) + 1
             if width > MAX_WIDTH:
                 overflow = max(overflow, width)
                 width = MAX_WIDTH
@@ -480,9 +457,7 @@ class ExcelManager(object):
         main_cols = list(self.columns)
         head_cols = main_cols[:SPLIT_COLUMN]
         tail_cols = main_cols[SPLIT_COLUMN:]
-        all_columns = ColumnSet(
-            *list(chain(head_cols, (related_cs,), tail_cols),)
-        )
+        all_columns = ColumnSet(*list(chain(head_cols, (related_cs,), tail_cols)))
         return all_columns
 
     def style_for(self, cell):
@@ -506,7 +481,7 @@ class ExcelManager(object):
             ws = wb[self.model_cls.__name__]
         except KeyError:
             # last chance
-            ws = wb['Sheet 1']
+            ws = wb["Sheet 1"]
 
         self._validate_import_sheet(ws)
         data_rows = self._collect_changed_rows(ws, wb)
@@ -514,30 +489,24 @@ class ExcelManager(object):
         by_name = {}
         unique_id_cols = {}
         for d in data_rows:
-            item_id = d.get('id')
+            item_id = d.get("id")
             if item_id and not isinstance(item_id, Invalid):
                 by_id[item_id] = d
-            name = d['__metadata__'].get('unique_name')
+            name = d["__metadata__"].get("unique_name")
             if name is not None:
                 # FIXME: check name is unique
                 by_name[name] = d
-            uid_cols = d['__metadata__'].get('unique_id_cols')
+            uid_cols = d["__metadata__"].get("unique_id_cols")
             if uid_cols is not None:
                 for key, val in uid_cols.items():
                     unique_id_cols.setdefault(key, {})[val] = d
 
         # collect data from the 'many related' sets
         for related_cs in many_related_columns_set:
-            self._collect_changed_relateds(
-                related_cs,
-                wb,
-                data_rows,
-                by_id,
-                by_name,
-            )
+            self._collect_changed_relateds(related_cs, wb, data_rows, by_id, by_name)
 
         # prefetch items
-        ids = [d['id'] for d in data_rows if 'id' in d]
+        ids = [d["id"] for d in data_rows if "id" in d]
         q = self.model_cls.query
         q.filter(self.model_cls.id.in_(ids)).all()
 
@@ -546,13 +515,13 @@ class ExcelManager(object):
         modified_items = []
 
         for data in data_rows:
-            metadata = data.pop('__metadata__')
-            is_new = metadata.get('is_new')
-            is_update = metadata.get('is_update')
+            metadata = data.pop("__metadata__")
+            is_new = metadata.get("is_new")
+            is_update = metadata.get("is_update")
 
             if not is_new:
                 try:
-                    item = q.get(data['id'])
+                    item = q.get(data["id"])
                 except BaseException:
                     # this may be a deleted line from an exported file, but excel has
                     # preserved hidden cell
@@ -568,7 +537,7 @@ class ExcelManager(object):
                     if val is not None:
                         try:
                             item = q.filter(
-                                getattr(self.model_cls, col_name) == val,
+                                getattr(self.model_cls, col_name) == val
                             ).one()
                         except sa.orm.exc.NoResultFound:
                             pass
@@ -578,31 +547,24 @@ class ExcelManager(object):
                                 'Multiple items match %s[%s] == ""%s"',
                                 self.model_cls.__name__,
                                 col_name,
-                                text_type(val).encode('utf-8'),
-                                extra={'stack': True},
+                                text_type(val).encode("utf-8"),
+                                extra={"stack": True},
                             )
                         else:
-                            is_new = metadata['is_new'] = False
-                            is_update = metadata['is_update'] = True
-                            data['id'] = item.id
+                            is_new = metadata["is_new"] = False
+                            is_update = metadata["is_update"] = True
+                            data["id"] = item.id
 
             assert not is_update or (is_update and not is_new)
 
             many_related_data = {}
             for cs in self.MANY_RELATED_CS:
-                many_related_data[cs.related_attr] = data.pop(
-                    cs.related_attr,
-                    None,
-                )
+                many_related_data[cs.related_attr] = data.pop(cs.related_attr, None)
 
             modified = self._get_modified_data(
-                item,
-                data,
-                attr_to_col,
-                is_new,
-                is_update,
+                item, data, attr_to_col, is_new, is_update
             )
-            required_missing = modified.pop('__required_missing__', False)
+            required_missing = modified.pop("__required_missing__", False)
 
             modified_relateds = {}
             for cs in self.MANY_RELATED_CS:
@@ -615,32 +577,22 @@ class ExcelManager(object):
                 current_data = getattr(item, cs.related_attr)
                 current_data_map = {name_getter(o): o for o in current_data}
                 related_attr_to_col = self.get_attr_to_column(
-                    related_cs,
-                    map_related_attr=True,
+                    related_cs, map_related_attr=True
                 )
 
                 for item_data in related_data:
-                    rel_metadata = item_data.pop('__metadata__')
-                    name = rel_metadata.get(
-                        '__metadata__',
-                        {},
-                    ).get('unique_name')
+                    rel_metadata = item_data.pop("__metadata__")
+                    name = rel_metadata.get("__metadata__", {}).get("unique_name")
                     is_new = name is not None
                     default = cs.model_cls()
-                    obj = current_data_map.get(
-                        name,
-                        default,
-                    ) if is_new else default
+                    obj = current_data_map.get(name, default) if is_new else default
                     rel_modified = self._get_modified_data(
-                        obj,
-                        item_data,
-                        related_attr_to_col,
-                        is_new,
+                        obj, item_data, related_attr_to_col, is_new
                     )
 
                     if rel_modified:
                         rel_items.append(
-                            dict(modified=rel_modified, metadata=rel_metadata),
+                            dict(modified=rel_modified, metadata=rel_metadata)
                         )
 
                 if rel_items:
@@ -649,20 +601,21 @@ class ExcelManager(object):
             if modified or modified_relateds:
                 # FIXME: use itsdangerous.TimedSerializer instead of joining a list
                 valid_keys = (
-                    k for k in modified
-                    if not (required_missing or modified[k].error)
+                    k for k in modified if not (required_missing or modified[k].error)
                 )
-                attr_sig = self.signer.sign(';'.join(sorted(valid_keys)))
+                attr_sig = self.signer.sign(";".join(sorted(valid_keys)))
                 attr_sig = self.extract_signature(attr_sig)
 
-                modified_items.append({
-                    'item': item,
-                    'metadata': metadata,
-                    'required_missing': required_missing,
-                    'modified': modified,
-                    'many_relateds': modified_relateds,
-                    'attr_signature': attr_sig,
-                })
+                modified_items.append(
+                    {
+                        "item": item,
+                        "metadata": metadata,
+                        "required_missing": required_missing,
+                        "modified": modified,
+                        "many_relateds": modified_relateds,
+                        "attr_signature": attr_sig,
+                    }
+                )
 
         # FIXME: also return list of invalid_rows?
         return modified_items
@@ -675,8 +628,8 @@ class ExcelManager(object):
             orig_md5 = self.signer.unsign(orig_md5)
         except itsdangerous.BadSignature:
             raise ExcelError(
-                'La signature de la 1ere ligne est incorrecte, '
-                'impossible de valider le fichier',
+                "La signature de la 1ere ligne est incorrecte, "
+                "impossible de valider le fichier"
             )
 
         if columns is None:
@@ -689,14 +642,14 @@ class ExcelManager(object):
 
         if orig_md5 != md5.hexdigest():
             raise ExcelError(
-                'L\'ordre des colonnes a changé ou leurs étiquettes ont'
-                ' été modifiées: le fichier n\'est pas valide.',
+                "L'ordre des colonnes a changé ou leurs étiquettes ont"
+                " été modifiées: le fichier n'est pas valide."
             )
 
         if orig_md5 != self.attrs_signature(columns):
             raise ExcelError(
                 'La feuille "{}" utilise une version du format d\'export qui'
-                ' n\'est plus à jour'.format(ws.name),
+                " n'est plus à jour".format(ws.name)
             )
 
     def _collect_changed_rows(self, ws, wb):
@@ -717,11 +670,11 @@ class ExcelManager(object):
             data = defaultdict(dict)
             orig_md5 = cell(0)
             is_new = False if orig_md5 else True
-            data['__metadata__'] = {
-                'row': row + 1,
-                'is_new': is_new,
-                'is_update': False,
-                'unique_id_cols': dict(),
+            data["__metadata__"] = {
+                "row": row + 1,
+                "is_new": is_new,
+                "is_update": False,
+                "unique_id_cols": dict(),
             }
 
             if not is_new:
@@ -729,14 +682,14 @@ class ExcelManager(object):
                     orig_md5 = self.signer.unsign(orig_md5)
                 except itsdangerous.BadSignature:
                     invalid_lines.append(row)
-                    logger.debug('Skip line %d: md5 signature is invalid', row)
+                    logger.debug("Skip line %d: md5 signature is invalid", row)
                     continue
 
             md5 = hashlib.md5()
             for idx, attr in enumerate(self.attrs, 1):
                 value = cell(idx)
-                if is_new and attr == 'id':
-                    data['__metadata__']['id'] = value
+                if is_new and attr == "id":
+                    data["__metadata__"]["id"] = value
                     continue
 
                 value = cell(idx)
@@ -761,14 +714,7 @@ class ExcelManager(object):
 
         return data_rows
 
-    def _collect_changed_relateds(
-        self,
-        related_cs,
-        wb,
-        data_rows,
-        id_map,
-        name_map,
-    ):
+    def _collect_changed_relateds(self, related_cs, wb, data_rows, id_map, name_map):
         """Collect changes from a many related column set.
 
         Data must be in sheet with named after `related_cs.export_label
@@ -782,10 +728,7 @@ class ExcelManager(object):
         try:
             ws = wb[related_cs.export_label]
         except KeyError:
-            logger.debug(
-                'No sheet named "%s"',
-                related_cs.export_label.encode('utf-8'),
-            )
+            logger.debug('No sheet named "%s"', related_cs.export_label.encode("utf-8"))
             return
 
         all_columns = self._columns_for_many_related(related_cs)
@@ -793,9 +736,9 @@ class ExcelManager(object):
             self._validate_import_sheet(ws, all_columns)
         except ExcelError:
             logger.warning(
-                'Many related _collect_changed_relateds: Invalid header signature, '
-                'skipping (%s)',
-                related_cs.export_label.encode('utf-8'),
+                "Many related _collect_changed_relateds: Invalid header signature, "
+                "skipping (%s)",
+                related_cs.export_label.encode("utf-8"),
             )
             return
 
@@ -814,9 +757,9 @@ class ExcelManager(object):
         for row in range(2, ws.nrows):
             cell = partial(self.get_cell_value, ws, row)
             data = defaultdict(dict)
-            data['__metadata__'] = {'row': row + 1}
+            data["__metadata__"] = {"row": row + 1}
             related_data = defaultdict(dict)
-            related_data['__metadata__'] = {'row': row + 1}
+            related_data["__metadata__"] = {"row": row + 1}
 
             orig_md5 = cell(0)
             is_new = False if orig_md5 else True
@@ -826,17 +769,14 @@ class ExcelManager(object):
                     orig_md5 = self.signer.unsign(orig_md5)
                 except itsdangerous.BadSignature:
                     invalid_lines.append(row)
-                    logger.debug('Skip line %d: md5 signature is invalid', row)
+                    logger.debug("Skip line %d: md5 signature is invalid", row)
                     continue
 
             attrs = iter(self.attrs)
             md5 = hashlib.md5()
             # main item: head data
-            for idx, attr in enumerate(
-                islice(attrs, self.MANY_SPLIT_COLUMN),
-                1,
-            ):
-                if is_new and attr == 'id':
+            for idx, attr in enumerate(islice(attrs, self.MANY_SPLIT_COLUMN), 1):
+                if is_new and attr == "id":
                     continue
                 value = cell(idx)
                 value = self.update_import_data(
@@ -866,7 +806,7 @@ class ExcelManager(object):
 
             # main item: tail data
             for idx, attr in enumerate(attrs, idx + 1):
-                if is_new and attr == 'id':
+                if is_new and attr == "id":
                     continue
                 value = cell(idx)
                 value = self.update_import_data(
@@ -894,10 +834,7 @@ class ExcelManager(object):
                 if not model_data:
                     continue
 
-                model_data.setdefault(
-                    related_cs.related_attr,
-                    [],
-                ).append(related_data)
+                model_data.setdefault(related_cs.related_attr, []).append(related_data)
 
     def _get_modified_data(self, obj, data, attr_to_col, is_new, is_update):
         """After data is read and processed from XLS cells, compare with
@@ -913,7 +850,7 @@ class ExcelManager(object):
                 # for now we can't handle this type of values
                 continue
 
-            has_data_for_new = (is_new and (attr in data) and value)
+            has_data_for_new = is_new and (attr in data) and value
 
             # Note: last test ensures (None, u'', 0, False, ...)
             # are treated as equal
@@ -953,11 +890,11 @@ class ExcelManager(object):
                             # update mode: we don't expect full records,
                             # and we don't erase # values with empty ones
                             continue
-                        modified['__required_missing__'] = True
+                        modified["__required_missing__"] = True
                         if not update.error:
                             # don't mask import error with 'required' message
                             update.error = True
-                            update.error_msg = _('This field is required')
+                            update.error_msg = _("This field is required")
 
                 if update:
                     modified[attr] = update
@@ -984,17 +921,14 @@ class ExcelManager(object):
         for item_update in data:
             is_new = item_update.id is None
             item = q.get(item_update.id) if not is_new else self.model_cls()
-            signed_attrs = '{}.{}'.format(
-                ';'.join(item_update.attrs),
-                item_update.sig,
-            )
+            signed_attrs = "{}.{}".format(";".join(item_update.attrs), item_update.sig)
             if not self.signer.validate(signed_attrs):
-                item_id = str(item_update.id) if not is_new else 'new'
+                item_id = str(item_update.id) if not is_new else "new"
                 logger.debug(
                     'Validation failed, skipping item "%s"'
-                    '\n'
+                    "\n"
                     'item_attrs="%s"'
-                    '\n'
+                    "\n"
                     'attr_sig="%s"',
                     item_id,
                     repr(item_update.attrs),
@@ -1009,7 +943,7 @@ class ExcelManager(object):
                         if attr not in item_update.attrs:
                             continue
                         col = attr_to_column[attr]
-                        if hasattr(col, 'type_') and col.type_ is not None:
+                        if hasattr(col, "type_") and col.type_ is not None:
                             value = col.type_(value)
 
                         value = col.deserialize(value)
@@ -1020,7 +954,7 @@ class ExcelManager(object):
 
                         if col.required and not update.value:
                             # FIXME: missing param
-                            raise ExcelImportError('missing required')
+                            raise ExcelImportError("missing required")
 
                         if update:
                             self._set_obj_value(item, attr, update)
@@ -1028,10 +962,9 @@ class ExcelManager(object):
                     db.session.add(item)
 
                     # import "many relateds" values
-                    many_relateds = item_update.data.get('__many_related__', {})
+                    many_relateds = item_update.data.get("__many_related__", {})
                     many_relateds_map = {
-                        cs.related_attr: cs
-                        for cs in self.MANY_RELATED_CS
+                        cs.related_attr: cs for cs in self.MANY_RELATED_CS
                     }
 
                     for rel_attr, updates in many_relateds.items():
@@ -1040,7 +973,7 @@ class ExcelManager(object):
                             logger.error(
                                 'Many relateds: columns set for "%s" not found',
                                 rel_attr,
-                                extra={'stack': True},
+                                extra={"stack": True},
                             )
                             continue
 
@@ -1051,8 +984,7 @@ class ExcelManager(object):
                         prop_key = prop.key
                         del prop
                         rel_attr_to_col = self.get_attr_to_column(
-                            cs,
-                            map_related_attr=True,
+                            cs, map_related_attr=True
                         )
 
                         for update in updates:
@@ -1063,26 +995,20 @@ class ExcelManager(object):
                                 if attr not in update.attrs:
                                     continue
                                 col = rel_attr_to_col[attr]
-                                if hasattr(
-                                    col,
-                                    'type_',
-                                ) and col.type_ is not None:
+                                if hasattr(col, "type_") and col.type_ is not None:
                                     value = col.type_(value)
 
                                 value = col.deserialize(value)
                                 import_val, current = col.data_for_import(obj)
                                 imported = manager._import_value(
-                                    obj,
-                                    col,
-                                    current,
-                                    value,
+                                    obj, col, current, value
                                 )
                                 # at this stage we don't expect anymore import errors
                                 assert not imported.error
 
                                 if col.required and not imported.value:
                                     # FIXME: missing param
-                                    raise ExcelImportError('missing required')
+                                    raise ExcelImportError("missing required")
 
                                 if imported:
                                     manager._set_obj_value(obj, attr, imported)
@@ -1092,17 +1018,15 @@ class ExcelManager(object):
             except Exception as e:
                 if isinstance(e, sa.exc.StatementError):
                     logger.error(
-                        'Import error: %s%s\n%s',
-                        text_type(e).encode('utf-8'),
+                        "Import error: %s%s\n%s",
+                        text_type(e).encode("utf-8"),
                         e.statement,
                         pprint.pformat(e.params),
                         exc_info=True,
                     )
                 else:
                     logger.error(
-                        'Import error: %s',
-                        text_type(e).encode('utf-8'),
-                        exc_info=True,
+                        "Import error: %s", text_type(e).encode("utf-8"), exc_info=True
                     )
                     raise
                 error_happened = True
@@ -1118,7 +1042,7 @@ class ExcelManager(object):
         if error_happened:
             # FIXME: include data for showing failed signatures, error during
             # attr conversion, etc
-            logger.error('Excel import error', extra={'stack': True})
+            logger.error("Excel import error", extra={"stack": True})
 
         db.session.commit()
         return dict(
@@ -1136,9 +1060,9 @@ class ExcelManager(object):
         hashing.
         """
         if value is None or isinstance(value, list):
-            value = ''
+            value = ""
 
-        value = text_type(value).encode('utf-8')
+        value = text_type(value).encode("utf-8")
         md5.update(value)
 
     def extract_signature(self, signed, signer=None):
@@ -1146,18 +1070,14 @@ class ExcelManager(object):
         if signer is None:
             signer = self.signer
         signature = signer.sep.join(signed.rsplit(signer.sep, 2)[-2:])
-        logger.debug(
-            'extract_signature: "%s" from "%s"',
-            repr(signature),
-            signed,
-        )
+        logger.debug('extract_signature: "%s" from "%s"', repr(signature), signed)
         return signature
 
     def columns_for(self, field, form):
         if field.name in self.SKIP_COLS:
             return None
 
-        custom_columns = 'columns_set_{}'.format(field.name)
+        custom_columns = "columns_set_{}".format(field.name)
         if hasattr(self, custom_columns):
             return getattr(self, custom_columns)(field, form)
 
@@ -1169,7 +1089,7 @@ class ExcelManager(object):
             label = field.label.text
             db_col = self.db_columns.get(field.name)
             column_cls, type_ = self.column_type(attr, db_col)
-            required = 'required' in field.flags
+            required = "required" in field.flags
             return column_cls(attr, label, type_, required)
 
         return None
@@ -1177,7 +1097,7 @@ class ExcelManager(object):
     def column_type(self, attr, db_col):
         column_cls = None
         type_ = None
-        custom_type = 'column_type_{}'.format(attr)
+        custom_type = "column_type_{}".format(attr)
         if hasattr(self, custom_type):
             column_cls, type_ = getattr(self, custom_type)(attr, db_col)
 
@@ -1205,7 +1125,8 @@ class ExcelManager(object):
                 if type_ is bool:
 
                     def type_(v):
-                        return v in (True, 'True', '1', 1)  # noqa
+                        return v in (True, "True", "1", 1)  # noqa
+
                 elif type_ in (datetime.date, datetime.datetime):
                     # native excel type, no need to set cast function
                     column_cls = (
@@ -1222,11 +1143,10 @@ class ExcelManager(object):
             return False
 
         attr_name = (
-            column.related_attr
-            if isinstance(column, RelatedColumnSet) else column.attr
+            column.related_attr if isinstance(column, RelatedColumnSet) else column.attr
         )
 
-        custom_import = 'import_{}'.format(attr_name)
+        custom_import = "import_{}".format(attr_name)
         if hasattr(self, custom_import):
             return True
 
@@ -1235,8 +1155,9 @@ class ExcelManager(object):
         if relationship is not None:
             target_class = relationship.mapper.class_
 
-            if (relationship.direction is sa.orm.interfaces.MANYTOONE and
-                    issubclass(target_class, BaseVocabulary)):
+            if relationship.direction is sa.orm.interfaces.MANYTOONE and issubclass(
+                target_class, BaseVocabulary
+            ):
                 return True
 
             return False  # we cannot handle relationships in a generic way
@@ -1272,9 +1193,7 @@ class ExcelManager(object):
 
         if isinstance(data, Invalid):
             raise ExcelImportError(
-                _('Invalid cell format, value: {value}').format(
-                    value=data.value,
-                ),
+                _("Invalid cell format, value: {value}").format(value=data.value),
                 imported_value=data,
             )
 
@@ -1284,7 +1203,7 @@ class ExcelManager(object):
         else:
             attr_name = column.attr
 
-        custom_import = 'import_{}'.format(attr_name)
+        custom_import = "import_{}".format(attr_name)
         if hasattr(self, custom_import):
             data, value = getattr(self, custom_import)(obj, data)
             return column.UpdateCls(attr_name, current, data, value)
@@ -1295,7 +1214,7 @@ class ExcelManager(object):
             raise ExcelImportError(
                 _(
                     'Cannot import related entity for attribute "{}" '
-                    'without a custom importer method',
+                    "without a custom importer method"
                 ).format(attr_name),
                 imported_value=value,
             )
@@ -1305,20 +1224,19 @@ class ExcelManager(object):
         except AttributeError:
             pass
         else:
-            if 'choices' in col.info:
+            if "choices" in col.info:
                 # unicode(v) will make translatable values... translated
                 rev_choices = {
-                    text_type(v): k
-                    for k, v in col.info.get('choices').items()
+                    text_type(v): k for k, v in col.info.get("choices").items()
                 }
                 if value not in rev_choices:
-                    valid = ', '.join(
+                    valid = ", ".join(
                         ('"{}"'.format(v) for v in rev_choices.keys() if v)
                     )
                     raise ExcelImportError(
-                        _(
-                            '"{value}" is invalid. Valid choices are: {valid}',
-                        ).format(value=value, valid=valid),
+                        _('"{value}" is invalid. Valid choices are: {valid}').format(
+                            value=value, valid=valid
+                        ),
                         imported_value=value,
                     )
                 value = rev_choices.get(value, value)
@@ -1339,12 +1257,12 @@ class ExcelManager(object):
         value = cell.value
 
         if isinstance(value, STRING_TYPES):
-            value = cell.value.strip().replace('\r\n', '\n')
-            if '\222' in value or '\225' in value:
+            value = cell.value.strip().replace("\r\n", "\n")
+            if "\222" in value or "\225" in value:
                 # handle weird copy paste that may happen in excel: value is not actual
                 # unicode but a cp1252 one that must be converted to unicode
-                value = value.encode('raw_unicode_escape').decode('cp1252')
-            elif value == '-':
+                value = value.encode("raw_unicode_escape").decode("cp1252")
+            elif value == "-":
                 value = ""
 
         return value
@@ -1376,8 +1294,9 @@ class ExcelManager(object):
                     value = Invalid(value)
 
         if (
-            not isinstance(value, Invalid) and value is not None and
-            column.type_ is not None
+            not isinstance(value, Invalid)
+            and value is not None
+            and column.type_ is not None
         ):
             try:
                 value = column.type_(value)
@@ -1386,17 +1305,16 @@ class ExcelManager(object):
 
         main_col = attr_to_main[attr]
         main_col_name = (
-            main_col.related_attr if isinstance(
-                main_col,
-                RelatedColumnSet,
-            ) else column.attr
+            main_col.related_attr
+            if isinstance(main_col, RelatedColumnSet)
+            else column.attr
         )
         data[main_col_name][attr] = value
 
         if attr == ID_BY_NAME_COL and not isinstance(value, Invalid):
-            data['__metadata__']['unique_name'] = value
+            data["__metadata__"]["unique_name"] = value
 
         if attr in UNIQUE_ID_COLS:
-            data['__metadata__']['unique_id_cols'][attr] = value
+            data["__metadata__"]["unique_id_cols"][attr] = value
 
         return value
