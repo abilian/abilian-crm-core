@@ -109,13 +109,13 @@ update-pot:
 	python setup.py extract_messages update_catalog compile_catalog
 
 update-deps:
-	pip install -U pip pip-tools wheel setuptools
+	pip install -qU pip pip-tools wheel setuptools
 	pip-compile -U > /dev/null
 	pip-compile > /dev/null
 	git --no-pager diff requirements.txt
 
 sync-deps:
-	pip install -U pip pip-tools wheel setuptools
+	pip install -qU pip pip-tools wheel setuptools
 	pip install -r requirements.txt
 	pip install -r etc/dev-requirements.txt
 	pip install -e .
