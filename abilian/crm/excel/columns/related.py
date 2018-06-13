@@ -81,7 +81,6 @@ class RelatedColumnSet(ColumnSet):
 
 
 class ManyRelatedColumnSet(ColumnSet):
-
     def __init__(
         self,
         related_attr,

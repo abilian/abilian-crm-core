@@ -13,6 +13,7 @@ __all__ = ("TagsColumn",)
 
 class TagsColumn(Column):
     """Columns for :class:`abilian.core.models.tags.Tag` items."""
+
     expected_cell_types = STRING_TYPES
 
     def data(self, item):

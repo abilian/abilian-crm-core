@@ -34,7 +34,6 @@ def assert_ascii(s):
 
 
 class CodeGenerator(object):
-
     def __init__(self, yaml_file=None, data=None, **options):
         self.vocabularies = {}
         self.options = options

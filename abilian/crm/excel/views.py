@@ -96,7 +96,6 @@ class BaseExcelView(ModuleView, views.View):
 
 
 class ExcelExport(BaseExcelView):
-
     def get(self):
         celery = current_app.extensions["celery"]
 
@@ -170,7 +169,6 @@ class ExcelExport(BaseExcelView):
 
 
 class TaskStatusView(views.JSONView):
-
     def data(self, *args, **kwargs):
         task_id = request.args.get("task_id")
         task = celery.result.AsyncResult(task_id)
@@ -359,6 +357,7 @@ class ExcelModuleComponent(ModuleComponent):
 
     :class:`abilian.web.frontend.Module` objects
     """
+
     name = "excel"
     EXCEL_SUPPORT_IMPORT = False
 

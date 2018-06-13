@@ -38,6 +38,7 @@ class Update(object):
 
     Used in import_data()
     """
+
     error = False
     error_msg = None
 
@@ -75,6 +76,7 @@ class Update(object):
 
 class Column(object):
     """A single column."""
+
     # a column may be declared unconditionnaly not importable
     importable = True
     expected_cell_types = None
@@ -173,6 +175,7 @@ class Column(object):
 
 class ColumnSet(object):
     """A set of columns to be added to current export / import."""
+
     # a columnset may be declared unconditionnaly not importable
     importable = True
     expected_cell_types = None

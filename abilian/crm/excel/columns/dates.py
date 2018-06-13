@@ -14,6 +14,7 @@ __all__ = ("DateTimeColumn", "DateColumn")
 
 class DateTimeColumn(Column):
     """Column for datetime.datetime objects."""
+
     _date_fmt = "%Y-%m-%d %H:%M:%S"
     expected_cell_types = TIME_TYPES
     adapt_cell_types = TIME_TYPES + NUMERIC_TYPES
@@ -45,6 +46,7 @@ class DateTimeColumn(Column):
 
 class DateColumn(DateTimeColumn):
     """Column for datetime.date objects."""
+
     _date_fmt = "%Y-%m-%d"
     _text_adapt = "%d/%m/%Y"
 

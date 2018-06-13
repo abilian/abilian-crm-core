@@ -42,6 +42,7 @@ _MARK = object()
 @total_ordering
 class YearlyBase(db.Model):
     """Base model for yearly data collections."""
+
     __abstract__ = True
 
     id = sa.Column(sa.Integer, primary_key=True, info=SYSTEM)
@@ -151,6 +152,7 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
 class YearlyAttrProxy(object):
     """Proxy model to allow get and update a particular attribute on yearly
     collections, as if it was directly a model collection."""
+
     __slots__ = ("yearly_data", "attrs")
 
     def __init__(self, yearly_data, attrs):
@@ -305,6 +307,7 @@ class YearlyCollectionProxy(dict):
 class YearlyAttribute(object):
     """An association proxy that allow multiple attributes grouping Descriptor
     for single attribute access."""
+
     __slots__ = ("_attrs", "_collection_proxy")
 
     def __init__(self, attrs):
@@ -454,7 +457,6 @@ class Yearly(Field):
 
 
 class YearlyFieldList(awbff.ModelFieldList):
-
     def process(self, formdata, data=unset_value):
         if data is not unset_value and isinstance(data, dict):
             data = data.values()

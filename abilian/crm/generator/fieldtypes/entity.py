@@ -40,7 +40,6 @@ class EntityField(Field):
     def _single_relationship(self, target_col, col_name, type_args):
         # column
         def get_column_attr(func_name, col_name, target_cls_name, target_col):
-
             def gen_column(cls):
                 # always use ALTER: when 2 entities reference each other it raises
                 # CircularDependencyError:
@@ -93,7 +92,6 @@ class EntityField(Field):
         model_name = self.model
 
         def get_m2m_attr(func_name, target_cls, secondary_tbl_name=None):
-
             def gen_m2m_relationship(cls):
                 is_self_referential = model_name == target_cls
                 src_name = cls.__tablename__

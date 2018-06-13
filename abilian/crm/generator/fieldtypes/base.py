@@ -127,6 +127,7 @@ class FormField(Registrable):
 
     int > 0 validator_length_min: int > 0.
     """
+
     #: form field type
     ff_type = wtforms.fields.TextField
 

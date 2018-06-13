@@ -12,6 +12,7 @@ __all__ = ("VocabularyColumn",)
 
 class VocabularyColumn(Column):
     """Columns for :class:`abilian.services.models.BaseVocabulary` items."""
+
     expected_cell_types = STRING_TYPES
 
     def data(self, item):

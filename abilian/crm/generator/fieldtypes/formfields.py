@@ -15,7 +15,6 @@ from .registry import form_field
 
 @form_field
 class TextField(FormField):
-
     def get_filters(self, *args, **kwargs):
         return (strip,)
 
@@ -69,7 +68,6 @@ class IntegerField(FormField):
 
 @form_field
 class EmailField(TextField):
-
     def __init__(self, model, data, *args, **kwargs):
         super(EmailField, self).__init__(model, data, *args, **kwargs)
         if "widget" not in data:
@@ -85,7 +83,6 @@ class EmailField(TextField):
 
 @form_field
 class URLField(TextField):
-
     def __init__(self, model, data, *args, **kwargs):
         super(URLField, self).__init__(model, data, *args, **kwargs)
         if "widget" not in data:
@@ -101,7 +98,6 @@ class FileField(FormField):
 
 @form_field
 class ImageField(FileField):
-
     def __init__(self, model, data, *args, **kwargs):
         if "widget" not in data:
             data["widget"] = aw_widgets.ImageInput()

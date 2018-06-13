@@ -64,7 +64,7 @@
     }
     var exported = data.exported;
     var total = data.total;
-    var percent = Math.min(Math.round(exported / total * 100), 100);
+    var percent = Math.min(Math.round((exported / total) * 100), 100);
 
     this.progressBar.attr("aria-valuenow", percent);
     percent = percent.toString() + "%";

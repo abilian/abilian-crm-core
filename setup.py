@@ -19,7 +19,6 @@ class sdist(_sdist):
 
 
 class develop(_develop):
-
     def run(self):
         _develop.run(self)
         self.run_command("compile_catalog")

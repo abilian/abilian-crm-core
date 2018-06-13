@@ -29,7 +29,6 @@ class Vocabulary(Field):
         if not self.multiple:
             # column
             def get_column_attr(func_name, col_name, target_col):
-
                 def gen_column(cls):
                     return sa.schema.Column(
                         col_name, sa.ForeignKey(target_col, ondelete="SET NULL")
@@ -43,7 +42,6 @@ class Vocabulary(Field):
 
             # relationship
             def get_rel_attr(func_name, target_cls, attr_name):
-
                 def gen_relationship(cls):
                     primary_join = "{} == {}".format(
                         cls.__name__ + "." + attr_name, target_cls.__name__ + ".id"
@@ -59,7 +57,6 @@ class Vocabulary(Field):
         else:  # m2m
 
             def get_m2m_attr(func_name, target_cls, secondary_tbl_name=None):
-
                 def gen_m2m_relationship(cls):
                     src_name = cls.__tablename__
                     target_name = target_cls.__tablename__
@@ -99,7 +96,6 @@ class VocabularyFormField(FormField):
         extra_args["get_label"] = "label"
 
         def gen_voc_query(voc_cls):
-
             def query_voc():
                 return voc_cls.query.active().all()
 
