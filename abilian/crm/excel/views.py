@@ -19,7 +19,6 @@ from abilian.web.action import Endpoint, FAIcon
 from abilian.web.blueprints import Blueprint
 from abilian.web.frontend import ModuleAction, ModuleActionDropDown, \
     ModuleActionGroupItem, ModuleComponent, ModuleView
-from abilian.web.util import capture_stream_errors
 
 from .manager import ExcelManager
 from .tasks import export as export_task
@@ -141,7 +140,6 @@ class ExcelExport(BaseExcelView):
         # of application context')"
         manager = self.manager
 
-        @capture_stream_errors(logger, "Error during XLS export")
         def response_generator():
             yield ""  # start response stream before XLS build has started. For long
             # files this avoids having downstream http server returning proxy
@@ -221,7 +219,6 @@ class ExcelImport(BaseExcelView):
             flash("Import Excel: aucun fichier fourni", "error")
             return self.redirect_to_index()
 
-        @capture_stream_errors(logger, "Error during XLS import")
         def generate():
             manager = self.manager
             filename = xls.filename
@@ -280,7 +277,6 @@ class ExcelImportValidate(BaseExcelView):
         filename = request.form.get("filename")
         redirect_to = url_for(".list_view")
 
-        @capture_stream_errors(logger, "Error during XLS import validation")
         def generate():
             # build data from form values
             f = request.form
