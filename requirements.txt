@@ -4,18 +4,18 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-abilian-core==0.10.23
-alembic==1.0.0            # via abilian-core, flask-migrate
+abilian-core==0.10.25
+alembic==1.0.1            # via abilian-core, flask-migrate
 amqp==2.3.2               # via kombu
 babel==2.6.0              # via flask-babel
 bcrypt==3.1.4             # via abilian-core
 billiard==3.5.0.4         # via celery
-bleach==2.1.4             # via abilian-core
+bleach==3.0.2             # via abilian-core
 blinker==1.4              # via flask-debugtoolbar, flask-mail
 celery==4.2.1             # via abilian-core
 cffi==1.11.5              # via bcrypt
 clamd==1.0.2              # via abilian-core
-click==6.7                # via flask
+click==7.0                # via flask
 closure==20180204         # via abilian-core
 contextlib2==0.5.5        # via raven
 cssmin==0.2.0             # via abilian-core
@@ -26,18 +26,17 @@ flask-babel==0.11.2       # via abilian-core
 flask-debugtoolbar==0.10.1  # via abilian-core
 flask-login==0.4.1        # via abilian-core
 flask-mail==0.9.1         # via abilian-core
-flask-migrate==2.2.1      # via abilian-core
+flask-migrate==2.3.0      # via abilian-core
 flask-script==2.0.6       # via abilian-core
 flask-sqlalchemy==2.1     # via abilian-core, flask-migrate
 flask-testing==0.7.1      # via abilian-core
 flask-wtf==0.12           # via abilian-core
 flask==1.0.2              # via abilian-core, flask-assets, flask-babel, flask-debugtoolbar, flask-login, flask-mail, flask-migrate, flask-script, flask-sqlalchemy, flask-testing, flask-wtf
-html5lib==1.0.1           # via bleach
 hyperlink==18.0.0         # via abilian-core
 idna==2.7                 # via hyperlink
 infinity==1.4             # via intervals
 intervals==0.8.1          # via wtforms-components
-itsdangerous==0.24        # via flask, flask-debugtoolbar
+itsdangerous==1.0.0       # via flask, flask-debugtoolbar
 jdcal==1.4                # via openpyxl
 jinja2==2.10              # via flask, flask-babel
 jsmin==2.2.2              # via abilian-core
@@ -45,13 +44,13 @@ kombu==4.2.1              # via celery
 lxml==4.2.5               # via abilian-core
 mako==1.0.7               # via alembic
 markupsafe==1.0           # via abilian-core, jinja2, mako
-numpy==1.15.1             # via pandas
-openpyxl==2.5.7
+numpy==1.15.2             # via pandas
+openpyxl==2.5.9
 pandas==0.23.4            # via abilian-core
 pathlib==1.0.1            # via abilian-core
-phonenumbers==8.9.13
+phonenumbers==8.9.16
 pillow==5.0.0
-pycparser==2.18           # via cffi
+pycparser==2.19           # via cffi
 pygeoip==0.3.2            # via abilian-core
 python-dateutil==2.7.3    # via abilian-core, alembic, pandas
 python-deprecated==1.1.0  # via abilian-core
@@ -61,16 +60,16 @@ pytz==2018.5              # via babel, celery, pandas
 pyyaml==3.13              # via abilian-core
 raven==6.9.0              # via abilian-core
 redis==2.10.6             # via abilian-core
-six==1.11.0               # via abilian-core, bcrypt, bleach, html5lib, python-dateutil, sqlalchemy-utils, validators, wtforms-alchemy, wtforms-components
-sqlalchemy-utils==0.33.4  # via wtforms-alchemy
-sqlalchemy==1.2.11        # via abilian-core, alembic, flask-sqlalchemy, sqlalchemy-utils, wtforms-alchemy, wtforms-sqlalchemy
+six==1.11.0               # via abilian-core, bcrypt, bleach, python-dateutil, sqlalchemy-utils, validators, wtforms-alchemy, wtforms-components
+sqlalchemy-utils==0.33.6  # via wtforms-alchemy
+sqlalchemy==1.2.12        # via abilian-core, alembic, flask-sqlalchemy, sqlalchemy-utils, wtforms-alchemy, wtforms-sqlalchemy
 sqlparse==0.2.4           # via abilian-core
-tqdm==4.26.0              # via abilian-core
+tqdm==4.28.1              # via abilian-core
 typing==3.6.6             # via abilian-core
 validators==0.12.2        # via wtforms-components
 vine==1.1.4               # via amqp
 webassets==0.12.1         # via flask-assets
-webencodings==0.5.1       # via html5lib
+webencodings==0.5.1       # via bleach
 werkzeug==0.14.1          # via flask, flask-debugtoolbar, flask-wtf
 whoosh==2.7.4             # via abilian-core
 wtforms-alchemy==0.16.7   # via abilian-core
