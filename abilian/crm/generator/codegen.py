@@ -93,8 +93,8 @@ class CodeGenerator(object):
                         item = item.decode("utf-8")
                     k = text_type(slugify(item, u"_"))
 
-                k = re.sub(ur"[^\w\s-]", "", k).strip().upper()
-                k = re.sub(ur"[-\s]+", "_", k)
+                k = re.sub(u"[^\\w\\s-]", "", k).strip().upper()
+                k = re.sub(u"[-\\s]+", "_", k)
                 #  avoid duplicates: suffix by a number if needed
                 current = k
                 count = 0
