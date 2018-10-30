@@ -97,6 +97,7 @@ clean:
 tidy: clean
 	rm -rf instance
 	rm -rf .tox
+	rm -rf .eggs
 
 update-pot:
 	python setup.py extract_messages update_catalog compile_catalog
