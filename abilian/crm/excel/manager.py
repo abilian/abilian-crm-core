@@ -111,6 +111,11 @@ class ExcelManager(object):
         self.columns = ColumnSet(*columns)
         # logger.debug('\nColumns:\n %s', pprint.pformat([c for c in self.columns]))
 
+        try:
+            self.signer
+        except:
+            pass
+
     def additional_columns(self):
         """To be overriden by subclasses that want to add specific columns."""
         return []
@@ -226,7 +231,7 @@ class ExcelManager(object):
                     width = max(len(l) for l in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
-                offset += len(col_data)
+                offset += len(list(col_data))
 
             cells[0].value = self.signer.sign(md5.hexdigest())
             ws.append(cells)

@@ -141,14 +141,14 @@ class ExcelExport(BaseExcelView):
         manager = self.manager
 
         def response_generator():
-            yield ""  # start response stream before XLS build has started. For long
+            # yield ""  # start response stream before XLS build has started. For long
             # files this avoids having downstream http server returning proxy
             # error to client. Unfortunatly xlwt doesn't allow writing by
             # chunks
             workbook = manager.export(objects, related_cs)
             fd = BytesIO()
             workbook.save(fd)
-            yield fd.getvalue()
+            return fd.getvalue()
 
         debug = request.args.get("debug_sql")
         if debug:

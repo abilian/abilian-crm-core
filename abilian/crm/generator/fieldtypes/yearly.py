@@ -140,9 +140,9 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
         for year, infos in reversed(self.items()):
             val = getter(infos)
             if val is not None:
-                return (year, infos)
+                return year, infos
 
-        return (None, None)
+        return None, None
 
     @staticmethod
     def _keyfunc(obj):
