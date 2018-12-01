@@ -111,10 +111,10 @@ class ExcelManager(object):
         self.columns = ColumnSet(*columns)
         # logger.debug('\nColumns:\n %s', pprint.pformat([c for c in self.columns]))
 
-        try:
-            self.signer
-        except:
-            pass
+        # try:
+        #     self.signer
+        # except:
+        #     pass
 
     def additional_columns(self):
         """To be overriden by subclasses that want to add specific columns."""
