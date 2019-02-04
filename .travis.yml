@@ -1,5 +1,11 @@
+dist: xenial
+
 language: python
-cache: pip
+cache:
+  pip: true
+  directories:
+    - node_modules
+
 python:
   - "2.7"
   - "3.6"
