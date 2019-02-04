@@ -3,6 +3,7 @@ cache: pip
 python:
   - "2.7"
   - "3.6"
+  - "3.7"
 
 env:
   - SQLALCHEMY_DATABASE_URI="sqlite://"
