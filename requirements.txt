@@ -4,22 +4,22 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-abilian-core==0.10.36
-alembic==1.0.6            # via abilian-core, flask-migrate
-amqp==2.4.0               # via kombu
+abilian-core==0.10.40
+alembic==1.0.7            # via abilian-core, flask-migrate
+amqp==2.4.1               # via kombu
 babel==2.6.0              # via flask-babel
 bcrypt==3.1.6             # via abilian-core
 billiard==3.5.0.5         # via celery
 bleach==3.1.0             # via abilian-core
-blinker==1.4              # via flask-debugtoolbar, flask-mail
+blinker==1.4              # via flask-debugtoolbar, flask-mail, sentry-sdk
 celery==4.2.1             # via abilian-core
+certifi==2018.11.29       # via sentry-sdk
 cffi==1.11.5              # via bcrypt
 clamd==1.0.2              # via abilian-core
 click==7.0                # via flask
 closure==20180204         # via abilian-core
-contextlib2==0.5.5        # via raven
 cssmin==0.2.0             # via abilian-core
-decorator==4.3.0          # via validators
+decorator==4.3.2          # via validators
 et-xmlfile==1.0.1         # via openpyxl
 flask-assets==0.12        # via abilian-core
 flask-babel==0.12.2       # via abilian-core
@@ -31,7 +31,7 @@ flask-script==2.0.6       # via abilian-core
 flask-sqlalchemy==2.1     # via abilian-core, flask-migrate
 flask-testing==0.7.1      # via abilian-core
 flask-wtf==0.12           # via abilian-core
-flask==1.0.2              # via abilian-core, flask-assets, flask-babel, flask-debugtoolbar, flask-login, flask-mail, flask-migrate, flask-script, flask-sqlalchemy, flask-testing, flask-wtf
+flask==1.0.2              # via abilian-core, flask-assets, flask-babel, flask-debugtoolbar, flask-login, flask-mail, flask-migrate, flask-script, flask-sqlalchemy, flask-testing, flask-wtf, sentry-sdk
 hyperlink==18.0.0         # via abilian-core
 idna==2.8                 # via hyperlink
 infinity==1.4             # via intervals
@@ -44,28 +44,29 @@ kombu==4.2.2.post1        # via celery
 lxml==4.3.0               # via abilian-core
 mako==1.0.7               # via alembic
 markupsafe==1.1.0         # via abilian-core, jinja2, mako
-numpy==1.16.0             # via pandas
-openpyxl==2.5.12
-pandas==0.23.4            # via abilian-core
+numpy==1.16.1             # via pandas
+openpyxl==2.5.14
+pandas==0.24.1            # via abilian-core
 pathlib==1.0.1            # via abilian-core
-phonenumbers==8.10.3
+phonenumbers==8.10.4
 pillow==5.0.0
 pycparser==2.19           # via cffi
 pygeoip==0.3.2            # via abilian-core
 python-dateutil==2.7.5    # via abilian-core, alembic, pandas
 python-deprecated==1.1.0  # via abilian-core
-python-editor==1.0.3      # via alembic
+python-editor==1.0.4      # via alembic
 python-magic==0.4.15      # via abilian-core
 pytz==2018.9              # via babel, celery, pandas
 pyyaml==3.13              # via abilian-core
-raven==6.10.0             # via abilian-core
 redis==2.10.6             # via abilian-core
+sentry-sdk[flask]==0.6.9  # via abilian-core
 six==1.12.0               # via abilian-core, bcrypt, bleach, python-dateutil, sqlalchemy-utils, validators, wtforms-alchemy, wtforms-components
 sqlalchemy-utils==0.33.11  # via wtforms-alchemy
-sqlalchemy==1.2.16        # via abilian-core, alembic, flask-sqlalchemy, sqlalchemy-utils, wtforms-alchemy, wtforms-sqlalchemy
+sqlalchemy==1.2.17        # via abilian-core, alembic, flask-sqlalchemy, sqlalchemy-utils, wtforms-alchemy, wtforms-sqlalchemy
 sqlparse==0.2.4           # via abilian-core
-tqdm==4.29.1              # via abilian-core
+tqdm==4.30.0              # via abilian-core
 typing==3.6.6             # via abilian-core
+urllib3==1.24.1           # via sentry-sdk
 validators==0.12.4        # via wtforms-components
 vine==1.2.0               # via amqp
 webassets==0.12.1         # via flask-assets
