@@ -23,7 +23,7 @@ from operator import attrgetter
 import sqlalchemy as sa
 from sqlalchemy.orm.collections import collection
 from wtforms.fields import FieldList, IntegerField
-from wtforms.utils import unset_value as unset_value
+from wtforms.utils import unset_value
 
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.widgets as aw_widgets
