@@ -4,6 +4,7 @@ generated.py
 custom.ini
 conf
 
+# dot stuff
 .idea
 .tox
 .DS_Store
@@ -14,6 +15,9 @@ conf
 .travis-solo
 .cache
 .mypy_cache
+.venv
+.pytest_cache
+.vscode
 
 whoosh*
 yaka.db
