@@ -5,4 +5,4 @@ openpyxl>=2.3.3
 # pillow==5.0.0
 abilian-core<0.11
 numpy<1.17
-pandas<0.25
+pandas<0.26
