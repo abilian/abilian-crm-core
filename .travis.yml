@@ -24,12 +24,12 @@ addons:
 
 # Install OS dependencies
 before_install:
- - pip install -U 'pip>=9.0.3' 'setuptools>=27.1.2'
+ - pip install -U pip setuptools
 
 # Install Python dependencies
 install:
+  - pip install -r requirements.txt
   - pip install -U -r etc/dev-requirements.txt
-  - pip install -U -e .
   - pip check
   - npm install -g less
   - yarn
