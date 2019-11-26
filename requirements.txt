@@ -47,7 +47,7 @@ mako==1.1.0               # via alembic
 markupsafe==1.1.1         # via abilian-core, jinja2, mako
 more-itertools==7.2.0     # via zipp
 numpy==1.16.5
-openpyxl==3.0.0
+openpyxl==3.0.2
 pandas==0.24.2
 pathlib==1.0.1            # via abilian-core
 phonenumbers==8.10.21
