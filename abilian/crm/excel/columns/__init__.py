@@ -3,13 +3,12 @@
 from __future__ import absolute_import
 
 from .base import Column, ColumnSet, Invalid
-
-from .dates import DateTimeColumn, DateColumn
-from .vocabulary import VocabularyColumn
-from .tags import TagsColumn
-from .postaladdress import PostalAddressColumn
+from .dates import DateColumn, DateTimeColumn
 from .misc import EmptyColumn, TextIntegerColumn
-from .related import RelatedColumnSet, ManyRelatedColumnSet
+from .postaladdress import PostalAddressColumn
+from .related import ManyRelatedColumnSet, RelatedColumnSet
+from .tags import TagsColumn
+from .vocabulary import VocabularyColumn
 from .yearly import ManyYearlyColumnSet
 
 __all__ = (
