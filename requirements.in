@@ -6,3 +6,4 @@ openpyxl>=2.3.3
 abilian-core<0.11
 numpy<1.17
 pandas<0.25
+more-itertools<6
