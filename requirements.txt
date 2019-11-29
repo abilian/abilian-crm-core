@@ -53,7 +53,7 @@ openpyxl==2.6.4
 pandas==0.24.2
 pathlib2==2.3.5           # via importlib-metadata
 pathlib==1.0.1            # via abilian-core
-phonenumbers==8.10.23
+phonenumbers==8.11.0
 pillow==6.2.1             # via abilian-core
 pycparser==2.19           # via cffi
 pygeoip==0.3.2            # via abilian-core
