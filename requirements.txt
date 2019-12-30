@@ -48,7 +48,7 @@ lxml==4.4.2               # via abilian-core
 mako==1.1.0               # via alembic
 markupsafe==1.1.1         # via abilian-core, jinja2, mako
 more-itertools==5.0.0
-numpy==1.16.5
+numpy==1.16.6
 openpyxl==2.6.4
 pandas==0.24.2
 pathlib2==2.3.5           # via importlib-metadata
