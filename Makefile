@@ -96,7 +96,7 @@ clean:
 
 tidy: clean
 	rm -rf instance
-	rm -rf .tox
+	rm -rf .tox .nox
 	rm -rf .eggs
 
 update-pot:
