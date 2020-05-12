@@ -56,11 +56,10 @@ lint: lint-python lint-js
 lint-python:
 	@echo "--> Linting Python files"
 	flake8 abilian *.py
-	# pylint --py3k abilian *.py
 
 lint-js:
 	@echo "--> Linting JavaScript files"
-	node_modules/.bin/eslint abilian
+	npx eslint abilian
 
 format: format-py format-js
 
@@ -73,8 +72,7 @@ format-imports:
 	isort -rc abilian *.py
 
 format-js:
-	./node_modules/.bin/prettier --trailing-comma es5 --write \
-                'abilian/**/*.js'
+	npx prettier --write 'abilian/**/*.js'
 
 clean:
 	find . -name "*.pyc" | xargs rm -f

@@ -1,7 +1,7 @@
-(function(factory) {
+(function (factory) {
   "use strict";
   require(["AbilianWidget", "jquery", "bootbox"], factory);
-})(function(Abilian, $, bootbox) {
+})(function (Abilian, $, bootbox) {
   "use strict";
 
   function TaskProgress(node, options) {
@@ -13,7 +13,7 @@
     this.intervalId = window.setInterval(this.doRequest.bind(this), 500);
   }
 
-  TaskProgress.prototype.doRequest = function() {
+  TaskProgress.prototype.doRequest = function () {
     $.ajax({
       url: Abilian.api.crm.excel.taskStatusUrl,
       data: { task_id: this.taskId },
@@ -24,11 +24,11 @@
     });
   };
 
-  TaskProgress.prototype.stopPolling = function() {
+  TaskProgress.prototype.stopPolling = function () {
     window.clearInterval(this.intervalId);
   };
 
-  TaskProgress.prototype.ajaxSuccess = function(data, status, xhr) {
+  TaskProgress.prototype.ajaxSuccess = function (data, status, xhr) {
     var taskState = data.state;
 
     switch (taskState) {
@@ -52,13 +52,13 @@
     this.state = data.state;
   };
 
-  TaskProgress.prototype.start = function(data) {
+  TaskProgress.prototype.start = function (data) {
     this.node.removeClass("progress-bar-striped");
     this.progressBar.width("0%");
     this.progressBar.text("0%");
   };
 
-  TaskProgress.prototype.updateProgress = function(data) {
+  TaskProgress.prototype.updateProgress = function (data) {
     if (data.state != this.state) {
       this.start();
     }
@@ -72,7 +72,7 @@
     this.progressBar.text(percent);
   };
 
-  TaskProgress.prototype.updateFinished = function(data) {
+  TaskProgress.prototype.updateFinished = function (data) {
     this.stopPolling();
     this.progressBar.attr("aria-valuenow", 100);
     this.progressBar.width("100%");
@@ -88,8 +88,8 @@
     filenameWrapper.text(filename);
     downloadBtn.parent().removeClass("hide");
 
-    downloadBtn.on("click", function() {
-      window.setTimeout(function() {
+    downloadBtn.on("click", function () {
+      window.setTimeout(function () {
         window.location = indexUrl;
       }, 500);
     });
@@ -99,7 +99,7 @@
     //        window.focus();
   };
 
-  TaskProgress.prototype.notifyFailure = function(data) {
+  TaskProgress.prototype.notifyFailure = function (data) {
     var indexUrl = this.indexUrl;
     var message = $("<p></p>")
       .addClass("text-warning")
