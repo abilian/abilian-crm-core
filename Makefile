@@ -96,6 +96,7 @@ tidy: clean
 	rm -rf instance
 	rm -rf .tox .nox
 	rm -rf .eggs
+	rm -rf node_modules
 
 update-pot:
 	python setup.py extract_messages update_catalog compile_catalog

@@ -9,6 +9,7 @@ def lint(session):
     session.install("poetry", "psycopg2-binary")
     session.run("poetry", "install", "-q")
     session.run("yarn", external="True")
+
     session.run("make", "lint-ci")
 
 
