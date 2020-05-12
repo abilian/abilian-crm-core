@@ -1,0 +1,42 @@
+[tool]
+[tool.poetry]
+name = "abilian-crm-core"
+version = "0.1.26.dev13+g6764a32"
+description = "Core framework for CRM applications"
+authors = ["Stefane Fermigier", "Abilian SAS"]
+license = "LGPL"
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Framework :: Flask"
+]
+homepage = "https://github.com/abilian/abilian-crm-core"
+
+[tool.poetry.dependencies]
+python = "*"
+abilian-core = "<0.11"
+more-itertools = "<6"
+numpy = "<1.17"
+openpyxl = ">=2.3.3"
+pandas = "<0.25"
+phonenumbers = ">=7.1.0"
+werkzeug = "<1"
+
+[tool.poetry.dev-dependencies]
+docformatter = "*"
+flake8 = "*"
+isort = "==4.3.4"
+mock = ">=1.0.1"
+pre-commit = "*"
+pylint = "*"
+pytest = ">=2.4.0"
+pytest-cov = "*"
+pytest-xdist = "*"
+requests = "*"
+restructuredtext-lint = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
