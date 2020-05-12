@@ -7,7 +7,7 @@ import setuptools
 from setuptools.command.develop import develop as _develop
 from setuptools.command.sdist import sdist as _sdist
 
-requirements = [l.strip() for l in open("requirements.in") if l.strip()]
+requirements = [line.strip() for line in open("requirements.in") if line.strip()]
 
 
 class build(_build):

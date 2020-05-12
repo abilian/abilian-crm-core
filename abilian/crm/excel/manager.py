@@ -228,7 +228,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split("\n")) + 1
+                    width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 offset += len(list(col_data))
@@ -311,7 +311,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split("\n")) + 1
+                    width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 data = related_columns_set.data(item)
@@ -325,7 +325,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split("\n")) + 1
+                    width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 for c, val in enumerate(tail_data, col_offset):
@@ -341,7 +341,7 @@ class ExcelManager(object):
 
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split("\n")) + 1
+                    width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 cells[0].value = self.signer.sign(md5.hexdigest())
@@ -363,7 +363,7 @@ class ExcelManager(object):
                     col_offset += 1
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split("\n")) + 1
+                    width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 for _ignored in range(related_columns_len):
@@ -378,7 +378,7 @@ class ExcelManager(object):
                     self.update_md5(md5, value)
                     # estimate width
                     value = text_type(cell.value)
-                    width = max(len(l) for l in value.split("\n")) + 1
+                    width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
                 cells[0].value = self.signer.sign(md5.hexdigest())
@@ -431,7 +431,7 @@ class ExcelManager(object):
 
         for idx, cell in enumerate(cells, 1):
             letter = get_column_letter(idx)
-            width = max(len(l) for l in cell.value.split("\n")) + 1
+            width = max(len(line) for line in cell.value.split("\n")) + 1
             if width > MAX_WIDTH:
                 overflow = max(overflow, width)
                 width = MAX_WIDTH
