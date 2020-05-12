@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import sqlalchemy as sa
 import sqlalchemy.ext
@@ -20,7 +18,7 @@ class EntityField(Field):
     default_ff_type = "EntityFormField"
 
     def __init__(self, model, data, *args, **kwargs):
-        super(EntityField, self).__init__(model, data, *args, **kwargs)
+        super().__init__(model, data, *args, **kwargs)
         self.target_cls = str(data.get("target", "Entity").strip()) or "Entity"
 
     def get_model_attributes(self, *args, **kwargs):
@@ -34,8 +32,7 @@ class EntityField(Field):
             else self._single_relationship(target_col, col_name, type_args)
         )
 
-        for result in res_iter:
-            yield result
+        yield from res_iter
 
     def _single_relationship(self, target_col, col_name, type_args):
         # column
@@ -45,7 +42,7 @@ class EntityField(Field):
                 # CircularDependencyError:
                 fk_kw = dict(
                     use_alter=True,
-                    name="{}_{}_fkey".format(cls.__name__.lower(), col_name),
+                    name=f"{cls.__name__.lower()}_{col_name}_fkey",
                 )
 
                 fk_kw["ondelete"] = "SET NULL"
@@ -67,9 +64,9 @@ class EntityField(Field):
                 local = cls.__name__ + "." + col_name
                 remote = target_cls + ".id"
                 if model_name == target_cls:
-                    local = "foreign({})".format(local)
-                    remote = "remote({})".format(remote)
-                kw["primaryjoin"] = "{} == {}".format(local, remote)
+                    local = f"foreign({local})"
+                    remote = f"remote({remote})"
+                kw["primaryjoin"] = f"{local} == {remote}"
 
                 if "backref" in type_args:
                     backref_name = type_args["backref"]
@@ -146,7 +143,7 @@ class EntityFormField(FormField):
     ff_type = awbff.JsonSelect2Field
 
     def __init__(self, model, data, *args, **kwargs):
-        super(EntityFormField, self).__init__(model, data, *args, **kwargs)
+        super().__init__(model, data, *args, **kwargs)
         self.module_endpoint = data.get("endpoint", self.name.lower())
 
     def get_type(self, *args, **kwargs):
@@ -155,7 +152,7 @@ class EntityFormField(FormField):
         )
 
     def get_extra_args(self, *args, **kwargs):
-        extra_args = super(EntityFormField, self).get_extra_args(*args, **kwargs)
+        extra_args = super().get_extra_args(*args, **kwargs)
         target = extra_args["model_class"] = self.data["target"]
         ajax_endpoint = self.data.get("ajax_endpoint", target.lower() + ".json_search")
         extra_args["ajax_source"] = Endpoint(ajax_endpoint)

@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 from abilian.web.action import FAIcon
 from abilian.web.forms.widgets import TextInput
@@ -14,6 +12,6 @@ class PhoneNumberWidget(TextInput):
     def render_view(self, field, **kwargs):
         data = field.data
         if not data:
-            return u""
+            return ""
 
         return format_phonenumber(data)

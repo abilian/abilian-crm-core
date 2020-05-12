@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function, unicode_literals
 
 from flask import current_app
 from openpyxl.cell.cell import STRING_TYPES
@@ -22,7 +20,7 @@ class TagsColumn(Column):
             yield None, None
 
         value = sorted(ext.entity_tags(item))
-        import_value = "; ".join(text_type(t) for t in value) if value else ""
+        import_value = "; ".join(str(t) for t in value) if value else ""
         yield import_value, value
 
     def deserialize(self, value):

@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 from io import BytesIO
@@ -10,7 +8,6 @@ import celery
 from flask import current_app, flash, render_template, request
 from flask_login import current_user
 from six import text_type
-from six.moves import filter
 
 from abilian.core.util import fqcn
 from abilian.i18n import _, _l
@@ -29,7 +26,7 @@ logger = logging.getLogger(__name__)
 bp = Blueprint("crm_excel", __name__, url_prefix="/excel")
 
 
-class _ItemUpdate(object):
+class _ItemUpdate:
     """Holds item update data.
 
     Used in import views.
@@ -60,7 +57,7 @@ class BaseExcelView(ModuleView, views.View):
         *args,
         **kwargs
     ):
-        super(BaseExcelView, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.component = self.module.get_component(component)
         self.Form = Form if Form is not None else self.component.export_form
 
@@ -238,7 +235,7 @@ class ExcelImport(BaseExcelView):
             #     logger.error(e, exc_info=True)
             except Exception as e:
                 error = True
-                flash(text_type(e), "error")
+                flash(str(e), "error")
 
             if modified_items is not None and len(modified_items) == 0:
                 flash(
@@ -284,7 +281,7 @@ class ExcelImportValidate(BaseExcelView):
             item_count = int(f.get("item_count"))
 
             for idx in range(1, item_count + 1):
-                key = "item_{:d}_{{}}".format(idx)
+                key = f"item_{idx:d}_{{}}"
                 item_id = f.get(key.format("id"))
                 if item_id is not None:
                     item_id = int(item_id)
@@ -364,7 +361,7 @@ class ExcelModuleComponent(ModuleComponent):
     export_form = None
 
     def __init__(self, export_form=None, excel_manager=None, *args, **kwargs):
-        super(ExcelModuleComponent, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if export_form is not None:
             self.export_form = export_form
@@ -372,7 +369,7 @@ class ExcelModuleComponent(ModuleComponent):
             self.excel_manager = excel_manager
 
     def init(self, *args, **kwargs):
-        super(ExcelModuleComponent, self).init(*args, **kwargs)
+        super().init(*args, **kwargs)
         module = self.module
         endpoint = module.endpoint
 

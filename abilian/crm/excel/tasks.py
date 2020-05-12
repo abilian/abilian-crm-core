@@ -1,6 +1,4 @@
-# coding=utf-8
 """Celery task for async export."""
-from __future__ import absolute_import, print_function, unicode_literals
 
 from io import BytesIO
 from time import gmtime, strftime
@@ -8,7 +6,6 @@ from time import gmtime, strftime
 from celery import shared_task
 from flask import current_app, request
 from flask_login import login_user
-from six.moves import filter
 from six.moves.urllib.parse import urlparse
 from werkzeug.utils import import_string
 

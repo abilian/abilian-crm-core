@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import sqlalchemy as sa
 import sqlalchemy.ext
@@ -33,7 +31,7 @@ class _PhoneNumberField(Field):
 
         def gen_column(cls):
             fk_kw = dict(
-                name=u"{}_{}_fkey".format(cls.__name__.lower(), col_name),
+                name=f"{cls.__name__.lower()}_{col_name}_fkey",
                 use_alter=True,
                 ondelete="SET NULL",
             )
@@ -49,7 +47,7 @@ class _PhoneNumberField(Field):
             kw = dict(uselist=False)
             local = cls.__name__ + "." + col_name
             remote = str(PhoneNumber.id)
-            kw["primaryjoin"] = "{} == {}".format(local, remote)
+            kw["primaryjoin"] = f"{local} == {remote}"
             return sa.orm.relationship(PhoneNumber, **kw)
 
         gen_relationship.func_name = self.name
@@ -86,7 +84,7 @@ class PhoneNumberFormField(FormField):
         return awbff.ModelFieldList if self.multiple else self.ff_type
 
     def get_extra_args(self, *args, **kwargs):
-        extra_args = super(PhoneNumberFormField, self).get_extra_args(*args, **kwargs)
+        extra_args = super().get_extra_args(*args, **kwargs)
         if self.multiple:
             extra_args["unbound_field"] = awbff.ModelFormField(PhoneNumberForm)
             extra_args["min_entries"] = 1

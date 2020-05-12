@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function, unicode_literals
 
 from openpyxl.cell.cell import NUMERIC_TYPES, STRING_TYPES
 from six import text_type
@@ -16,7 +14,7 @@ class EmptyColumn(Column):
     importable = False
 
     def __init__(self, label=""):
-        super(EmptyColumn, self).__init__("", label=label, type_=None)
+        super().__init__("", label=label, type_=None)
 
     def data(self, item):
         yield None, None
@@ -30,5 +28,5 @@ class TextIntegerColumn(Column):
 
     def _adapt_from_cell(self, value, cell_type, workbook):
         if isinstance(value, float):
-            value = text_type(int(value))
+            value = str(int(value))
         return value, value

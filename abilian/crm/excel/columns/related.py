@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function, unicode_literals
 
 from operator import attrgetter
 
@@ -24,7 +22,7 @@ class RelatedColumnSet(ColumnSet):
         self.get_related = attrgetter(self.related_attr)
 
         if label is None:
-            label = text_type(related_attr).replace("_", " ").replace(".", " ")
+            label = str(related_attr).replace("_", " ").replace(".", " ")
 
         self.label = self.related_label = label
         self.required = required
@@ -47,7 +45,7 @@ class RelatedColumnSet(ColumnSet):
     @property
     def attrs(self):
         for attr in ColumnSet.attrs.fget(self):
-            yield "{}.{}".format(self.related_attr, attr)
+            yield f"{self.related_attr}.{attr}"
 
     @property
     def labels(self):
@@ -55,7 +53,7 @@ class RelatedColumnSet(ColumnSet):
             if not self.related_label:
                 yield label
             else:
-                yield "{}:\n {}".format(self.related_label, label)
+                yield f"{self.related_label}:\n {label}"
 
     def data(self, item):
         # if item is None we must nonetheless call data() for all columns and
@@ -138,11 +136,9 @@ class ManyRelatedColumnSet(ColumnSet):
             attrs = attrs[1:]
             for item in objs:
                 # python 2.7 doesn't have "yield from"...
-                for yielded_item in iter_obj(item, attrs):
-                    yield yielded_item
+                yield from iter_obj(item, attrs)
 
-        for item in iter_obj(obj, path):
-            yield item
+        yield from iter_obj(obj, path)
 
     @property
     def labels(self):
@@ -150,4 +146,4 @@ class ManyRelatedColumnSet(ColumnSet):
             if not self.related_label:
                 yield label
             else:
-                yield "{}:\n {}".format(self.related_label, label)
+                yield f"{self.related_label}:\n {label}"

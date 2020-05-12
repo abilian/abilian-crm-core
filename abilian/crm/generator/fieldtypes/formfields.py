@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import wtforms.fields
 import wtforms.widgets as wtf_widgets
@@ -28,7 +26,7 @@ class BooleanField(FormField):
         return ()
 
     def setup_widgets(self, extra_args):
-        super(BooleanField, self).setup_widgets(extra_args)
+        super().setup_widgets(extra_args)
 
         if "widget" not in extra_args:
             kwargs = {}
@@ -61,7 +59,7 @@ class IntegerField(FormField):
     ff_type = wtforms.fields.IntegerField
 
     def __init__(self, model, data, *args, **kwargs):
-        super(IntegerField, self).__init__(model, data, *args, **kwargs)
+        super().__init__(model, data, *args, **kwargs)
         if "widget" not in data:
             data["widget"] = wtf_widgets.html5.NumberInput()
 
@@ -69,7 +67,7 @@ class IntegerField(FormField):
 @form_field
 class EmailField(TextField):
     def __init__(self, model, data, *args, **kwargs):
-        super(EmailField, self).__init__(model, data, *args, **kwargs)
+        super().__init__(model, data, *args, **kwargs)
         if "widget" not in data:
             data["widget"] = aw_widgets.EmailWidget()
         if "view_widget" not in data:
@@ -84,7 +82,7 @@ class EmailField(TextField):
 @form_field
 class URLField(TextField):
     def __init__(self, model, data, *args, **kwargs):
-        super(URLField, self).__init__(model, data, *args, **kwargs)
+        super().__init__(model, data, *args, **kwargs)
         if "widget" not in data:
             data["widget"] = wtf_widgets.html5.URLInput()
         if "view_widget" not in data:
@@ -101,4 +99,4 @@ class ImageField(FileField):
     def __init__(self, model, data, *args, **kwargs):
         if "widget" not in data:
             data["widget"] = aw_widgets.ImageInput()
-        super(ImageField, self).__init__(model, data, *args, **kwargs)
+        super().__init__(model, data, *args, **kwargs)

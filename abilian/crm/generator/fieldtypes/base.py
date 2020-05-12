@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import re
 from collections import OrderedDict
@@ -31,7 +29,7 @@ def assert_valid_identifier(s):
 class Field(Registrable):
 
     name = None
-    label = u""
+    label = ""
 
     #: sqlalchemy column type
     sa_type = None  # type: Optional[staticmethod]
@@ -48,7 +46,7 @@ class Field(Registrable):
         self.generator = generator
         self.name = data["name"]
         assert_valid_identifier(self.name)
-        self.label = data.get("description", u"")
+        self.label = data.get("description", "")
         self.sa_type_options = data.get("type_options", dict())
         self.required = data.get("required", False)
         self.unique = data.get("unique", False)
@@ -137,7 +135,7 @@ class FormField(Registrable):
         self.generator = generator
         self.name = data["name"]
         assert_valid_identifier(self.name)
-        self.label = data.get("description", u"")
+        self.label = data.get("description", "")
         self.sa_type_options = data.get("type_options", dict())
         self.required = data.get("required", False)
         self.multiple = data.get("multiple", False)
@@ -174,20 +172,20 @@ class FormField(Registrable):
         # extra validators & filters specified in data
         d = self.data
 
-        description = d.get("help", u"").strip()
+        description = d.get("help", "").strip()
         if description:
             extra_args["description"] = description
 
         if "validators" in d:
             validators = d["validators"]
-            if isinstance(validators, string_types):
+            if isinstance(validators, str):
                 validators = [validators]
             validators = [VALIDATORS[v]() for v in validators]
             extra_args["validators"].extend(validators)
 
         if "filters" in d:
             filters = d["filters"]
-            if isinstance(filters, string_types):
+            if isinstance(filters, str):
                 filters = [filters]
             filters = [FORM_FILTERS[f] for f in filters]
             extra_args["filters"].extend(filters)
@@ -229,10 +227,10 @@ class FormField(Registrable):
 
             options = list(d["from_list"])
             if "required" in d:
-                if options[0][0] == u"":
+                if options[0][0] == "":
                     options.pop(0)
-            elif options[0] != u"":
-                options.insert(0, (u"", u""))
+            elif options[0] != "":
+                options.insert(0, ("", ""))
 
             extra_args["choices"] = options
 
@@ -261,7 +259,7 @@ class FormField(Registrable):
 
             widget = d[widget_arg]
 
-            if isinstance(widget, string_types):
+            if isinstance(widget, str):
                 if widget not in WIDGETS:
                     raise ValueError(
                         "Invalid {}: {}".format(widget_arg, widget.encode("utf-8"))

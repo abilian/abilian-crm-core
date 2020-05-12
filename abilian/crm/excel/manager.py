@@ -1,7 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import datetime
 import hashlib
@@ -24,7 +21,6 @@ from openpyxl.cell.cell import STRING_TYPES, WriteOnlyCell
 from openpyxl.utils import get_column_letter, units
 from openpyxl.utils.exceptions import IllegalCharacterError
 from six import text_type
-from six.moves import zip
 
 from abilian.core.extensions import db
 from abilian.core.sqlalchemy import JSON as JSONType
@@ -48,7 +44,7 @@ MIN_WIDTH = 3
 MAX_WIDTH = units.BASE_COL_WIDTH * 2
 
 
-class ExcelManager(object):
+class ExcelManager:
     """import/export data to excel files, from/to model."""
 
     XF_HEADER = {
@@ -227,7 +223,7 @@ class ExcelManager(object):
                     self.update_md5(md5, import_val)
 
                     # estimate width
-                    value = text_type(cell.value)
+                    value = str(cell.value)
                     width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -310,7 +306,7 @@ class ExcelManager(object):
                     col_offset += 1
 
                     # estimate width
-                    value = text_type(cell.value)
+                    value = str(cell.value)
                     width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -324,7 +320,7 @@ class ExcelManager(object):
                     col_offset += 1
 
                     # estimate width
-                    value = text_type(cell.value)
+                    value = str(cell.value)
                     width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -340,7 +336,7 @@ class ExcelManager(object):
                     self.update_md5(md5, value)
 
                     # estimate width
-                    value = text_type(cell.value)
+                    value = str(cell.value)
                     width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -362,7 +358,7 @@ class ExcelManager(object):
                     self.update_md5(md5, value)
                     col_offset += 1
                     # estimate width
-                    value = text_type(cell.value)
+                    value = str(cell.value)
                     width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -377,7 +373,7 @@ class ExcelManager(object):
                     cells.append(cell)
                     self.update_md5(md5, value)
                     # estimate width
-                    value = text_type(cell.value)
+                    value = str(cell.value)
                     width = max(len(line) for line in value.split("\n")) + 1
                     cols_width[c] = max(width, cols_width[c])
 
@@ -414,7 +410,7 @@ class ExcelManager(object):
         md5 = hashlib.md5()
         cells = [WriteOnlyCell(ws)]
         for _c, label in enumerate(columns.labels, 1):
-            cell = WriteOnlyCell(ws, value=text_type(label))
+            cell = WriteOnlyCell(ws, value=str(label))
             cell.font = self.XF_HEADER["font"]
             cell.alignment = self.XF_HEADER["alignment"]
             cells.append(cell)
@@ -552,7 +548,7 @@ class ExcelManager(object):
                                 'Multiple items match %s[%s] == ""%s"',
                                 self.model_cls.__name__,
                                 col_name,
-                                text_type(val).encode("utf-8"),
+                                str(val).encode("utf-8"),
                                 extra={"stack": True},
                             )
                         else:
@@ -1024,14 +1020,14 @@ class ExcelManager(object):
                 if isinstance(e, sa.exc.StatementError):
                     logger.error(
                         "Import error: %s%s\n%s",
-                        text_type(e).encode("utf-8"),
+                        str(e).encode("utf-8"),
                         e.statement,
                         pprint.pformat(e.params),
                         exc_info=True,
                     )
                 else:
                     logger.error(
-                        "Import error: %s", text_type(e).encode("utf-8"), exc_info=True
+                        "Import error: %s", str(e).encode("utf-8"), exc_info=True
                     )
                     raise
                 error_happened = True
@@ -1067,7 +1063,7 @@ class ExcelManager(object):
         if value is None or isinstance(value, list):
             value = ""
 
-        value = text_type(value).encode("utf-8")
+        value = str(value).encode("utf-8")
         md5.update(value)
 
     def extract_signature(self, signed, signer=None):
@@ -1082,7 +1078,7 @@ class ExcelManager(object):
         if field.name in self.SKIP_COLS:
             return None
 
-        custom_columns = "columns_set_{}".format(field.name)
+        custom_columns = f"columns_set_{field.name}"
         if hasattr(self, custom_columns):
             return getattr(self, custom_columns)(field, form)
 
@@ -1102,7 +1098,7 @@ class ExcelManager(object):
     def column_type(self, attr, db_col):
         column_cls = None
         type_ = None
-        custom_type = "column_type_{}".format(attr)
+        custom_type = f"column_type_{attr}"
         if hasattr(self, custom_type):
             column_cls, type_ = getattr(self, custom_type)(attr, db_col)
 
@@ -1151,7 +1147,7 @@ class ExcelManager(object):
             column.related_attr if isinstance(column, RelatedColumnSet) else column.attr
         )
 
-        custom_import = "import_{}".format(attr_name)
+        custom_import = f"import_{attr_name}"
         if hasattr(self, custom_import):
             return True
 
@@ -1208,7 +1204,7 @@ class ExcelManager(object):
         else:
             attr_name = column.attr
 
-        custom_import = "import_{}".format(attr_name)
+        custom_import = f"import_{attr_name}"
         if hasattr(self, custom_import):
             data, value = getattr(self, custom_import)(obj, data)
             return column.UpdateCls(attr_name, current, data, value)
@@ -1232,11 +1228,11 @@ class ExcelManager(object):
             if "choices" in col.info:
                 # unicode(v) will make translatable values... translated
                 rev_choices = {
-                    text_type(v): k for k, v in col.info.get("choices").items()
+                    str(v): k for k, v in col.info.get("choices").items()
                 }
                 if value not in rev_choices:
                     valid = ", ".join(
-                        ('"{}"'.format(v) for v in rev_choices.keys() if v)
+                        f'"{v}"' for v in rev_choices.keys() if v
                     )
                     raise ExcelImportError(
                         _('"{value}" is invalid. Valid choices are: {valid}').format(

@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import
 
 # register fields
 from . import entity, formfields, phonenumber, postaladdress, simple, vocabulary, yearly

@@ -1,12 +1,10 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 from functools import partial
 from typing import Dict, Optional, Text
 
 
-class Registrable(object):
+class Registrable:
     #: if not `None`, this is used as __fieldtype__()
     __fieldname__ = None  # type: Optional[Text]
 
@@ -26,7 +24,7 @@ def _register(registry, cls):
     """class decorator for `Registrable` subclasses."""
     assert issubclass(cls, Registrable)
 
-    reg_attr = "_{}_registered".format(cls.__name__)
+    reg_attr = f"_{cls.__name__}_registered"
     if getattr(cls, reg_attr, False):
         return cls
 

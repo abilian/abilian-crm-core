@@ -1,4 +1,3 @@
-# coding=utf-8
 """Field for yearly data.
 
 Use to add attributes values by year; might be several in a row. If model has
@@ -15,7 +14,6 @@ In yml they are specified like this:
             type: Integer
           - name: ...
 """
-from __future__ import absolute_import, print_function
 
 from functools import total_ordering
 from operator import attrgetter
@@ -65,15 +63,15 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
     """
 
     def __init__(self, yearly_cls):
-        super(YearlyCollection, self).__init__(YearlyCollection._keyfunc)
+        super().__init__(YearlyCollection._keyfunc)
         self.yearly_cls = yearly_cls
 
     @collection.internally_instrumented
     def __setitem__(self, key, value, _sa_initiator=None):
         if not isinstance(key, int):
-            raise ValueError("Key must be an integer, key={!r}".format(key))
+            raise ValueError(f"Key must be an integer, key={key!r}")
         value = self._value_fromdict(key, value)
-        return super(YearlyCollection, self).__setitem__(key, value, _sa_initiator)
+        return super().__setitem__(key, value, _sa_initiator)
 
     @collection.internally_instrumented
     def setdefault(self, key, default=None):
@@ -110,29 +108,26 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
         return value
 
     def keys(self):
-        return sorted(super(YearlyCollection, self).keys())
+        return sorted(super().keys())
 
     def iterkeys(self):
-        for key in self.keys():
-            yield key
+        yield from self.keys()
 
     __iter__ = iterkeys
 
     def values(self):
         return sorted(
-            super(YearlyCollection, self).values(), key=YearlyCollection._keyfunc
+            super().values(), key=YearlyCollection._keyfunc
         )
 
     def itervalues(self):
-        for v in self.values():
-            yield v
+        yield from self.values()
 
     def items(self):
         return [(obj.year, obj) for obj in self.values()]
 
     def iteritems(self):
-        for item in self.items():
-            yield item
+        yield from self.items()
 
     def latest(self, attr):
         """Return the most recent tuple `(year, value)` for given :attr:"""
@@ -149,7 +144,7 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
         return obj.year
 
 
-class YearlyAttrProxy(object):
+class YearlyAttrProxy:
     """Proxy model to allow get and update a particular attribute on yearly
     collections, as if it was directly a model collection."""
 
@@ -188,7 +183,7 @@ class YearlyAttrProxy(object):
         if name != "attrs" and (name == "year" or name in self.attrs):
             return self.yearly_data.__setattr__(name, value)
 
-        return super(YearlyAttrProxy, self).__setattr__(name, value)
+        return super().__setattr__(name, value)
 
     def __bool__(self):
         return any(
@@ -226,16 +221,16 @@ class YearlyCollectionProxy(dict):
     def __getitem__(self, key):
         if key not in self.__collection:
             if key in self:
-                super(YearlyCollectionProxy, self).__delitem__(key)
+                super().__delitem__(key)
             raise KeyError
 
         year_data = self.__collection[key]
         if key not in self:
-            super(YearlyCollectionProxy, self).__setitem__(
+            super().__setitem__(
                 key, YearlyAttrProxy(year_data, self.__attrs)
             )
 
-        return super(YearlyCollectionProxy, self).__getitem__(key)
+        return super().__getitem__(key)
 
     def __setitem__(self, key, value):
         if isinstance(value, YearlyAttrProxy):
@@ -264,7 +259,7 @@ class YearlyCollectionProxy(dict):
         if value is not None:
             value.clear()
             del value
-        super(YearlyCollectionProxy, self).__delitem__(key)
+        super().__delitem__(key)
 
     def setdefault(self, key, default=None):
         """D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D."""
@@ -276,22 +271,20 @@ class YearlyCollectionProxy(dict):
         return self.__getitem__(key)
 
     def keys(self):
-        return sorted(super(YearlyCollectionProxy, self).keys())
+        return sorted(super().keys())
 
     def iterkeys(self):
-        for key in self.keys():
-            yield key
+        yield from self.keys()
 
     __iter__ = iterkeys
 
     def values(self):
         return sorted(
-            super(YearlyCollectionProxy, self).values(), key=YearlyCollection._keyfunc
+            super().values(), key=YearlyCollection._keyfunc
         )
 
     def itervalues(self):
-        for v in self.values():
-            yield v
+        yield from self.values()
 
     def items(self):
         return [
@@ -300,11 +293,10 @@ class YearlyCollectionProxy(dict):
         ]
 
     def iteritems(self):
-        for item in self.items():
-            yield item
+        yield from self.items()
 
 
-class YearlyAttribute(object):
+class YearlyAttribute:
     """An association proxy that allow multiple attributes grouping Descriptor
     for single attribute access."""
 
@@ -351,21 +343,21 @@ class Yearly(Field):
     default_ff_type = "YearlyFormField"
 
     def __init__(self, model, data, generator, *args, **kwargs):
-        super(Yearly, self).__init__(model, data, generator, *args, **kwargs)
+        super().__init__(model, data, generator, *args, **kwargs)
         self.data["type_args"]["name"] = self.name
         generator.add_model_finalizer(self.finalize)
 
         if "yearly" not in generator.data:
             model_lower = model.lower()
-            related_attr_id = "{}_id".format(model_lower)
-            tablename = "{}_yearly".format(model_lower)
-            type_name = "{}YearlyData".format(model)
+            related_attr_id = f"{model_lower}_id"
+            tablename = f"{model_lower}_yearly"
+            type_name = f"{model}YearlyData"
             fk_col = sa.Column(sa.Integer(), sa.ForeignKey(self.model.lower() + ".id"))
             attributes = dict()
             attributes[related_attr_id] = fk_col
             attributes["_" + model_lower] = sa.orm.relationship(
                 model,
-                primaryjoin=u"{tablename}.c.{related_attr_id} == {remote}.c.id".format(
+                primaryjoin="{tablename}.c.{related_attr_id} == {remote}.c.id".format(
                     tablename=tablename,
                     related_attr_id=related_attr_id,
                     remote=self.model.lower(),
@@ -409,9 +401,9 @@ class Yearly(Field):
             self.create_related_model(module)
 
         yearly_cls = self.yearly_data["cls"]
-        primaryjoin = u"{local} == {remote}".format(
-            local=u"{__tablename__}.c.id".format(**attributes),
-            remote=u"{tablename}.c.{related_attr_id}".format(**self.yearly_data),
+        primaryjoin = "{local} == {remote}".format(
+            local="{__tablename__}.c.id".format(**attributes),
+            remote="{tablename}.c.{related_attr_id}".format(**self.yearly_data),
         )
         attributes["__yearly_data__"] = sa.orm.relationship(
             yearly_cls,
@@ -460,7 +452,7 @@ class YearlyFieldList(awbff.ModelFieldList):
     def process(self, formdata, data=unset_value):
         if data is not unset_value and isinstance(data, dict):
             data = data.values()
-        return super(YearlyFieldList, self).process(formdata, data)
+        return super().process(formdata, data)
 
     def _add_entry(self, formdata=None, data=unset_value, index=None):
         return FieldList._add_entry(self, formdata=formdata, data=data, index=index)
@@ -480,17 +472,17 @@ class YearlyFormField(FormFieldGeneratorBase):
     ff_type = YearlyFieldList
 
     def __init__(self, *args, **kwargs):
-        super(YearlyFormField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_extra_args(self, *args, **kwargs):
         from ..codegen import CodeGenerator
 
         generator = CodeGenerator(data=self.data["type_args"])
-        year_field = IntegerField(label=_l(u"Year"))
+        year_field = IntegerField(label=_l("Year"))
         FormBase = generator.gen_form(self.generator.module)
         ModelField = type(self.name + "Form", (FormBase, Form), {"year": year_field})
 
-        extra_args = super(YearlyFormField, self).get_extra_args(*args, **kwargs)
+        extra_args = super().get_extra_args(*args, **kwargs)
         extra_args["unbound_field"] = awbff.FormField(ModelField, default=dict)
         extra_args["population_strategy"] = "update"
         extra_args["min_entries"] = 1

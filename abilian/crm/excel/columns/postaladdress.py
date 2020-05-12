@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function, unicode_literals
 
 from abilian.crm.forms import PostalAddressForm
 from abilian.crm.models import PostalAddress
@@ -16,4 +14,4 @@ class PostalAddressColumn(RelatedColumnSet):
 
         manager = ExcelManager(PostalAddress, PostalAddressForm)
         columns = manager.columns.columns
-        super(PostalAddressColumn, self).__init__(attr, columns, label, required)
+        super().__init__(attr, columns, label, required)

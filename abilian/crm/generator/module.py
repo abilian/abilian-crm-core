@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, division, print_function
 
 import imp
 import logging
@@ -30,7 +28,7 @@ def generate_module(fullname, **kw):
     assert directory.exists() and directory.is_dir()
     module.__path__ = [str(directory)]  # noqa
 
-    for yml in directory.glob(u"*.yml"):
+    for yml in directory.glob("*.yml"):
         logger.info("Loading: %s", yml)
         with yml.open("rt", encoding="utf-8") as f:
             gen = CodeGenerator(yaml_file=f, **kw)
@@ -42,7 +40,7 @@ def generate_module(fullname, **kw):
     return module
 
 
-class GeneratedModelsFinder(object):
+class GeneratedModelsFinder:
     """Module finder for generated models."""
 
     def __init__(self):

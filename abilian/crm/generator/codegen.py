@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import logging
 import re
@@ -33,7 +31,7 @@ def assert_ascii(s):
         raise ValueError("{} is not an ASCII string".format(repr(s)))
 
 
-class CodeGenerator(object):
+class CodeGenerator:
     def __init__(self, yaml_file=None, data=None, **options):
         self.vocabularies = {}
         self.options = options
@@ -58,11 +56,11 @@ class CodeGenerator(object):
         for d in self.data["fields"]:
             vocabulary = d.get("vocabulary")
             if vocabulary:
-                name = u"Vocabulary_"
-                group = vocabulary.get("group", u"").strip()
+                name = "Vocabulary_"
+                group = vocabulary.get("group", "").strip()
                 if group:
-                    group = slugify(group, u"_")
-                    name += group + u"__"
+                    group = slugify(group, "_")
+                    name += group + "__"
                 name += vocabulary["name"]
 
                 if name in self.vocabularies:
@@ -87,20 +85,20 @@ class CodeGenerator(object):
                     k, v = item
                     if isinstance(k, bytes):
                         k = k.decode("utf-8")
-                    v = text_type(v)
+                    v = str(v)
                 else:
                     if isinstance(item, bytes):
                         item = item.decode("utf-8")
-                    k = text_type(slugify(item, u"_"))
+                    k = str(slugify(item, "_"))
 
-                k = re.sub(u"[^\\w\\s-]", "", k).strip().upper()
-                k = re.sub(u"[-\\s]+", "_", k)
+                k = re.sub("[^\\w\\s-]", "", k).strip().upper()
+                k = re.sub("[-\\s]+", "_", k)
                 #  avoid duplicates: suffix by a number if needed
                 current = k
                 count = 0
                 while k in seen and seen[k] != v:
                     count += 1
-                    k = "{}_{}".format(current, count)
+                    k = f"{current}_{count}"
 
                 seen[k] = v
                 key_val_list.append((k, v))
@@ -111,7 +109,7 @@ class CodeGenerator(object):
         self.set_current_module(module)
         for generated_name, definition in self.vocabularies.items():
             name = definition["name"].encode("ascii").strip()
-            group = definition.get("group", u"").strip() or None
+            group = definition.get("group", "").strip() or None
             label = definition["label"].strip()
             voc_cls = get_vocabulary(name, group=group)
 
@@ -212,7 +210,7 @@ class CodeGenerator(object):
         setattr(module, type_name, cls)
 
         # automatic name from other fields
-        auto_name = text_type(self.data.get("auto_name") or u"").strip()
+        auto_name = str(self.data.get("auto_name") or "").strip()
 
         if auto_name:
             autoname.setup(cls, auto_name)

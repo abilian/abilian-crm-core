@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import jinja2
 import pkg_resources
@@ -16,7 +14,7 @@ STATIC_DIR = pkg_resources.resource_filename(__name__, "static")
 JS = ("js/async_export.js",)
 
 
-class AbilianCRM(object):
+class AbilianCRM:
     """Base extension required by abilian.crm.apps."""
 
     def __init__(self, app=None):

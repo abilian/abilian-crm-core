@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import sqlalchemy as sa
 
@@ -35,13 +33,13 @@ class PhoneNumber(IdMixin, Model):
     __tablename__ = "crm_phonenumbers"
 
     #: number type: mobile, pro... left as free text
-    type = sa.Column(sa.UnicodeText, default=u"", server_default=sa.sql.text(u"''"))
+    type = sa.Column(sa.UnicodeText, default="", server_default=sa.sql.text("''"))
     #: phone number
     number = sa.Column(sa.UnicodeText, nullable=False)
 
     def __unicode__(self):
         if not self.number:
-            self.number = u""
+            self.number = ""
         if not self.type:
-            self.type = u""
-        return u"%s: %s" % (self.type, format_phonenumber(self.number))
+            self.type = ""
+        return "{}: {}".format(self.type, format_phonenumber(self.number))

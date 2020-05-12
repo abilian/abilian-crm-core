@@ -1,6 +1,4 @@
-# coding=utf-8
 """Set up listener to automatically set 'name' from various attributes."""
-from __future__ import absolute_import, print_function
 
 import string
 from operator import attrgetter
@@ -35,7 +33,7 @@ def setup(cls, spec):
                 if attr != key:
                     val = getter(obj)
                     if val is None:
-                        val = u""
+                        val = ""
                     vals[attr] = val
 
             obj.name = spec.format(**vals).strip()

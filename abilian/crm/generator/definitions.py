@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import wtforms.fields
 from flask_wtf.file import FileField

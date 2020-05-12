@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function, unicode_literals
 
 from operator import attrgetter
 
@@ -13,7 +11,7 @@ from abilian.core.entities import Entity
 _NULL_MARK = object()
 
 
-class Invalid(object):
+class Invalid:
     """Mark invalid values."""
 
     def __init__(self, value):
@@ -30,10 +28,10 @@ class Invalid(object):
         return "Invalid: {}".format(repr(self.value))
 
     def __str__(self):
-        return text_type(self).encode("utf-8")
+        return str(self).encode("utf-8")
 
 
-class Update(object):
+class Update:
     """Holds information about a value update.
 
     Used in import_data()
@@ -74,7 +72,7 @@ class Update(object):
         return self._render(manager, self.value)
 
 
-class Column(object):
+class Column:
     """A single column."""
 
     # a column may be declared unconditionnaly not importable
@@ -134,18 +132,18 @@ class Column(object):
             elif isinstance(item, Entity):
                 return item.name
             else:
-                return text_type(item)
+                return str(item)
 
         value = attrgetter(self.attr)(item)
         import_value = item.display_value(self.attr, value=value)
         if isinstance(import_value, Entity):
             import_value = import_value.name
         elif isinstance(import_value, list):
-            import_value = "; ".join((to_str(i) for i in import_value))
+            import_value = "; ".join(to_str(i) for i in import_value)
 
         if isinstance(import_value, bytes):
             import_value = import_value.decode("utf-8")
-        if isinstance(import_value, text_type):
+        if isinstance(import_value, str):
             import_value = import_value.strip().replace("\r\n", "\n")
 
         yield import_value, value
@@ -158,7 +156,7 @@ class Column(object):
 
     def adapt_from_cell(self, value, cell_type, workbook):
         if cell_type not in self.adapt_cell_types:
-            raise ValueError("Cannot adapt {}".format(cell_type))
+            raise ValueError(f"Cannot adapt {cell_type}")
         return self._adapt_from_cell(value, cell_type, workbook)
 
     def _adapt_from_cell(self, value, cell_type, workbook):
@@ -173,7 +171,7 @@ class Column(object):
         return value
 
 
-class ColumnSet(object):
+class ColumnSet:
     """A set of columns to be added to current export / import."""
 
     # a columnset may be declared unconditionnaly not importable
@@ -198,8 +196,7 @@ class ColumnSet(object):
 
     def iter_flatened(self):
         for sub_columns in self:
-            for c in sub_columns.iter_flatened():
-                yield c
+            yield from sub_columns.iter_flatened()
 
     @property
     def colspan(self):
@@ -208,19 +205,16 @@ class ColumnSet(object):
     @property
     def attrs(self):
         for c in self.columns:
-            for attr in c.attrs:
-                yield attr
+            yield from c.attrs
 
     @property
     def labels(self):
         for c in self.columns:
-            for label in c.labels:
-                yield label
+            yield from c.labels
 
     def data(self, item):
         for c in self.columns:
-            for result in c.data(item):
-                yield result
+            yield from c.data(item)
 
     def data_for_import(self, item):
         """Like ::meth `data`, but for import. The difference is that it must

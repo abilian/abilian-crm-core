@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import sqlalchemy as sa
 import sqlalchemy.ext
@@ -19,7 +17,7 @@ class Vocabulary(Field):
     default_ff_type = "VocabularyFormField"
 
     def __init__(self, model, data, *args, **kwargs):
-        super(Vocabulary, self).__init__(model, data, *args, **kwargs)
+        super().__init__(model, data, *args, **kwargs)
         self.voc_cls = data["vocabulary"]["cls"]
 
     def get_model_attributes(self, *args, **kwargs):
@@ -91,7 +89,7 @@ class VocabularyFormField(FormField):
     ff_type = awbff.QuerySelect2Field
 
     def get_extra_args(self, *args, **kwargs):
-        extra_args = super(VocabularyFormField, self).get_extra_args(*args, **kwargs)
+        extra_args = super().get_extra_args(*args, **kwargs)
         extra_args["multiple"] = self.multiple
         extra_args["get_label"] = "label"
 
@@ -99,7 +97,7 @@ class VocabularyFormField(FormField):
             def query_voc():
                 return voc_cls.query.active().all()
 
-            query_voc.func_name = "query_vocabulary_{}".format(voc_cls.Meta.name)
+            query_voc.func_name = f"query_vocabulary_{voc_cls.Meta.name}"
             return query_voc
 
         voc_cls = self.data["vocabulary"]["cls"]

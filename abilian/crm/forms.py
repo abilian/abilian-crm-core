@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 from wtforms.fields import IntegerField, StringField, TextAreaField
 from wtforms.widgets import HiddenInput
@@ -16,7 +14,7 @@ from .models import PhoneNumber, PostalAddress
 from .widgets import PhoneNumberWidget
 
 
-class RequireableFormField(object):
+class RequireableFormField:
     """Mixin for Formfield based class, to allow toggle required / optional.
 
     Basic FormField doesn't allow any validators, making harder to
@@ -25,7 +23,7 @@ class RequireableFormField(object):
 
     def __init__(self, *args, **kwargs):
         self.__validators = tuple(kwargs.pop("validators", ()))
-        super(RequireableFormField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for v in self.__validators:
             for flag in getattr(v, "field_flags", ()):
@@ -38,7 +36,7 @@ class RequireableFormField(object):
                     )
 
     def process(self, *args, **kwargs):
-        super(RequireableFormField, self).process(*args, **kwargs)
+        super().process(*args, **kwargs)
 
         for f in self.form:
             if f.flags.required:
@@ -76,39 +74,39 @@ class PostalAddressForm(ModelForm):
 
     id = IntegerField(widget=HiddenInput(), validators=[optional(), flaghidden()])
     street_lines = TextAreaField(
-        _l(u"postal_address_street_lines"),
-        description=_l(u"postal_address_street_lines_help"),
+        _l("postal_address_street_lines"),
+        description=_l("postal_address_street_lines_help"),
         validators=[required()],
         filters=(strip,),
         widget=TextArea(rows=4),
     )
 
     administrative_area = StringField(
-        _l(u"postal_address_administrative_area"),
-        description=_l(u"postal_address_administrative_area_help"),
+        _l("postal_address_administrative_area"),
+        description=_l("postal_address_administrative_area_help"),
     )
 
     sub_administrative_area = StringField(
-        _l(u"postal_address_sub_administrative_area"),
-        description=_l(u"postal_address_sub_administrative_area_help"),
+        _l("postal_address_sub_administrative_area"),
+        description=_l("postal_address_sub_administrative_area_help"),
     )
 
     postal_code = StringField(
-        _l(u"postal_address_postal_code"),
-        description=_l(u"postal_address_postal_code_help"),
+        _l("postal_address_postal_code"),
+        description=_l("postal_address_postal_code_help"),
         validators=[required()],
         filters=(strip,),
     )
 
     locality = StringField(
-        _l(u"postal_address_locality"),
+        _l("postal_address_locality"),
         # description=_l(u'postal_address_locality_help'),
         validators=[required()],
         filters=(strip,),
     )
 
     country = Select2Field(
-        _l(u"postal_address_country"),
+        _l("postal_address_country"),
         validators=[required()],
         filters=(strip,),
         choices=country_choices,
@@ -124,17 +122,17 @@ class PostalAddressField(RequireableFormField, ModelFormField):
     widget = ModelWidget()
 
     def __init__(self, *args, **kwargs):
-        super(PostalAddressField, self).__init__(PostalAddressForm, *args, **kwargs)
+        super().__init__(PostalAddressForm, *args, **kwargs)
 
 
 class PhoneNumberForm(ModelForm):
     id = IntegerField(widget=HiddenInput(), validators=[optional(), flaghidden()])
     type = StringField(
-        _l(u"phonenumber_type"), description=_l(u"phonenumber_type_help")
+        _l("phonenumber_type"), description=_l("phonenumber_type_help")
     )
     number = PhoneNumberField(
-        _l(u"phonenumber_number"),
-        description=_l(u'for an extension number add "#1234"'),
+        _l("phonenumber_number"),
+        description=_l('for an extension number add "#1234"'),
         validators=[required()],
     )
 
@@ -148,4 +146,4 @@ class PhoneNumberFormField(RequireableFormField, ModelFormField):
     widget = ModelWidget(view_template="crm/widgets/phonenumber_model_view.html")
 
     def __init__(self, *args, **kwargs):
-        super(PhoneNumberFormField, self).__init__(PhoneNumberForm, *args, **kwargs)
+        super().__init__(PhoneNumberForm, *args, **kwargs)

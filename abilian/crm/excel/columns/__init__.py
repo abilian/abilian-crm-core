@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import
 
 from .base import Column, ColumnSet, Invalid
 from .dates import DateColumn, DateTimeColumn

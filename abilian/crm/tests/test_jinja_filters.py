@@ -1,8 +1,6 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function, unicode_literals
 
-from mock import patch
+from unittest.mock import patch
 
 from abilian.crm import jinja_filters
 

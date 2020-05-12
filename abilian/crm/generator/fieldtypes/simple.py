@@ -1,6 +1,4 @@
-# coding=utf-8
 """"""
-from __future__ import absolute_import, print_function
 
 import hashlib
 
@@ -47,7 +45,7 @@ class PositiveInteger(Integer):
 
     def get_table_args(self, *args, **kwargs):
         col_name = self.name[:MAX_IDENTIFIER_LENGTH]
-        name = "check_{name}_positive".format(name=col_name)
+        name = f"check_{col_name}_positive"
         if len(name) > MAX_IDENTIFIER_LENGTH:
             digest = hashlib.md5(self.name).digest()
             exceed = len(name) - MAX_IDENTIFIER_LENGTH
