@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 
 language: python
 cache:
@@ -24,7 +24,8 @@ addons:
 
 # Install OS dependencies
 before_install:
- - pip install -U pip setuptools poetry
+  - pip install -U pip setuptools poetry
+  - pip install -U pip setuptools wheel tox tox-travis poetry
 
 # Install Python dependencies
 install:

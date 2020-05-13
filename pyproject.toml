@@ -16,27 +16,39 @@ classifiers = [
 ]
 homepage = "https://github.com/abilian/abilian-crm-core"
 
+
+[build-system]
+requires = ["poetry >= 1"]
+build-backend = "poetry.masonry.api"
+
+
 [tool.poetry.dependencies]
 python = "*"
 abilian-core = "<0.11"
 more-itertools = "<6"
-numpy = "<1.17"
+numpy = "*"
 openpyxl = ">=2.3.3"
-pandas = "<0.25"
+pandas = "*"
 phonenumbers = ">=7.1.0"
 werkzeug = "<1"
 
+
 [tool.poetry.dev-dependencies]
-docformatter = "*"
-flake8 = "*"
-isort = "==4.3.4"
-mock = ">=1.0.1"
 pre-commit = "*"
-pylint = "*"
+mock = ">=1.0.1"
 pytest = ">=2.4.0"
 pytest-cov = "*"
 pytest-xdist = "*"
+
+flake8 = "*"
+flake8-bugbear = "*"
+pylint = "*"
+mypy = "*"
+isort = "*"
+
 requests = "*"
+
 restructuredtext-lint = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
+docformatter = "*"
