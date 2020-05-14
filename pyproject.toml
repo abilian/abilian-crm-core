@@ -20,7 +20,7 @@ packages = [
 
 
 [tool.poetry.dependencies]
-python = "*"
+python = "^3.6"
 
 abilian-core = "<0.11"
 more-itertools = "<6"
@@ -40,6 +40,7 @@ pytest-xdist = "*"
 
 flake8 = "*"
 flake8-bugbear = "*"
+flake8-mypy-fork = "*"
 pylint = "*"
 mypy = "*"
 isort = "*"
