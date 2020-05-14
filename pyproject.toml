@@ -6,22 +6,18 @@ description = "Core framework for CRM applications"
 authors = ["Stefane Fermigier", "Abilian SAS"]
 license = "LGPL"
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Environment :: Web Environment",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
-  "Operating System :: OS Independent",
-  "Programming Language :: Python",
-  "Framework :: Flask"
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Framework :: Flask"
 ]
-packages = [
-  { include = "abilian" },
-]
-
+packages = [{ include = "abilian" }]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-
 abilian-core = "<0.11"
 more-itertools = "<6"
 numpy = "*"
@@ -30,28 +26,23 @@ pandas = "*"
 phonenumbers = ">=7.1.0"
 werkzeug = "<1"
 
-
 [tool.poetry.dev-dependencies]
 pre-commit = "*"
 mock = ">=1.0.1"
 pytest = ">=2.4.0"
 pytest-cov = "*"
 pytest-xdist = "*"
-
 flake8 = "*"
 flake8-bugbear = "*"
 flake8-mypy-fork = "*"
 pylint = "*"
 mypy = "*"
 isort = "*"
-
 requests = "*"
-
 restructuredtext-lint = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 docformatter = "*"
-
 
 [build-system]
 requires = ["poetry >= 1"]
