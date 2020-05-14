@@ -11,10 +11,6 @@ python:
   - "3.7"
   - "3.8"
 
-env:
-  - SQLALCHEMY_DATABASE_URI="sqlite://"
-  - SQLALCHEMY_DATABASE_URI="postgres://postgres@localhost/abilian_crm"
-
 services:
   - redis-server
 
@@ -22,28 +18,35 @@ addons:
   postgresql: "9.6"
 
 
-# Install OS dependencies
-before_install:
-  - pip install -U pip setuptools poetry
-  - pip install -U pip setuptools wheel tox tox-travis poetry
+env:
+  - SQLALCHEMY_DATABASE_URI="sqlite://"
+  - SQLALCHEMY_DATABASE_URI="postgres://postgres@localhost/abilian"
 
-# Install Python dependencies
+matrix:
+  include:
+    - python: 3.6
+      env: TOXENV=lint
+
+# Install OS dependencies
 install:
-  - poetry install
-  - pip check
-  - npm install -g less
-  - yarn
+  - pip install -U pip setuptools wheel tox tox-travis poetry
 
 # Create DB
 before_script:
-  - createdb -w -U postgres -E utf-8 abilian_crm
+  - createdb -w -U postgres -E utf-8 abilian
 
 # Run tests
 script:
-  - pytest -q --cov abilian abilian
-  - make lint-python
+  - tox
 
 # Report coverage
-after_success:
-  - pip install coveralls
-  - coveralls
+#after_success:
+#  - pip install coveralls
+#  - coveralls
+
+notifications:
+  slack:
+    rooms:
+      - abilian:dTtRD7DHS4Dw3jfRrqytQWU6#code
+    on_success: change
+    on_failure: always
