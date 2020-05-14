@@ -116,9 +116,7 @@ class YearlyCollection(sa.orm.collections.MappedCollection):
     __iter__ = iterkeys
 
     def values(self):
-        return sorted(
-            super().values(), key=YearlyCollection._keyfunc
-        )
+        return sorted(super().values(), key=YearlyCollection._keyfunc)
 
     def itervalues(self):
         yield from self.values()
@@ -226,9 +224,7 @@ class YearlyCollectionProxy(dict):
 
         year_data = self.__collection[key]
         if key not in self:
-            super().__setitem__(
-                key, YearlyAttrProxy(year_data, self.__attrs)
-            )
+            super().__setitem__(key, YearlyAttrProxy(year_data, self.__attrs))
 
         return super().__getitem__(key)
 
@@ -279,9 +275,7 @@ class YearlyCollectionProxy(dict):
     __iter__ = iterkeys
 
     def values(self):
-        return sorted(
-            super().values(), key=YearlyCollection._keyfunc
-        )
+        return sorted(super().values(), key=YearlyCollection._keyfunc)
 
     def itervalues(self):
         yield from self.values()

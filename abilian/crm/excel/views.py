@@ -55,7 +55,7 @@ class BaseExcelView(ModuleView, views.View):
         Form=None,
         excel_manager=None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.component = self.module.get_component(component)

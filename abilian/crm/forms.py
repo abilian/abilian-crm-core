@@ -127,9 +127,7 @@ class PostalAddressField(RequireableFormField, ModelFormField):
 
 class PhoneNumberForm(ModelForm):
     id = IntegerField(widget=HiddenInput(), validators=[optional(), flaghidden()])
-    type = StringField(
-        _l("phonenumber_type"), description=_l("phonenumber_type_help")
-    )
+    type = StringField(_l("phonenumber_type"), description=_l("phonenumber_type_help"))
     number = PhoneNumberField(
         _l("phonenumber_number"),
         description=_l('for an extension number add "#1234"'),

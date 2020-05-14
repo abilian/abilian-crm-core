@@ -1227,13 +1227,9 @@ class ExcelManager:
         else:
             if "choices" in col.info:
                 # unicode(v) will make translatable values... translated
-                rev_choices = {
-                    str(v): k for k, v in col.info.get("choices").items()
-                }
+                rev_choices = {str(v): k for k, v in col.info.get("choices").items()}
                 if value not in rev_choices:
-                    valid = ", ".join(
-                        f'"{v}"' for v in rev_choices.keys() if v
-                    )
+                    valid = ", ".join(f'"{v}"' for v in rev_choices.keys() if v)
                     raise ExcelImportError(
                         _('"{value}" is invalid. Valid choices are: {valid}').format(
                             value=value, valid=valid

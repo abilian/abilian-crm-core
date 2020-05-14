@@ -110,7 +110,7 @@ class File(Field):
             col_name,
             self.sa_type(**self.sa_type_options),
             sa.ForeignKey(Blob.id),
-            **extra_args
+            **extra_args,
         )
 
         yield col_name, attr
