@@ -1,7 +1,7 @@
-[tool]
 [tool.poetry]
 name = "abilian-crm-core"
-version = "0.1.26.dev13+g6764a32"
+version = "0.1.27"
+homepage = "https://github.com/abilian/abilian-crm-core"
 description = "Core framework for CRM applications"
 authors = ["Stefane Fermigier", "Abilian SAS"]
 license = "LGPL"
@@ -14,12 +14,6 @@ classifiers = [
   "Programming Language :: Python",
   "Framework :: Flask"
 ]
-homepage = "https://github.com/abilian/abilian-crm-core"
-
-
-[build-system]
-requires = ["poetry >= 1"]
-build-backend = "poetry.masonry.api"
 
 
 [tool.poetry.dependencies]
@@ -52,3 +46,8 @@ restructuredtext-lint = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 docformatter = "*"
+
+
+[build-system]
+requires = ["poetry >= 1"]
+build-backend = "poetry.masonry.api"
