@@ -14,10 +14,14 @@ classifiers = [
   "Programming Language :: Python",
   "Framework :: Flask"
 ]
+packages = [
+  { include = "abilian" },
+]
 
 
 [tool.poetry.dependencies]
 python = "*"
+
 abilian-core = "<0.11"
 more-itertools = "<6"
 numpy = "*"
