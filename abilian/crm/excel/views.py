@@ -156,9 +156,7 @@ class ExcelExport(BaseExcelView):
         filename = "{}-{}.xlsx".format(
             self.module.managed_class.__name__, strftime("%d:%m:%Y-%H:%M:%S", gmtime())
         )
-        response.headers["content-disposition"] = 'attachment;filename="{}"'.format(
-            filename
-        )
+        response.headers["content-disposition"] = f'attachment;filename="{filename}"'
 
         return response
 
@@ -239,12 +237,7 @@ class ExcelImport(BaseExcelView):
 
             if modified_items is not None and len(modified_items) == 0:
                 flash(
-                    _(
-                        "No change detected in file {filename}".format(
-                            filename=filename
-                        )
-                    ),
-                    "info",
+                    _(f"No change detected in file {filename}"), "info",
                 )
 
             yield render_template(

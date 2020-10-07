@@ -74,9 +74,7 @@ class Vocabulary(Field):
                 gen_m2m_relationship.func_name = func_name
                 return gen_m2m_relationship
 
-            relation_secondary_tbl_name = "{}_{}".format(
-                self.model.lower(), self.name.lower()
-            )
+            relation_secondary_tbl_name = f"{self.model.lower()}_{self.name.lower()}"
 
             rel_attr = get_m2m_attr(
                 relation_name, self.voc_cls, relation_secondary_tbl_name

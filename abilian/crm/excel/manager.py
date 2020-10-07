@@ -922,7 +922,7 @@ class ExcelManager:
         for item_update in data:
             is_new = item_update.id is None
             item = q.get(item_update.id) if not is_new else self.model_cls()
-            signed_attrs = "{}.{}".format(";".join(item_update.attrs), item_update.sig)
+            signed_attrs = f"{';'.join(item_update.attrs)}.{item_update.sig}"
             if not self.signer.validate(signed_attrs):
                 item_id = str(item_update.id) if not is_new else "new"
                 logger.debug(

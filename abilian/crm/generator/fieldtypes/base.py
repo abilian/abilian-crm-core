@@ -23,7 +23,7 @@ _VALID_IDENTIFIER_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*", re.UNICODE)
 def assert_valid_identifier(s):
     match = _VALID_IDENTIFIER_RE.match(s)
     if match is None or match.end() != match.endpos:
-        raise ValueError("{} is not a valid python identifier".format(repr(s)))
+        raise ValueError(f"{repr(s)} is not a valid python identifier")
 
 
 class Field(Registrable):
@@ -261,9 +261,7 @@ class FormField(Registrable):
 
             if isinstance(widget, str):
                 if widget not in WIDGETS:
-                    raise ValueError(
-                        "Invalid {}: {}".format(widget_arg, widget.encode("utf-8"))
-                    )
+                    raise ValueError(f"Invalid {widget_arg}: {widget.encode('utf-8')}")
                 widget = WIDGETS[widget]
                 kw = d.get(widget_arg + "_args", dict())
                 widget = widget(**kw)

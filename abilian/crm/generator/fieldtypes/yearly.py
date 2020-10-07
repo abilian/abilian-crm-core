@@ -231,9 +231,7 @@ class YearlyCollectionProxy(dict):
     def __setitem__(self, key, value):
         if isinstance(value, YearlyAttrProxy):
             if value.attrs != self.__attrs:
-                raise ValueError(
-                    "Incompatible attribute proxys: {!r}, {!r}" "".format(self, value)
-                )
+                raise ValueError(f"Incompatible attribute proxys: {self!r}, {value!r}")
             if key not in self and value:
                 self[key]  # add key since value is nonzero
                 return  # same proxy: no update needed
@@ -326,9 +324,7 @@ class YearlyAttribute:
                 setattr(year_data, attr, None)
 
     def __repr__(self):
-        return "<{}{!r} at 0x{:x}>".format(
-            self.__class__.__name__, self._attrs, id(self)
-        )
+        return f"<{self.__class__.__name__}{self._attrs!r} at 0x{id(self):x}>"
 
 
 @model_field
@@ -383,7 +379,7 @@ class Yearly(Field):
         fields = self.data["type_args"]["fields"]
         if any(f["name"] in forbidden_attrs for f in fields):
             raise ValueError(
-                "{} are forbidden field names".format(",".join(sorted(forbidden_attrs)))
+                f"{','.join(sorted(forbidden_attrs))} are forbidden field names"
             )
 
         self.yearly_data["fields"].extend(fields)

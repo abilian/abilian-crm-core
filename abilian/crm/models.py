@@ -42,4 +42,4 @@ class PhoneNumber(IdMixin, Model):
             self.number = ""
         if not self.type:
             self.type = ""
-        return "{}: {}".format(self.type, format_phonenumber(self.number))
+        return f"{self.type}: {format_phonenumber(self.number)}"

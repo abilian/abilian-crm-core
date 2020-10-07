@@ -28,7 +28,7 @@ def assert_ascii(s):
     try:
         s.encode("ascii")
     except UnicodeError:
-        raise ValueError("{} is not an ASCII string".format(repr(s)))
+        raise ValueError(f"{repr(s)} is not an ASCII string")
 
 
 class CodeGenerator:
@@ -179,7 +179,7 @@ class CodeGenerator:
 
             FieldCls = get_field(type_)
             if FieldCls is None:
-                raise ValueError("Unknown type: {}".format(repr(type_)))
+                raise ValueError(f"Unknown type: {repr(type_)}")
 
             field = FieldCls(model=model_name, data=d, generator=self)
 

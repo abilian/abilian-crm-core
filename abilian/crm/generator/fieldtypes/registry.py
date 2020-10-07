@@ -29,10 +29,9 @@ def _register(registry, cls):
         return cls
 
     name = cls.__fieldtype__()
-    assert name not in registry, (
-        "{!r} cannot be registered as {!r}: already used by {!r}"
-        "".format(cls, name, registry[name])
-    )
+    assert (
+        name not in registry
+    ), f"{cls!r} cannot be registered as {name!r}: already used by {registry[name]!r}"
 
     registry[name] = cls
     setattr(cls, reg_attr, True)

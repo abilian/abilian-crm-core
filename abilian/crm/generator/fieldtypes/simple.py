@@ -50,7 +50,7 @@ class PositiveInteger(Integer):
             digest = hashlib.md5(self.name).digest()
             exceed = len(name) - MAX_IDENTIFIER_LENGTH
             name = self.name[: MAX_IDENTIFIER_LENGTH - exceed - 7]
-            name = "check_{name}_{digest}_positive".format(name=name, digest=digest[:6])
+            name = f"check_{name}_{digest[:6]}_positive"
 
         yield sa.schema.CheckConstraint(sa.sql.text(col_name + " >= 0"), name=name)
 
@@ -116,10 +116,7 @@ class File(Field):
         yield col_name, attr
 
         relationship = sa.orm.relationship(
-            Blob,
-            primaryjoin="{tablename}.c.{local} == Blob.id".format(
-                tablename=self.model.lower(), local=col_name
-            ),
+            Blob, primaryjoin=f"{self.model.lower()}.c.{col_name} == Blob.id",
         )
         yield self.name, relationship
 
