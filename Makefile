@@ -114,7 +114,7 @@ sync-deps:
 	pip install -e .
 
 release:
-	rm -rf /tmp/abilian-crm-core
-	git clone . /tmp/abilian-crm-core
-	cd /tmp/abilian-crm-core ; python setup.py sdist
-	cd /tmp/abilian-crm-core ; python setup.py sdist upload
+release:
+	maketag
+	git push --tags
+	poetry publish --build

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "abilian-crm-core"
-version = "0.1.27"
+version = "0.1.28"
 homepage = "https://github.com/abilian/abilian-crm-core"
 description = "Core framework for CRM applications"
 authors = ["Stefane Fermigier", "Abilian SAS"]
