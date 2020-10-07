@@ -16,6 +16,7 @@ classifiers = [
 ]
 packages = [{ include = "abilian" }]
 
+
 [tool.poetry.dependencies]
 python = ">3.6.1,<4"
 abilian-core = "<0.11"
@@ -25,6 +26,7 @@ openpyxl = ">=2.3.3"
 pandas = "*"
 phonenumbers = ">=7.1.0"
 werkzeug = "<1"
+
 
 [tool.poetry.dev-dependencies]
 pre-commit = "*"
@@ -45,5 +47,5 @@ sphinx-rtd-theme = "*"
 docformatter = "*"
 
 [build-system]
-requires = ["poetry >= 1"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
