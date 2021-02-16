@@ -14,8 +14,13 @@ from abilian.i18n import _, _l
 from abilian.web import csrf, url_for, views
 from abilian.web.action import Endpoint, FAIcon
 from abilian.web.blueprints import Blueprint
-from abilian.web.frontend import ModuleAction, ModuleActionDropDown, \
-    ModuleActionGroupItem, ModuleComponent, ModuleView
+from abilian.web.frontend import (
+    ModuleAction,
+    ModuleActionDropDown,
+    ModuleActionGroupItem,
+    ModuleComponent,
+    ModuleView,
+)
 
 from .manager import ExcelManager
 from .tasks import export as export_task

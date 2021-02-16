@@ -11,8 +11,12 @@ from six import string_types
 import abilian.web.forms.fields as awbff
 import abilian.web.forms.validators as aw_validators
 import abilian.web.forms.widgets as aw_widgets
-from abilian.crm.generator.definitions import FORM_FILTERS, LIST_GENERATORS, \
-    MAX_IDENTIFIER_LENGTH, WIDGETS
+from abilian.crm.generator.definitions import (
+    FORM_FILTERS,
+    LIST_GENERATORS,
+    MAX_IDENTIFIER_LENGTH,
+    WIDGETS,
+)
 from abilian.web.forms.validators import VALIDATORS
 
 from .registry import Registrable, get_formfield

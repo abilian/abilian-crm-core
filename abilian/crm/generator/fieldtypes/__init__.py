@@ -1,8 +1,7 @@
 """"""
 
 # register fields
-from . import entity, formfields, phonenumber, postaladdress, simple, \
-    vocabulary, yearly
+from . import entity, formfields, phonenumber, postaladdress, simple, vocabulary, yearly
 from .registry import form_field, get_field, get_formfield, model_field
 
 __all__ = (

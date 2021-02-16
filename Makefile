@@ -69,7 +69,7 @@ format-py:
 	@make format-imports
 
 format-imports:
-	isort -rc abilian *.py
+	isort abilian *.py
 
 format-js:
 	npx prettier --write 'abilian/**/*.js'

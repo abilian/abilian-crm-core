@@ -30,9 +30,17 @@ from abilian.services.vocabularies.models import BaseVocabulary
 from abilian.web.forms.fields import ModelFieldList
 
 from ..models import PostalAddress
-from .columns import Column, ColumnSet, DateColumn, DateTimeColumn, Invalid, \
-    ManyRelatedColumnSet, PostalAddressColumn, RelatedColumnSet, \
-    VocabularyColumn
+from .columns import (
+    Column,
+    ColumnSet,
+    DateColumn,
+    DateTimeColumn,
+    Invalid,
+    ManyRelatedColumnSet,
+    PostalAddressColumn,
+    RelatedColumnSet,
+    VocabularyColumn,
+)
 from .exc import ExcelError, ExcelImportError
 
 logger = logging.getLogger(__name__)
