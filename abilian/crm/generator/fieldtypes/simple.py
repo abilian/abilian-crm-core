@@ -116,7 +116,8 @@ class File(Field):
         yield col_name, attr
 
         relationship = sa.orm.relationship(
-            Blob, primaryjoin=f"{self.model.lower()}.c.{col_name} == Blob.id",
+            Blob,
+            primaryjoin=f"{self.model.lower()}.c.{col_name} == Blob.id",
         )
         yield self.name, relationship
 

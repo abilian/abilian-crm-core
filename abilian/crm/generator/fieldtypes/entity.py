@@ -41,7 +41,8 @@ class EntityField(Field):
                 # always use ALTER: when 2 entities reference each other it raises
                 # CircularDependencyError:
                 fk_kw = dict(
-                    use_alter=True, name=f"{cls.__name__.lower()}_{col_name}_fkey",
+                    use_alter=True,
+                    name=f"{cls.__name__.lower()}_{col_name}_fkey",
                 )
 
                 fk_kw["ondelete"] = "SET NULL"

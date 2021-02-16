@@ -237,7 +237,8 @@ class ExcelImport(BaseExcelView):
 
             if modified_items is not None and len(modified_items) == 0:
                 flash(
-                    _(f"No change detected in file {filename}"), "info",
+                    _(f"No change detected in file {filename}"),
+                    "info",
                 )
 
             yield render_template(
