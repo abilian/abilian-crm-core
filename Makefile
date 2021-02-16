@@ -32,14 +32,13 @@ update-env:
 # testing
 #
 test:
-	py.test --tb=short
+	pytest --tb=short
 
 test-with-coverage:
-	py.test --tb=short --durations 10 --cov $(PKG) --cov-config etc/coverage.rc \
-	  --cov-report term-missing
+	pytest --tb=short --cov src/$(PKG)
 
 test-long:
-	RUN_SLOW_TESTS=True py.test -x
+	RUN_SLOW_TESTS=True pytest -x
 
 vagrant-tests:
 	vagrant up

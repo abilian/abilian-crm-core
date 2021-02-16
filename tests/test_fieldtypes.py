@@ -2,7 +2,7 @@
 
 import pytest
 
-from .base import assert_valid_identifier
+from abilian.crm.generator.fieldtypes.base import assert_valid_identifier
 
 
 def test_assert_valid_identifier():
