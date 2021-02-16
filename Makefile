@@ -1,7 +1,6 @@
 .PHONY: test full-test flake8 clean setup default
 
-SRC=abilian/crm
-PKG=$(SRC)
+PKG=abilian
 
 INSTANCE_FOLDER=$(shell 												\
 	$(VIRTUAL_ENV)/bin/python											\
@@ -33,14 +32,14 @@ update-env:
 # testing
 #
 test:
-	py.test --tb=short $(PKG)
+	py.test --tb=short
 
 test-with-coverage:
 	py.test --tb=short --durations 10 --cov $(PKG) --cov-config etc/coverage.rc \
-	  --cov-report term-missing $(SRC)
+	  --cov-report term-missing
 
 test-long:
-	RUN_SLOW_TESTS=True py.test -x $(SRC)
+	RUN_SLOW_TESTS=True py.test -x
 
 vagrant-tests:
 	vagrant up
@@ -55,21 +54,21 @@ lint: lint-python lint-js
 
 lint-python:
 	@echo "--> Linting Python files"
-	flake8 abilian *.py
+	flake8 src *.py
 
 lint-js:
 	@echo "--> Linting JavaScript files"
-	npx eslint abilian
+	npx eslint src
 
 format: format-py format-js
 
 format-py:
-	docformatter -i -r abilian
-	black abilian *.py
+	docformatter -i -r src
+	black src *.py
 	@make format-imports
 
 format-imports:
-	isort abilian *.py
+	isort src *.py
 
 format-js:
 	npx prettier --write 'abilian/**/*.js'
