@@ -31,8 +31,7 @@ class RequireableFormField:
                     self.flags.required = True
                 elif flag != "optional":
                     raise TypeError(
-                        '{} accept only "required" validator'
-                        "".format(self.__class__.__name__)
+                        f"{self.__class__.__name__} accept only \"required\" validator"
                     )
 
     def process(self, *args, **kwargs):
