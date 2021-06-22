@@ -24,8 +24,7 @@ setup-git:
 update-env:
 	@echo "--> Installing/updating dependencies"
 	pip install -U setuptools pip wheel
-	pip install -U -r requirements.txt -r etc/dev-requirements.txt
-	pip install -e .
+	poetry install
 	@echo ""
 
 #
