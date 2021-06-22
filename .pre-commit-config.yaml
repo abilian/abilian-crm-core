@@ -1,6 +1,6 @@
 repos:
 -   repo: git://github.com/pre-commit/pre-commit-hooks
-    rev: v0.9.3
+    rev: v4.0.1
     hooks:
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
@@ -9,4 +9,8 @@ repos:
     -   id: check-yaml
     -   id: check-json
     -   id: check-ast
+
+-   repo: https://gitlab.com/pycqa/flake8
+    rev: 3.9.2
+    hooks:
     -   id: flake8
